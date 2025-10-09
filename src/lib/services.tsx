@@ -28,8 +28,8 @@ export const services = [
     {
     id: 'pintura',
     icon: <Paintbrush />,
-    image: 'https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    imageHint: 'painter working',
+    image: 'https://images.unsplash.com/photo-1596541248883-094b8163b438?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    imageHint: 'professional painter',
   },
   {
     id: 'impermeabilizacion',
@@ -40,19 +40,19 @@ export const services = [
   {
     id: 'electricidad',
     icon: <Zap />,
-    image: 'https://images.unsplash.com/photo-1555963962-969a0812ab56?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://images.unsplash.com/photo-1489223769492-5a5f4e041a7c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     imageHint: 'electrical work',
   },
   {
     id: 'carpinteria',
     icon: <Hammer />,
-    image: 'https://images.unsplash.com/photo-1572999003433-80f3438f8f2b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    imageHint: 'aluminum carpentry',
+    image: 'https://images.unsplash.com/photo-1595643449989-10515159491a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    imageHint: 'woodworking tools',
   },
   {
     id: 'fontaneria',
     icon: <Droplets />,
-    image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    imageHint: 'plumbing work',
+    image: 'https://images.unsplash.com/photo-1581092916323-e251877b1029?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    imageHint: 'plumbing pipes',
   },
 ];
