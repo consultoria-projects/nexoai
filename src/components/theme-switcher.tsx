@@ -13,21 +13,20 @@ import { useTheme } from "next-themes"
 import { Moon, Sun, Palette } from "lucide-react"
 
 export function ThemeSwitcher() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme, theme, themes } = useTheme()
 
-  const themeColors = [
+  const isDarkMode = theme?.startsWith('dark-')
+  const baseTheme = isDarkMode ? theme.substring(5) : theme
+
+  const toggleDarkMode = () => {
+    setTheme(isDarkMode ? baseTheme : `dark-${baseTheme}`)
+  }
+  
+  const colorThemes = [
     { name: "Blue", class: "theme-blue" },
     { name: "Green", class: "theme-green" },
     { name: "Orange", class: "theme-orange" },
   ]
-
-  const isDarkMode = theme?.startsWith('dark-')
-  const currentBaseTheme = isDarkMode ? theme.substring(5) : theme
-
-  const toggleDarkMode = () => {
-    const baseTheme = currentBaseTheme || "theme-blue"
-    setTheme(isDarkMode ? baseTheme : `dark-${baseTheme}`)
-  }
 
   const handleSetBaseTheme = (newBaseTheme: string) => {
     setTheme(isDarkMode ? `dark-${newBaseTheme}` : newBaseTheme)
@@ -43,11 +42,11 @@ export function ThemeSwitcher() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Color Scheme</DropdownMenuLabel>
-        {themeColors.map((color) => (
+        {colorThemes.map((color) => (
           <DropdownMenuItem
             key={color.class}
             onClick={() => handleSetBaseTheme(color.class)}
-            disabled={currentBaseTheme === color.class}
+            disabled={baseTheme === color.class}
           >
             {color.name}
           </DropdownMenuItem>
