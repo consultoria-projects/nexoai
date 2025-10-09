@@ -10,7 +10,7 @@ export const services = [
   {
     id: 'piscinas',
     icon: <Waves />,
-    image: 'https://images.unsplash.com/photo-1563489438097-482f504f051b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fstair-swimming-pool-beautiful-luxury-hotel-pool-resort.jpg?alt=media&token=000a63f7-5bc9-4725-8241-9a1aca26f0ee',
     imageHint: 'swimming pool',
   },
   {
@@ -28,13 +28,13 @@ export const services = [
     {
     id: 'pintura',
     icon: <Paintbrush />,
-    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fportrait-engineer-job-site-work-hours.jpg?alt=media&token=62378104-d756-4d9f-92a7-e0663ce03fc6',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fsafety-tools-painting-work.jpg?alt=media&token=2de4b481-d54b-465b-8993-c027428dc313',
     imageHint: 'professional painter',
   },
   {
     id: 'impermeabilizacion',
     icon: <Shield />,
-    image: 'https://images.unsplash.com/photo-1574793539957-892a7f565213?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fclose-up-safety-boos-worker-use-boot-safety-cleaning-by-water.jpg?alt=media&token=2b06910b-0555-461a-9079-9045ddfa7912',
     imageHint: 'roof waterproofing',
   },
   {
