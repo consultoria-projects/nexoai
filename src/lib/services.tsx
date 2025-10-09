@@ -16,19 +16,19 @@ export const services = [
   {
     id: 'reformas-de-interiores',
     icon: <Home />,
-    image: 'https://images.unsplash.com/photo-1600607687932-e3edd5c89f79?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Freformas-interiores.jpg?alt=media&token=538252a2-39d1-4cf6-9901-07bcee453c1a',
     imageHint: 'modern kitchen',
   },
   {
     id: 'paramentos-verticales',
     icon: <Layers />,
-    image: 'https://images.unsplash.com/photo-1621905251929-0639450336e8?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fportrait-engineer-job-site-work-hours.jpg?alt=media&token=62378104-d756-4d9f-92a7-e0663ce03fc6',
     imageHint: 'building facade',
   },
     {
     id: 'pintura',
     icon: <Paintbrush />,
-    image: 'https://images.unsplash.com/photo-1596541248883-094b8163b438?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fportrait-engineer-job-site-work-hours.jpg?alt=media&token=62378104-d756-4d9f-92a7-e0663ce03fc6',
     imageHint: 'professional painter',
   },
   {
@@ -40,19 +40,19 @@ export const services = [
   {
     id: 'electricidad',
     icon: <Zap />,
-    image: 'https://images.unsplash.com/photo-1489223769492-5a5f4e041a7c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fmale-electrician-works-switchboard-with-electrical-connecting-cable.jpg?alt=media&token=398720eb-bd07-4aee-90cc-0376ed7b892a',
     imageHint: 'electrical work',
   },
   {
     id: 'carpinteria',
     icon: <Hammer />,
-    image: 'https://images.unsplash.com/photo-1595643449989-10515159491a?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Fcarpinteria.jpg?alt=media&token=3a943388-4d57-474c-86d7-ca02901b2fff',
     imageHint: 'woodworking tools',
   },
   {
     id: 'fontaneria',
     icon: <Droplets />,
-    image: 'https://images.unsplash.com/photo-1581092916323-e251877b1029?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Frm-construcciones%2Ffontaneria.jpg?alt=media&token=265db5dc-043b-46b9-a87f-d968e5b3f1df',
     imageHint: 'plumbing pipes',
   },
 ];
