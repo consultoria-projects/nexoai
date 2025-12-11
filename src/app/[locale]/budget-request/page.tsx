@@ -1,26 +1,11 @@
-'use client';
 
 import { getDictionary } from '@/lib/dictionaries';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import Image from 'next/image';
-import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { FileText, ClipboardCheck, ArrowLeft } from 'lucide-react';
-import { QuickBudgetForm } from '@/components/budget-request/quick-budget-form';
-import { Button } from '@/components/ui/button';
+import { BudgetRequestForm } from '@/components/budget-request/budget-request-form';
 
-export default function BudgetRequestPage({ params: { locale } }: { params: { locale: any } }) {
-  const [dict, setDict] = useState<any>(null);
-
-  useEffect(() => {
-    getDictionary(locale).then(d => setDict(d));
-  }, [locale]);
-  
-  if (!dict) {
-    return null; // or a loading skeleton
-  }
-  
+export default async function BudgetRequestPage({ params: { locale } }: { params: { locale: string } }) {
+  const dict = await getDictionary(locale);
   const t_br = dict.budgetRequest;
 
   return (
@@ -37,12 +22,12 @@ export default function BudgetRequestPage({ params: { locale } }: { params: { lo
             </p>
             
             <div className='w-full flex justify-center mt-12'>
-              <QuickBudgetForm t={dict} />
+              <BudgetRequestForm t={dict} />
             </div>
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer t={dict.home.finalCta} />
     </>
   );
 }
