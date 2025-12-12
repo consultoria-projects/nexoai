@@ -3,16 +3,17 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default async function Home() {
-  const imageUrl = "https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Fdochevi%2F218434-P0LL3W-528.jpg?alt=media&token=c3092520-0d13-4b4d-9cb8-9ae6677893f2";
+  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Fdochevi%2FLogo-Express-web-276w.webp?alt=media&token=70fcace5-1efc-4999-867c-6d933be5cada";
 
   return (
     <main className="flex-1 flex items-center justify-center text-center p-4">
-      <div className="space-y-6">
-        <div className="relative w-full max-w-lg mx-auto aspect-square">
+      <div className="space-y-8">
+        <div className="relative w-72 h-auto mx-auto">
           <Image
-            src={imageUrl}
-            alt="Sitio en construcción"
-            fill
+            src={logoUrl}
+            alt="Logo Express Renovation Mallorca"
+            width={276}
+            height={116}
             className="object-contain"
             priority
           />

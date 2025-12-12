@@ -1,10 +1,9 @@
 import { getDictionary } from '@/lib/dictionaries';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { CheckCircle, Users, GitMerge, Bot, BarChart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 const phases = [
     {
@@ -83,15 +82,25 @@ const phases = [
 
 export default async function RoadmapPage({ params: { locale } }: { params: { locale: any } }) {
   const dict = await getDictionary(locale);
+  const logoUrl = "https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Fdochevi%2FLogo-Express-web-276w.webp?alt=media&token=70fcace5-1efc-4999-867c-6d933be5cada";
 
   return (
     <>
-      <Header t={dict} />
       <main className="flex-1 bg-gray-50 dark:bg-gray-900">
         <section className="w-full py-16 md:py-24 bg-secondary/50">
           <div className="container-limited text-center">
+            <div className="relative w-64 h-auto mx-auto mb-8">
+              <Image
+                src={logoUrl}
+                alt="Logo Express Renovation Mallorca"
+                width={276}
+                height={116}
+                className="object-contain"
+                priority
+              />
+            </div>
             <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Plan Constructor Total
+              Plan Constructor Total Express Renovation Mallorca
             </h1>
             <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
               El sistema completo para visualizar, presupuestar y cerrar más proyectos en automático. A continuación, nuestra hoja de ruta detallada para hacerlo realidad.
@@ -165,7 +174,6 @@ export default async function RoadmapPage({ params: { locale } }: { params: { lo
         </section>
 
       </main>
-      <Footer t={dict.home.finalCta} />
     </>
   );
 }
