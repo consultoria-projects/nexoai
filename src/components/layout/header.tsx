@@ -3,7 +3,6 @@
 import { BudgetWidget } from '@/components/budget-widget';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/logo';
 import { useAuth } from '@/hooks/use-auth';
 import { UserNav } from '@/components/auth/user-nav';
 import { LanguageSwitcher } from '@/components/language-switcher';
@@ -56,10 +55,10 @@ export function Header({ t }: { t: any }) {
       <div className="w-[85vw] max-w-[1920px] mx-auto flex h-full items-center justify-between transition-all duration-300">
         <div className={cn("transition-transform duration-300", isScrolled ? "scale-90" : "scale-100")}>
           <div className="md:hidden">
-            <Logo width={120} height={40} />
+            <div className="w-[120px] h-[40px] bg-muted/30 rounded-md animate-pulse" />
           </div>
           <div className="hidden md:block">
-            <Logo width={180} height={60} /> {/* Adjusted size for better visibility */}
+            <div className="w-[180px] h-[60px] bg-muted/30 rounded-md animate-pulse" />
           </div>
         </div>
 
@@ -87,7 +86,7 @@ export function Header({ t }: { t: any }) {
               <SheetHeader>
                 <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
                 <div className="py-4">
-                  <Logo />
+                  <div className="w-[120px] h-[40px] bg-muted/30 rounded-md animate-pulse" />
                 </div>
               </SheetHeader>
               <MobileMenu

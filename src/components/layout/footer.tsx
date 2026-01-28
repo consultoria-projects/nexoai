@@ -1,4 +1,4 @@
-import { Logo } from '@/components/logo';
+
 import { Link } from '@/i18n/navigation';
 
 export function Footer({ t }: { t?: any }) {
@@ -9,7 +9,7 @@ export function Footer({ t }: { t?: any }) {
         <div className="grid md:grid-cols-3 gap-8 items-center text-center md:text-left">
           <div className="flex flex-col items-center md:items-start gap-4">
             <div className="bg-white/10 p-2 rounded-lg w-fit">
-              <Logo width={40} height={40} />
+              <div className="w-[40px] h-[40px] bg-muted/30 rounded-md animate-pulse" />
             </div>
             <p className="text-sm text-gray-400 max-w-xs">
               Exclusividad y detalle en cada proyecto. Construimos sueños.

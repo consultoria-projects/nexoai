@@ -34,7 +34,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   return (
     <main className="flex-1">
       {/* Hero Section */}
-      <HeroSection t={dict.home.hero} />
+      {/* <HeroSection t={dict.home.hero} />
 
       <VisionSection t={dict.home.vision} />
 
@@ -42,13 +42,18 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 
       <TransformationsSection t={dict.home.transformations} />
 
+        
+
+
       <ProcessSteps t={dict.home.processSteps} />
 
       <LocationsGrid t={dict.home.locations} />
 
       <FaqSection t={dict.home.faq} />
 
-      <CtaSection t={dict.home.cta} />
+      <CtaSection t={dict.home.cta} /> */}
+
+      <h1 className="text-4xl font-bold" >Home Constructor</h1>
 
     </main>
   );

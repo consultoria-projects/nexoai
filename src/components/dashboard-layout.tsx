@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 import { useAuth } from '@/hooks/use-auth';
-import { Logo } from '@/components/logo';
+
 import { UserNav } from '@/components/auth/user-nav';
 import {
   Sidebar,
@@ -99,7 +99,7 @@ export function DashboardLayout({ children, t }: { children: React.ReactNode, t:
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <Logo />
+          <div className="w-[140px] h-[46px] bg-muted/30 rounded-md animate-pulse" />
         </SidebarHeader>
         <SidebarContent>
           {renderNavGroup(t.dashboard.sidebar.groups.management, managementNavItems)}
