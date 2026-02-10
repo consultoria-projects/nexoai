@@ -8,8 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
+import { WebPageJsonLd, BreadcrumbJsonLd } from '@/components/seo/json-ld';
 
-export default async function ContactPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const dict = await getDictionary(locale as any);
   const t = dict.contact;
   const t_cta = dict.blog.cta;
@@ -36,6 +38,16 @@ export default async function ContactPage({ params: { locale } }: { params: { lo
 
   return (
     <>
+      <WebPageJsonLd
+        name="Contacto - Grupo RG"
+        description="Contacta con Grupo RG para tus proyectos de construcción y reformas en Mallorca."
+        url={`https://gruporg.es/${locale}/contact`}
+        type="ContactPage"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: 'Inicio', href: `/${locale}` },
+        { name: t.title || 'Contacto', href: `/${locale}/contact` }
+      ]} />
       <Header t={dict} />
       <main className="flex-1">
         <section className="w-full py-20 md:py-28 bg-secondary/50">

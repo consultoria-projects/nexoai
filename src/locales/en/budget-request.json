@@ -79,7 +79,13 @@
     "trigger": {
         "title": "Thinking of renovating?",
         "subtitle": "Get your free estimate in seconds.",
+        "badge": "Start your project",
         "mobileSubtitle": "Click to start",
+        "features": [
+            "Free AI consultation",
+            "No commitment",
+            "Immediate response"
+        ],
         "modes": {
             "general": "Request Quote",
             "pool": "Pool Quote",
@@ -87,7 +93,56 @@
             "new_build": "New Build Study",
             "kitchen": "Kitchen Budget",
             "bathroom": "Bathroom Budget",
-            "wizard": "360º Budget"
+            "wizard": "360º Budget",
+            "chat": "Architect Chat"
+        },
+        "cards": {
+            "chat": {
+                "title": "Architect Chat",
+                "description": "Talk to our expert AI to define your ideal project.",
+                "badge": "NEW"
+            },
+            "wizard": {
+                "title": "Smart Budget",
+                "description": "Professional 360º analysis of your renovation.",
+                "badge": "RECOMMENDED"
+            },
+            "newBuild": {
+                "title": "New Build",
+                "description": "Feasibility study and costs for construction from scratch."
+            },
+            "reform": {
+                "title": "Quick Quote",
+                "description": "Express estimate for simple renovations."
+            }
+        },
+        "identity": {
+            "title": {
+                "contact": "Start Project",
+                "accessTo": "Access to",
+                "otp": "Security Verification"
+            },
+            "subtitle": {
+                "contact": "Your data is safe. We only use it to manage your project.",
+                "otp": "We have sent a secure code to your email."
+            },
+            "buttons": {
+                "cancel": "Cancel"
+            },
+            "form": {
+                "name": "Full Name",
+                "email": "Email Address",
+                "phone": "Mobile Phone",
+                "country": "Country",
+                "submit": "Continue",
+                "verifying": "Verifying...",
+                "back": "Back / Correct",
+                "placeholders": {
+                    "name": "Your full name",
+                    "email": "you@email.com",
+                    "phone": "555 123 456"
+                }
+            }
         }
     },
     "quickForm": {

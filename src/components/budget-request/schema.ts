@@ -52,6 +52,10 @@ export const detailedFormSchema = contactInfoSchema.extend({
     partialScope: z.array(z.string()).optional(),
     totalAreaM2: z.coerce.number().min(1, 'La superficie debe ser de al menos 1 m²'),
 
+    // Budget & Urgency
+    targetBudget: z.string().optional(),
+    urgency: z.string().optional(),
+
     // Residential specific
     numberOfRooms: z.coerce.number().min(0, 'El número de habitaciones no puede ser negativo.').optional(),
     numberOfBathrooms: z.coerce.number().min(0, 'El número de baños no puede ser negativo.').optional(),

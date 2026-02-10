@@ -1,6 +1,6 @@
 
 import { genkit } from 'genkit';
-import { googleAI, textEmbedding004 } from '@genkit-ai/googleai';
+import { googleAI, geminiEmbedding001, gemini } from '@genkit-ai/googleai';
 
 /**
  * Shared Genkit Instance Configuration.
@@ -16,6 +16,6 @@ export const ai = genkit({
 });
 
 // Export the Embedding Model Reference
-// We allow the deprecation warning because migrating to @genkit-ai/google-genai requires package changes.
-// Using the object reference ensures runtime compatibility with the installed version.
-export const embeddingModel = textEmbedding004;
+export const embeddingModel = geminiEmbedding001;
+// Use the model reference from the plugin
+export const gemini25Flash = gemini('gemini-2.5-flash');

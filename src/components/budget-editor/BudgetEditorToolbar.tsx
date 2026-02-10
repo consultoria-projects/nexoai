@@ -60,36 +60,38 @@ export const BudgetEditorToolbar = ({
             lastSavedAt ? `Guardado ${lastSavedAt.toLocaleTimeString()}` : 'Listo';
 
     return (
-        <div className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b p-4 flex justify-between items-center shadow-sm">
+        <div className="sticky top-0 z-50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-border p-4 flex justify-between items-center supports-[backdrop-filter]:bg-background/60">
 
             {/* Left: History Actions */}
             <div className="flex items-center gap-2">
                 <Button
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     onClick={onUndo}
                     disabled={!canUndo}
-                    className="h-9 w-9"
+                    className="h-9 w-9 text-muted-foreground hover:text-foreground"
                     title="Deshacer"
                 >
                     <Undo2 className="w-4 h-4" />
                 </Button>
                 <Button
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
                     onClick={onRedo}
                     disabled={!canRedo}
-                    className="h-9 w-9"
+                    className="h-9 w-9 text-muted-foreground hover:text-foreground"
                     title="Rehacer"
                 >
                     <Redo2 className="w-4 h-4" />
                 </Button>
 
-                <div className="h-6 w-px bg-slate-200 mx-2" />
+                <div className="h-6 w-px bg-border mx-2" />
 
                 <span className={cn(
-                    "text-xs font-medium px-2 py-1 rounded-full transition-colors",
-                    hasUnsavedChanges ? "text-amber-600 bg-amber-50" : "text-green-600 bg-green-50"
+                    "text-xs font-medium px-2.5 py-1 rounded-full transition-colors border",
+                    hasUnsavedChanges
+                        ? "text-amber-600 bg-amber-50 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800"
+                        : "text-emerald-600 bg-emerald-50 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800"
                 )}>
                     {statusText}
                 </span>
@@ -102,15 +104,15 @@ export const BudgetEditorToolbar = ({
                     size="sm"
                     onClick={onToggleGhostMode}
                     className={cn(
-                        "gap-2 text-slate-600",
-                        showGhostMode && "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                        "gap-2 text-muted-foreground hover:text-foreground",
+                        showGhostMode && "bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:border-indigo-800"
                     )}
                 >
                     <ScanEye className="w-4 h-4" />
                     <span className="hidden sm:inline">Comparar</span>
                 </Button>
 
-                <div className="h-6 w-px bg-slate-200 mx-1" />
+                <div className="h-6 w-px bg-border mx-1" />
 
                 <PDFDownloadLink
                     document={
@@ -129,7 +131,7 @@ export const BudgetEditorToolbar = ({
                     className="inline-flex"
                 >
                     {({ loading }) => (
-                        <Button variant="ghost" size="sm" className="gap-2 text-slate-600" disabled={loading}>
+                        <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground" disabled={loading}>
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileDown className="w-4 h-4" />}
                             <span className="hidden sm:inline">Exportar PDF</span>
                         </Button>
@@ -139,8 +141,11 @@ export const BudgetEditorToolbar = ({
                 <Button
                     onClick={onSave}
                     className={cn(
-                        "gap-2 min-w-[120px] transition-all",
-                        hasUnsavedChanges && "animate-pulse-subtle shadow-md shadow-primary/20"
+                        "gap-2 min-w-[120px] transition-all font-medium shadow-lg hover:shadow-xl",
+                        hasUnsavedChanges
+                            ? "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-orange-500/20"
+                            : "bg-primary text-primary-foreground shadow-primary/20",
+                        isSaving && "opacity-80"
                     )}
                     disabled={isSaving}
                 >

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+﻿import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -227,7 +227,7 @@ export const ProvisionalBudgetView = ({ data, lineItems, totalEstimated, costBre
                             logoUrl={typeof window !== 'undefined' ? `${window.location.origin}/images/logo.png` : undefined}
                         />
                     }
-                    fileName={`Presupuesto-Dochevi-${today.replace(/\//g, '-')}.pdf`}
+                    fileName={`Presupuesto-GRUPO RG-${today.replace(/\//g, '-')}.pdf`}
                     className="inline-flex"
                 >
                     {({ blob, url, loading, error }) => (

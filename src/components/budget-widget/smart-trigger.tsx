@@ -6,9 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Calculator, Hammer, Home, MessageSquarePlus, Palmtree, ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useScrollDirection } from '@/hooks/use-scroll-direction'; // Assumption: We might need to create this or use simple logic
-
-// Local hook removed in favor of imported hook
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { usePathname } from 'next/navigation';
 
 
 // Helper to get config with translation
@@ -20,10 +19,11 @@ const getTriggerConfig = (mode: BudgetMode, t: any) => {
         'new_build': 'Estudio Obra Nueva',
         'kitchen': 'Presupuesto Cocina',
         'bathroom': 'Presupuesto Baño',
-        'wizard': 'Presupuesto 360º'
+        'wizard': 'Presupuesto 360º',
+        'chat': 'Chat Arquitecto'
     };
 
-    const configBase: Record<BudgetMode, { icon: any; color: string }> = {
+    const configBase: Record<string, { icon: any; color: string }> = {
         'general': { icon: Calculator, color: 'bg-primary' },
         'pool': { icon: Palmtree, color: 'bg-blue-600' },
         'reform': { icon: Hammer, color: 'bg-orange-600' },
@@ -31,17 +31,22 @@ const getTriggerConfig = (mode: BudgetMode, t: any) => {
         'kitchen': { icon: MessageSquarePlus, color: 'bg-green-600' },
         'bathroom': { icon: MessageSquarePlus, color: 'bg-cyan-600' },
         'wizard': { icon: Calculator, color: 'bg-purple-600' },
+        'chat': { icon: MessageSquarePlus, color: 'bg-violet-600' },
     };
 
     const modeKey = mode === 'new-build' ? 'new_build' : mode; // key in json is new_build
+    const config = configBase[mode] || configBase['general']; // Fallback to general if mode not found
+
     return {
         label: labels[modeKey] || labels['general'],
-        ...configBase[mode]
+        ...config
     };
 };
 
+
 export function SmartBudgetTrigger({ dictionary }: { dictionary?: any }) {
     const { activeMode, openWidget, isOpen } = useWidgetContext();
+    const pathname = usePathname();
     // Fallback if dictionary is missing
     const t = dictionary || { trigger: { title: "¿Pensando en renovar?", subtitle: "Obtén tu estimación gratuita.", mobileSubtitle: "Click para comenzar" } };
 
@@ -51,10 +56,8 @@ export function SmartBudgetTrigger({ dictionary }: { dictionary?: any }) {
     const scrollDirection = useScrollDirection();
     const isVisible = scrollDirection === 'up' || isOpen === false;
 
-    // Don't show if already open (modal handles visibility usually, but here sticky footer stays? 
-    // Usually sticky footer stays BEHIND modal or hides. Let's hide if open to reduce clutter 
-    // OR keep it if it acts as a toggle. Let's hide)
-    if (isOpen) return null;
+    // Don't show if already open or if we are in the dashboard
+    if (isOpen || pathname?.includes('/dashboard')) return null;
 
     return (
         <AnimatePresence>

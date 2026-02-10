@@ -1,4 +1,5 @@
-import { BudgetClientData } from '@/components/budget-request/schema';
+import { ProjectSpecs } from './project-specs';
+import { PersonalInfo } from '@/backend/lead/domain/lead';
 
 export interface BudgetLineItem {
   order: number;
@@ -14,10 +15,10 @@ export interface BudgetLineItem {
     totalPrice?: number;
   };
   note?: string;
-  id?: string; // Added for editor
-  isEditing?: boolean; // For editor state
-  chapter?: string; // Grouping category (e.g., "Demoliciones")
-  originalState?: { // Snapshot for comparison/ghost mode
+  id?: string;
+  isEditing?: boolean;
+  chapter?: string;
+  originalState?: {
     unitPrice: number;
     quantity: number;
     description: string;
@@ -36,34 +37,48 @@ export interface BudgetCostBreakdown {
 
 /**
  * Represents the core Budget entity in the domain layer.
+ * Decoupled from Frontend Zod Schemas.
  */
 export interface Budget {
   id: string;
-  userId?: string; // Optional if guest
+
+  // Owner Reference (Linked to Lead Module)
+  leadId: string;
+
+  // Snapshot of client data at budget creation time (Immutable record)
+  clientSnapshot: PersonalInfo;
 
   // Metadata
   status: 'draft' | 'pending_review' | 'approved' | 'sent';
   createdAt: Date;
   updatedAt: Date;
   version: number;
-  type?: 'renovation' | 'quick' | 'new_build'; // Discriminator
+  type?: 'renovation' | 'quick' | 'new_build';
 
-  // Client & Project Info (from form)
-  clientData: BudgetClientData;
+  // Domain Project Data
+  specs: ProjectSpecs;
 
   // Financials
   lineItems: BudgetLineItem[];
   costBreakdown: BudgetCostBreakdown;
   totalEstimated: number;
 
-  // AI Renders (Dream Renovator)
+  // Origin & Metadata
+  source?: 'wizard' | 'pdf_measurement' | 'manual';
+  pricingMetadata?: {
+    uploadedFileName?: string;
+    pageCount?: number;
+    extractionConfidence?: number;
+  };
+
+  // AI Renders
   renders?: BudgetRender[];
 }
 
 export interface BudgetRender {
   id: string;
   url: string;
-  originalUrl?: string; // Optional: store the "before" image too
+  originalUrl?: string;
   prompt: string;
   style: string;
   roomType: string;
@@ -75,7 +90,7 @@ export interface BudgetRender {
  */
 export interface BudgetRepository {
   findById(id: string): Promise<Budget | null>;
-  findByUserId(userId: string): Promise<Budget[]>;
-  findAll(): Promise<Budget[]>; // For admin list
+  findByLeadId(leadId: string): Promise<Budget[]>;
+  findAll(): Promise<Budget[]>;
   save(budget: Budget): Promise<void>;
 }

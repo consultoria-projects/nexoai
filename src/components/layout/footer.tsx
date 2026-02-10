@@ -1,4 +1,4 @@
-
+﻿
 import { Link } from '@/i18n/navigation';
 
 export function Footer({ t }: { t?: any }) {
@@ -8,8 +8,12 @@ export function Footer({ t }: { t?: any }) {
       <div className="container mx-auto px-4 md:px-6 py-16">
         <div className="grid md:grid-cols-3 gap-8 items-center text-center md:text-left">
           <div className="flex flex-col items-center md:items-start gap-4">
-            <div className="bg-white/10 p-2 rounded-lg w-fit">
-              <div className="w-[40px] h-[40px] bg-muted/30 rounded-md animate-pulse" />
+            <div className="bg-white/5 p-3 rounded-lg w-fit mb-2">
+              <img
+                src="/images/logo.avif"
+                alt="Grupo RG Logo"
+                className="h-10 w-auto object-contain brightness-0 invert opacity-90"
+              />
             </div>
             <p className="text-sm text-gray-400 max-w-xs">
               Exclusividad y detalle en cada proyecto. Construimos sueños.
@@ -28,7 +32,7 @@ export function Footer({ t }: { t?: any }) {
                 {t.reviewLink || "Déjanos una reseña"}
               </a>
             )}
-            <p className="text-xs text-gray-500">&copy; {currentYear} Express Renovation Mallorca.</p>
+            <p className="text-xs text-gray-500">&copy; {currentYear} Grupo RG.</p>
           </div>
         </div>
       </div>

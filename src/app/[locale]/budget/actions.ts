@@ -1,7 +1,8 @@
 'use server';
 
 import { DetailedFormValues, detailedFormSchema } from '@/components/budget-request/schema';
-import { buildBudgetNarrative } from '@/backend/budget/domain/budget-narrative-builder';
+import { BudgetNarrativeBuilder } from '@/backend/budget/domain/budget-narrative-builder';
+import { FormToSpecsMapper } from '@/backend/budget/application/mappers/form-to-specs.mapper';
 import { generateBudgetFlow } from '@/backend/ai/flows/budget/generate-budget.flow';
 import { BudgetRepositoryFirestore } from '@/backend/budget/infrastructure/budget-repository-firestore';
 import { Budget } from '@/backend/budget/domain/budget';
@@ -47,7 +48,10 @@ export async function submitBudgetRequest(data: DetailedFormValues): Promise<Sub
         const validData = parsed.data;
 
         // 2. Build Narrative
-        const narrative = buildBudgetNarrative(validData);
+        // Map form values to domain specs
+        const specs = FormToSpecsMapper.map(validData);
+        // Build narrative from specs
+        const narrative = BudgetNarrativeBuilder.build(specs);
         console.log('--- Generated Budget Narrative ---');
         console.log(narrative);
         console.log('----------------------------------');
@@ -59,18 +63,23 @@ export async function submitBudgetRequest(data: DetailedFormValues): Promise<Sub
         // 4. Persist Budget
         const budgetId = generateId();
 
-        // TODO: Get actual logged in user ID if available
-        // const session = await auth(); 
-        const userId = undefined;
+        // Create Client Snapshot
+        const clientSnapshot = {
+            name: validData.name,
+            email: validData.email,
+            phone: validData.phone,
+            address: validData.address
+        };
 
         const newBudget: Budget = {
             id: budgetId,
-            ...(userId ? { userId } : {}),
+            leadId: generateId(), // TODO: Properly create/link Lead entity in a separate step or here
+            clientSnapshot,
             status: 'draft', // Initial status
             createdAt: new Date(),
             updatedAt: new Date(),
             version: 1,
-            clientData: validData,
+            specs, // Use the mapped specs
             lineItems: budgetResult.lineItems.map((item, index) => ({
                 ...item,
                 id: generateId(), // Ensure items have IDs

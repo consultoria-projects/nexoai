@@ -1,129 +1,264 @@
 {
     "hero": {
-        "title": "Transforming Spaces <br/> <span class='text-primary italic'>into Experiences</span>",
-        "subtitle": "High-end comprehensive renovations in Mallorca. Where quality meets exclusivity.",
-        "cta": "Request Premium Quote",
-        "ctaSecondary": "Discover Services"
-    },
-    "vision": {
-        "label": "Our Philosophy",
-        "title": "The New Era of <br/> <span class='text-primary'>Modern Construction</span>",
-        "description": "At Express Renovation Mallorca, we redefine the standard for luxury renovations. We leave behind traditional uncertainty to embrace technological precision and artisanal excellence.",
-        "points": [
-            "Certified European quality standards.",
-            "3D visualization technology before starting.",
-            "Fixed deadlines under contract.",
-            "Premium finishes and sustainable materials."
+        "subtitle": "Over 30 years building in the Balearic Islands",
+        "title": "We create spaces that last",
+        "description": "GRUPO RG is a construction company specialized in comprehensive renovations, new builds and high-end interior design in Mallorca and the Balearic Islands.",
+        "cta": "Request Quote",
+        "ctaSecondary": "View projects",
+        "stats": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Years of experience"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Completed projects"
+            }
         ],
-        "cta": "Learn our story"
+        "floating": {
+            "featured": "Featured",
+            "clients": "+500 Clients",
+            "renovate": "Thinking of renovating?",
+            "estimate": "Free estimate in seconds",
+            "scroll": "Scroll to explore"
+        }
+    },
+    "philosophy": {
+        "quote": "We don't build houses. We create the stage for your life.",
+        "author": "Grupo RG",
+        "description": "Every project is unique because every client is unique. We combine artisanal experience with technological innovation for exceptional results."
+    },
+    "expertise": {
+        "subtitle": "Our Expertise",
+        "title": "Excellence in every project",
+        "items": [
+            {
+                "title": "New Construction",
+                "description": "Construction of homes, commercial spaces and buildings from scratch with the highest quality standards.",
+                "link": "/services/new-construction",
+                "featured": true
+            },
+            {
+                "title": "Complete Renovations",
+                "description": "Full transformation of spaces, coordinating all trades under a single project.",
+                "link": "/services/renovations"
+            },
+            {
+                "title": "Maintenance",
+                "description": "Plumbing, electrical, masonry and general repairs services.",
+                "link": "/services/maintenance"
+            },
+            {
+                "title": "Interior Design",
+                "description": "Interior design and decoration that reflects your personality and lifestyle.",
+                "link": "/services/interior-design"
+            },
+            {
+                "title": "Specialized Works",
+                "description": "Solar panels, pool renovations, accessibility and advanced technical services.",
+                "link": "/services/specialized-works"
+            }
+        ]
+    },
+    "numbers": {
+        "items": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Years of experience"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Completed projects"
+            },
+            {
+                "value": 98,
+                "suffix": "%",
+                "label": "Satisfied clients"
+            },
+            {
+                "value": 50,
+                "suffix": "+",
+                "label": "Professionals"
+            }
+        ]
+    },
+    "territories": {
+        "title": "Presence in all the Balearic Islands",
+        "description": "We operate throughout the Balearic archipelago, adapting to the regulations and unique characteristics of each location.",
+        "locations": [
+            "Palma de Mallorca",
+            "Calvià",
+            "Sóller",
+            "Pollença",
+            "Alcúdia",
+            "Manacor",
+            "Menorca",
+            "Ibiza",
+            "Formentera"
+        ]
+    },
+    "contact": {
+        "title": "Do you have a project in mind?",
+        "cta": "Request Free Quote"
     },
     "servicesGrid": {
         "label": "Our Specialties",
         "title": "Excellence in Every Detail",
-        "subtitle": "We master the key disciplines to create exceptional homes.",
+        "subtitle": "We master the key disciplines to create exceptional spaces.",
         "items": [
             {
-                "title": "Comprehensive Renovations",
-                "description": "Complete transformation of residential and commercial spaces. Total coordination of trades.",
-                "link": "/servicios/reformas-integrales"
+                "title": "New Construction",
+                "description": "Construction of homes, commercial spaces, hotels and buildings from scratch with the highest standards.",
+                "link": "/services/new-construction"
             },
             {
-                "title": "Designer Kitchens",
-                "description": "The heart of the home, designed to inspire. Ergonomics, noble materials, and technology.",
-                "link": "/servicios/cocinas"
+                "title": "Complete Renovations",
+                "description": "We renovate your home, commercial space or office comprehensively, from planning to final execution.",
+                "link": "/services/renovations"
             },
             {
-                "title": "Bathrooms & Wellness",
-                "description": "Private relaxation oases. Rain showers, freestanding bathtubs, and spa finishes.",
-                "link": "/servicios/banos"
+                "title": "Maintenance & Repairs",
+                "description": "Plumbing, electrical, masonry and all types of repairs to keep your property in perfect condition.",
+                "link": "/services/maintenance"
             },
             {
-                "title": "Exteriors & Landscaping",
-                "description": "Terraces, pools, and gardens that extend your living space into Mallorca's nature.",
-                "link": "/servicios/exteriores"
+                "title": "Interior Design",
+                "description": "We design and decorate your interior space, creating a unique and personalized environment.",
+                "link": "/services/interior-design"
             },
             {
-                "title": "Heritage Restoration",
-                "description": "Restoring the original splendor of historic and modern buildings. Techniques respectful of architectural heritage.",
-                "link": "/servicios/fachadas"
+                "title": "Specialized Works",
+                "description": "Solar panel installation, pool renovations, accessibility and other technical services.",
+                "link": "/services/specialized-works"
             },
             {
-                "title": "Thermal Insulation (SATE)",
-                "description": "Superior energy efficiency. External thermal cladding that reduces consumption and improves comfort.",
-                "link": "/servicios/aislamiento"
+                "title": "Permit Management",
+                "description": "Processing of licenses, building permits and all necessary bureaucratic paperwork.",
+                "link": "/services/other-services"
             }
         ],
         "cta": "View details"
     },
-    "transformations": {
-        "label": "Before & After",
-        "title": "Real Transformations",
-        "subtitle": "Beyond words, our results speak. Swipe to see the change.",
-        "sidebarTitle": "Ready for your transformation?",
-        "sidebarDescription": "Every project starts with a vision. We help you define it and execute it without deviation.",
-        "sidebarStep1Title": "Structural Analysis",
-        "sidebarStep1Desc": "We evaluate technical feasibility.",
-        "sidebarStep2Title": "Design Proposal",
-        "sidebarStep2Desc": "Photorealistic renders of your future home.",
-        "cta": "View Full Gallery"
+    "contactStrip": {
+        "badge": "Start Your Project",
+        "title": "How can we ",
+        "titleHighlight": "help you",
+        "subtitle": "Choose the option that best fits your project. Each tool is designed for a different need.",
+        "options": {
+            "chat": {
+                "title": "AI Architect Chat",
+                "description": "Chat with our expert AI to explore ideas, validate concepts, and shape your vision.",
+                "whyChoose": "Ideal if you're still defining the project and need professional guidance."
+            },
+            "wizard": {
+                "title": "Smart Budget",
+                "description": "360° analysis of your renovation with detailed breakdown. Our AI analyzes every aspect of your project.",
+                "whyChoose": "Perfect if you know what you want and need an accurate estimate."
+            },
+            "newBuild": {
+                "title": "New Construction",
+                "description": "Feasibility study and complete estimation for ground-up construction projects.",
+                "whyChoose": "For new construction projects: homes, commercial spaces, or complete buildings."
+            },
+            "reform": {
+                "title": "Quick Quote",
+                "description": "Express estimation for simple renovations. Results in less than 2 minutes.",
+                "whyChoose": "Ideal for specific jobs: bathroom, kitchen, painting, installations."
+            }
+        },
+        "cta": "Start",
+        "trust1": "No obligation",
+        "trust2": "Immediate response",
+        "trust3": "+500 completed projects",
+        "trust4": "30+ years experience"
     },
     "processSteps": {
-        "label": "Total Transparency",
-        "title": "The Express Method: No Surprises",
-        "subtitle": "A linear and predictable process designed for your peace of mind.",
+        "label": "Our Process",
+        "title": "How We Work",
+        "subtitle": "A smart process combining AI technology with human expertise for your peace of mind.",
         "steps": [
             {
-                "title": "Initial Consultation",
-                "description": "In-situ meeting to understand your needs and budget."
+                "title": "Smart Budget",
+                "description": "Use our AI budgeting system. Describe your project and get a preliminary cost breakdown in seconds, no obligation.",
+                "badge": "AI"
             },
             {
-                "title": "Design & Planning",
-                "description": "Creation of plans, 3D renders, and detailed budget."
+                "title": "Expert Review",
+                "description": "A human agent analyzes your estimate, verifies technical specifications, and adjusts the budget with professional criteria."
             },
             {
-                "title": "Expert Execution",
-                "description": "Construction under constant supervision and fixed deadlines."
+                "title": "Site Visit",
+                "description": "We organize an optional visit to take measurements, assess the space, and define final details of the technical proposal."
             },
             {
-                "title": "Turnkey Delivery",
-                "description": "Final cleaning, quality review, and key handover."
+                "title": "Final Budget",
+                "description": "Receive a detailed, closed budget ready for approval. Consult any doubts with our intelligent assistant.",
+                "badge": "AI"
             }
         ]
     },
     "locations": {
-        "label": "Exclusive Coverage",
-        "title": "Renovations in Mallorca's Prime Locations",
-        "subtitle": "Our logistics and team are prepared to operate in the island's most demanding areas, guaranteeing discretion and compliance with local regulations.",
-        "link": "View all coverage areas"
+        "label": "Service Areas",
+        "title": "Construction and Renovations in the Balearics",
+        "subtitle": "We operate throughout the Balearic archipelago: Mallorca, Menorca, Ibiza and Formentera.",
+        "link": "View all areas"
     },
     "faq": {
-        "label": "Questions Solved",
-        "title": "Expertise that Generates Peace of Mind",
-        "subtitle": "We know renovations generate questions. Here we answer the most common ones with the honesty that characterizes us.",
+        "label": "Frequently Asked Questions",
+        "title": "We answer your questions",
+        "subtitle": "The most common questions about our services.",
         "items": [
             {
-                "question": "How long does a comprehensive renovation take in Mallorca?",
-                "answer": "Time varies by complexity, but a standard comprehensive renovation usually takes between 3 and 5 months. At Express Renovation Mallorca, we guarantee fixed deadlines by contract thanks to our pre-planning with 3D technology, avoiding common industry delays."
+                "question": "How long does a complete renovation take?",
+                "answer": "The time varies depending on the complexity of the project. A standard complete renovation usually takes between 3 and 6 months. At GRUPO RG we guarantee realistic deadlines and meet them thanks to our 30+ years of experience."
             },
             {
-                "question": "Do you handle building permits?",
-                "answer": "Yes, we handle the entire bureaucratic process. From applying for municipal licenses (major or minor works) to managing public road occupation. Our technical team knows each town hall's regulations in detail."
+                "question": "Do you manage building permits?",
+                "answer": "Yes, we handle the entire bureaucratic process. From requesting municipal licenses to managing public road occupation. We know the regulations of every municipality in the Balearics."
             },
             {
-                "question": "Can I see the design before starting work?",
-                "answer": "Absolutely. It is a fundamental part of our Express Method. We develop photorealistic renders and detailed plans before laying the first brick, ensuring the final result matches your vision exactly."
-            },
-            {
-                "question": "Do you work with a closed budget?",
+                "question": "Do you work with a fixed budget?",
                 "answer": "Yes. Our transparency policy eliminates surprises. Once the design and materials are approved, the price is fixed, unless you decide to make changes during construction."
+            },
+            {
+                "question": "In which areas of the Balearics do you work?",
+                "answer": "We operate throughout the Balearic Islands: Mallorca, Menorca, Ibiza and Formentera. Our headquarters is in Mallorca but we travel to all the islands."
             }
         ]
     },
     "cta": {
         "title": "Your Project, Our Priority",
-        "subtitle": "Don't leave your investment to chance. Schedule a free consultation and discover your property's real potential.",
-        "buttonPrimary": "Request Quote Now",
-        "buttonSecondary": "Speak with an Agent",
-        "note": "Limited spots per month to ensure quality"
+        "subtitle": "30 years of experience back our work. Request your free quote with no obligation.",
+        "buttonPrimary": "Request Quote",
+        "buttonSecondary": "Contact Us",
+        "note": "Response within 24 hours"
+    },
+    "vision": {
+        "label": "Our Philosophy",
+        "title": "More than 30 years <br/> <span class='text-primary'>building trust</span>",
+        "description": "At GRUPO RG, every project is a personal commitment. We combine three decades of experience with the most advanced techniques to deliver results that exceed expectations.",
+        "points": [
+            "Own team of specialized professionals.",
+            "Certified first-quality materials.",
+            "Realistic deadlines and guaranteed compliance.",
+            "Constant communication throughout the process."
+        ],
+        "cta": "Learn our story"
+    },
+    "transformations": {
+        "label": "Real Projects",
+        "title": "Transformations That Speak",
+        "subtitle": "More than 500 successfully completed projects in the Balearics.",
+        "sidebarTitle": "Ready for your project?",
+        "sidebarDescription": "Every project starts with a conversation. Tell us your vision and we'll make it happen.",
+        "sidebarStep1Title": "Technical Evaluation",
+        "sidebarStep1Desc": "We analyze the feasibility of your project.",
+        "sidebarStep2Title": "Customized Proposal",
+        "sidebarStep2Desc": "Design and budget tailored to you.",
+        "cta": "View more projects"
     }
 }

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
-export type BudgetMode = 'general' | 'pool' | 'reform' | 'new-build' | 'kitchen' | 'bathroom' | 'wizard';
+export type BudgetMode = 'general' | 'pool' | 'reform' | 'new-build' | 'kitchen' | 'bathroom' | 'wizard' | 'chat';
 
 type WidgetContextType = {
     isOpen: boolean;
@@ -11,6 +11,8 @@ type WidgetContextType = {
     openWidget: (mode?: BudgetMode) => void;
     closeWidget: () => void;
     toggleWidget: () => void;
+    leadId: string | null;
+    setLeadId: (id: string | null) => void;
 };
 
 const BudgetWidgetContext = createContext<WidgetContextType | undefined>(undefined);
@@ -18,6 +20,7 @@ const BudgetWidgetContext = createContext<WidgetContextType | undefined>(undefin
 export function BudgetWidgetProvider({ children }: { children: ReactNode }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeMode, setActiveMode] = useState<BudgetMode>('general');
+    const [leadId, setLeadId] = useState<string | null>(null);
     const pathname = usePathname();
 
     // Helper to determine mode from path
@@ -52,7 +55,7 @@ export function BudgetWidgetProvider({ children }: { children: ReactNode }) {
     const toggleWidget = () => setIsOpen(prev => !prev);
 
     return (
-        <BudgetWidgetContext.Provider value={{ isOpen, activeMode, openWidget, closeWidget, toggleWidget }}>
+        <BudgetWidgetContext.Provider value={{ isOpen, activeMode, openWidget, closeWidget, toggleWidget, leadId, setLeadId }}>
             {children}
         </BudgetWidgetContext.Provider>
     );

@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/sheet';
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { ThemeSwitcher } from '../theme-switcher';
 import { MegaMenu } from './mega-menu';
 import { MobileMenu } from './mobile-menu';
 
@@ -53,20 +52,20 @@ export function Header({ t }: { t: any }) {
       )}
     >
       <div className="w-[85vw] max-w-[1920px] mx-auto flex h-full items-center justify-between transition-all duration-300">
-        <div className={cn("transition-transform duration-300", isScrolled ? "scale-90" : "scale-100")}>
-          <div className="md:hidden">
-            <div className="w-[120px] h-[40px] bg-muted/30 rounded-md animate-pulse" />
-          </div>
-          <div className="hidden md:block">
-            <div className="w-[180px] h-[60px] bg-muted/30 rounded-md animate-pulse" />
-          </div>
+        <div className={cn("transition-transform duration-300 flex-shrink-0", isScrolled ? "scale-90" : "scale-100")}>
+          <Link href="/" className="block relative h-12 w-auto aspect-[3/1] md:h-16">
+            <img
+              src="/images/logo.avif"
+              alt="Grupo RG Logo"
+              className="h-full w-auto object-contain"
+            />
+          </Link>
         </div>
 
         <div className="hidden md:block ml-10">
           <MegaMenu t={t} />
         </div>
         <div className="flex items-center gap-2">
-          <ThemeSwitcher />
           <LanguageSwitcher />
           {user ? (
             <UserNav t={t.header.userNav} />

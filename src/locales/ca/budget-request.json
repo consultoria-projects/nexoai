@@ -24,6 +24,31 @@
             }
         }
     },
+    "premiumSelector": {
+        "badge": "Comença el teu projecte",
+        "title": "Com podem <br /> <span class=\"text-[#e8c42f]\">ajudar-te?</span>",
+        "subtitle": "Tria l'opció que millor s'adapti al teu projecte.",
+        "features": [
+            "Consultoria gratuïta",
+            "Sense compromís",
+            "Resposta en 24h"
+        ],
+        "options": {
+            "smart": {
+                "badge": "Recomanat",
+                "title": "Pressupost Smart",
+                "desc": "Anàlisi 360º amb IA."
+            },
+            "newBuild": {
+                "title": "Obra Nova",
+                "desc": "Construcció des de zero."
+            },
+            "quick": {
+                "title": "Pressupost Ràpid",
+                "desc": "Estimació exprés."
+            }
+        }
+    },
     "modal": {
         "headers": {
             "newBuild": {
@@ -79,7 +104,13 @@
     "trigger": {
         "title": "Pensant en renovar?",
         "subtitle": "Obté la teva estimació gratuïta en segons.",
-        "mobileSubtitle": "Clic per començar",
+        "badge": "Comença el teu projecte",
+        "mobileSubtitle": "Fes clic per començar",
+        "features": [
+            "Consultoria gratuïta amb IA",
+            "Sense compromís",
+            "Resposta immediata"
+        ],
         "modes": {
             "general": "Sol·licitar Pressupost",
             "pool": "Cotitzar Piscina",
@@ -87,7 +118,56 @@
             "new_build": "Estudi Obra Nova",
             "kitchen": "Pressupost Cuina",
             "bathroom": "Pressupost Bany",
-            "wizard": "Pressupost 360º"
+            "wizard": "Pressupost 360º",
+            "chat": "Xat Arquitecte"
+        },
+        "cards": {
+            "chat": {
+                "title": "Xat Arquitecte",
+                "description": "Parla amb la nostra IA experta per definir el teu projecte ideal.",
+                "badge": "NOU"
+            },
+            "wizard": {
+                "title": "Pressupost Smart",
+                "description": "Anàlisi 360º de la teva reforma amb detall professional.",
+                "badge": "RECOMMANAT"
+            },
+            "newBuild": {
+                "title": "Obra Nova",
+                "description": "Estudi de viabilitat i costos per a construcció des de zero."
+            },
+            "reform": {
+                "title": "Pressupost Ràpid",
+                "description": "Estimació exprés per a reformes senzilles."
+            }
+        },
+        "identity": {
+            "title": {
+                "contact": "Començar Projecte",
+                "accessTo": "Accedir a",
+                "otp": "Verificació de Seguretat"
+            },
+            "subtitle": {
+                "contact": "Les teves dades estan segures. Només les utilitzarem per gestionar el teu projecte.",
+                "otp": "Hem enviat un codi segur al teu correu electrònic."
+            },
+            "buttons": {
+                "cancel": "Cancel·lar"
+            },
+            "form": {
+                "name": "Nom Complet",
+                "email": "Correu Electrònic",
+                "phone": "Telèfon Mòbil",
+                "country": "País",
+                "submit": "Continuar",
+                "verifying": "Verificant...",
+                "back": "Tornar / Corregir",
+                "placeholders": {
+                    "name": "El teu nom complet",
+                    "email": "tu@email.com",
+                    "phone": "600 000 000"
+                }
+            }
         }
     },
     "quickForm": {

@@ -26,7 +26,7 @@ export const MultimediaStep = ({ form, t }: MultimediaStepProps) => {
     // Renovator State
     const [isGenerating, setIsGenerating] = useState(false);
     const [renovatorImage, setRenovatorImage] = useState<string | null>(null);
-    const [generatedResult, setGeneratedResult] = useState<{ url: string, originalUrl: string, style: string, roomType: string } | null>(null);
+    const [generatedResult, setGeneratedResult] = useState<{ generatedUrl: string, originalUrl: string, style: string, roomType: string } | null>(null);
     const [roomType, setRoomType] = useState('Salón');
     const [style, setStyle] = useState('Moderno');
     const [requirements, setRequirements] = useState('');
@@ -123,7 +123,7 @@ export const MultimediaStep = ({ form, t }: MultimediaStepProps) => {
             const currentFiles = form.getValues('files') || [];
             form.setValue('files', [...currentFiles, originalUrl]);
 
-            setGeneratedResult({ url: generatedUrl, originalUrl, style, roomType });
+            setGeneratedResult({ generatedUrl: generatedUrl, originalUrl, style, roomType });
 
         } catch (error) {
             console.error(error);
@@ -314,7 +314,7 @@ export const MultimediaStep = ({ form, t }: MultimediaStepProps) => {
                             <div className="w-full aspect-video bg-slate-100 rounded-lg flex flex-col items-center justify-center border overflow-hidden relative">
                                 {generatedResult ? (
                                     <>
-                                        <img src={generatedResult.url} className="w-full h-full object-cover" alt="Result" />
+                                        <img src={generatedResult.generatedUrl} className="w-full h-full object-cover" alt="Result" />
                                         <div className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
                                             <Button type="button" variant="secondary" onClick={() => setViewingComparison(true)}>
                                                 Ver Comparativa
@@ -365,7 +365,7 @@ export const MultimediaStep = ({ form, t }: MultimediaStepProps) => {
                                 <div className="relative flex-1 w-full h-full overflow-hidden">
                                     <ImageComparisonSlider
                                         beforeImage={generatedResult.originalUrl}
-                                        afterImage={generatedResult.url}
+                                        afterImage={generatedResult.generatedUrl}
                                         className="w-full h-full"
                                     />
                                 </div>

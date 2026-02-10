@@ -2,10 +2,10 @@
 
 import { FirestorePriceBookRepository } from '@/backend/price-book/infrastructure/firestore-price-book-repository';
 import { FirestoreIngestionJobRepository } from '@/backend/price-book/infrastructure/firestore-ingestion-job-repository';
-import { RegexPriceBookParser } from '@/backend/price-book/infrastructure/regex-price-book-parser';
+import { LLMPriceBookParser } from '@/backend/price-book/infrastructure/llm-price-book-parser';
 import { IngestPriceBookService } from '@/backend/price-book/application/ingest-price-book-service';
 import { IngestionJob } from '@/backend/price-book/domain/ingestion-job';
-// import { v4 as uuidv4 } from 'uuid'; // Removed in favor of crypto.randomUUID()
+import { FirestoreBasicResourceRepository } from '@/backend/price-book/infrastructure/firestore-basic-resource-repository';
 
 export async function ingestPriceBookAction(fileUrl: string, fileName: string, year: number) {
     console.log("Action: Ingest Price Book (Async Trigger)", fileName, year);
@@ -13,14 +13,17 @@ export async function ingestPriceBookAction(fileUrl: string, fileName: string, y
     const jobId = crypto.randomUUID();
     // const year = new Date().getFullYear(); // Removed hardcoded default
 
+    // ...
+
     // Initialize Dependencies (Hexagonal)
     // Infrastructure
-    const parser = new RegexPriceBookParser(); // Use Rule-based parser
+    const parser = new LLMPriceBookParser(); // Use LLM-based parser
     const repository = new FirestorePriceBookRepository();
     const jobRepository = new FirestoreIngestionJobRepository();
+    const resourceRepository = new FirestoreBasicResourceRepository();
 
     // Application Service
-    const service = new IngestPriceBookService(repository, parser, jobRepository);
+    const service = new IngestPriceBookService(repository, parser, jobRepository, resourceRepository);
 
     // 1. Create Initial Job Record
     const newJob: IngestionJob = {

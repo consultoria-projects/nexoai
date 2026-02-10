@@ -1,14 +1,79 @@
-{
+﻿{
     "hero": {
         "title": "Transformem Espais <br/> <span class='text-primary italic'>en Experiències</span>",
         "subtitle": "Reformes integrals d'alta gamma a Mallorca. On la qualitat es troba amb l'exclusivitat.",
         "cta": "Sol·licitar Pressupost Premium",
-        "ctaSecondary": "Descobrir Serveis"
+        "ctaSecondary": "Descobrir Serveis",
+        "floating": {
+            "featured": "Destacat",
+            "clients": "+500 Clients",
+            "renovate": "¿Pensant en reformar?",
+            "estimate": "Pressupost gratis en segons",
+            "scroll": "Llisca per explorar"
+        },
+        "stats": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Anys d'experiència"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Projectes completats"
+            }
+        ]
+    },
+    "numbers": {
+        "items": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Anys d'experiència"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Projectes completats"
+            },
+            {
+                "value": 98,
+                "suffix": "%",
+                "label": "Clients satisfets"
+            },
+            {
+                "value": 50,
+                "suffix": "+",
+                "label": "Professionals"
+            }
+        ]
+    },
+    "territories": {
+        "label": "Cobertura",
+        "title": "Presència a les Illes Balears",
+        "description": "Operem a tot l'arxipèlag balear, adaptant-nos a les normatives i característiques úniques de cada ubicació.",
+        "locations": [
+            "Palma de Mallorca",
+            "Calvià",
+            "Sóller",
+            "Pollença",
+            "Alcúdia",
+            "Manacor",
+            "Menorca",
+            "Eivissa",
+            "Formentera"
+        ]
+    },
+    "philosophy": {
+        "label": "Filosofia",
+        "quote": "No construïm cases. Creem l'escenari de la teva vida.",
+        "author": "Grup RG",
+        "description": "Cada projecte és únic perquè cada client és únic. Combinem experiència artesanal amb innovació tecnològica per a resultats excepcionals."
     },
     "vision": {
         "label": "La Nostra Filosofia",
         "title": "La Nova Era de la <br/> <span class='text-primary'>Construcció Moderna</span>",
-        "description": "A Express Renovation Mallorca, redefinim l'estàndard de les reformes de luxe. Deixem enrere la incertesa tradicional per abraçar la precisió tecnològica i l'excel·lència artesanal.",
+        "description": "A Grupo RG, redefinim l'estàndard de les reformes de luxe. Deixem enrere la incertesa tradicional per abraçar la precisió tecnològica i l'excel·lència artesanal.",
         "points": [
             "Estàndards de qualitat europeus certificats.",
             "Tecnologia de visualització 3D abans de començar.",
@@ -67,26 +132,61 @@
         "sidebarStep2Desc": "Renders fotorrealistes de la teva futura llar.",
         "cta": "Veure Galeria Completa"
     },
+    "contactStrip": {
+        "badge": "Inicia el teu projecte",
+        "title": "Com podem ",
+        "titleHighlight": "ajudar-te",
+        "subtitle": "Tria l'opció que millor encaixi amb el teu projecte. Cada eina està dissenyada per a una necessitat diferent.",
+        "options": {
+            "chat": {
+                "title": "Chat Arquitecte IA",
+                "description": "Xerra amb la nostra IA experta per explorar idees, validar conceptes i donar forma a la teva visió.",
+                "whyChoose": "Ideal si encara estàs definint el projecte i necessites orientació professional."
+            },
+            "wizard": {
+                "title": "Pressupost Smart",
+                "description": "Anàlisi 360º de la teva reforma amb desglossament detallat. La nostra IA analitza cada aspecte del teu projecte.",
+                "whyChoose": "Perfecte si saps què vols i necessites una estimació exacta."
+            },
+            "newBuild": {
+                "title": "Obra Nova",
+                "description": "Estudi de viabilitat i estimació completa per a projectes de construcció des de zero.",
+                "whyChoose": "Per a projectes de nova construcció: habitatges, locals o edificis complerts."
+            },
+            "reform": {
+                "title": "Pressupost Ràpid",
+                "description": "Estimació exprés per a reformes senzilles. Resultat en menys de 2 minuts.",
+                "whyChoose": "Ideal per a treballs puntuals: bany, cuina, pintura, instal·lacions."
+            }
+        },
+        "cta": "Començar",
+        "trust1": "Sense compromís",
+        "trust2": "Resposta immediata",
+        "trust3": "+500 projectes completats",
+        "trust4": "30+ anys d'experiència"
+    },
     "processSteps": {
-        "label": "Transparència Total",
-        "title": "El Mètode Express: Sense Sorpreses",
-        "subtitle": "Un procés lineal i predictible dissenyat per a la teva tranquil·litat.",
+        "label": "El Nostre Procés",
+        "title": "Com Treballem",
+        "subtitle": "Un procés intel·ligent que combina tecnologia IA amb experiència humana per a la teva tranquil·litat.",
         "steps": [
             {
-                "title": "Consulta Inicial",
-                "description": "Reunió in-situ per entendre les teves necessitats i pressupost."
+                "title": "Pressupost Intel·ligent",
+                "description": "Utilitza el nostre sistema de pressupostos amb IA. Descriu el teu projecte i obtén un desglossament de costos preliminar en segons, sense compromís.",
+                "badge": "IA"
             },
             {
-                "title": "Disseny & Planificació",
-                "description": "Creació de plànols, renders 3D i pressupost detallat."
+                "title": "Revisió d'Experts",
+                "description": "Un agent humà analitza la teva estimació, verifica especificacions tècniques i ajusta el pressupost amb criteris professionals."
             },
             {
-                "title": "Execució Experta",
-                "description": "Construcció sota supervisió constant i terminis fixos."
+                "title": "Visita Tècnica",
+                "description": "Organitzem una visita opcional per prendre mesures, avaluar l'espai i definir els detalls de la proposta tècnica."
             },
             {
-                "title": "Lliurament Claus en Mà",
-                "description": "Neteja final, revisió de qualitat i lliurament de claus."
+                "title": "Pressupost Final",
+                "description": "Rep un pressupost detallat i tancat per a la seva aprovació. Resol qualsevol dubte amb el nostre assistent intel·ligent.",
+                "badge": "IA"
             }
         ]
     },
@@ -103,7 +203,7 @@
         "items": [
             {
                 "question": "Quant triga una reforma integral a Mallorca?",
-                "answer": "El temps varia segons la complexitat, però una reforma integral estàndard sol oscil·lar entre 3 i 5 mesos. A Express Renovation Mallorca, garantim terminis tancats per contracte gràcies a la nostra planificació prèvia amb tecnologia 3D, evitant els retards habituals del sector."
+                "answer": "El temps varia segons la complexitat, però una reforma integral estàndard sol oscil·lar entre 3 i 5 mesos. A Grupo RG, garantim terminis tancats per contracte gràcies a la nostra planificació prèvia amb tecnologia 3D, evitant els retards habituals del sector."
             },
             {
                 "question": "Gestioneu les llicències d'obra?",
@@ -125,5 +225,9 @@
         "buttonPrimary": "Sol·licitar Pressupost Ara",
         "buttonSecondary": "Parlar amb un Agent",
         "note": "Places limitades per mes per garantir qualitat"
+    },
+    "contact": {
+        "title": "Tens un projecte en ment?",
+        "cta": "Sol·licitar Pressupost Gratuït"
     }
 }

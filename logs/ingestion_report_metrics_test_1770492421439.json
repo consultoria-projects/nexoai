@@ -1,0 +1,242 @@
+{
+  "jobId": "metrics_test_1770492421439",
+  "pdfFile": "Libro Precios 46_COAATMCA.pdf",
+  "startPage": 50,
+  "endPage": 69,
+  "timestamp": "2026-02-07T19:37:37.629Z",
+  "summary": {
+    "totalPages": 20,
+    "successfulPages": 20,
+    "failedPages": [],
+    "totalItems": 38,
+    "totalInputTokens": 8238,
+    "totalOutputTokens": 64964,
+    "totalTokens": 179498,
+    "totalCostUSD": 0.020107049999999998,
+    "avgTokensPerPage": 8975,
+    "avgCostPerPage": 0.0010053525,
+    "totalDurationMs": 636031
+  },
+  "pageMetrics": [
+    {
+      "pageNumber": 50,
+      "status": "success",
+      "itemsExtracted": 3,
+      "inputTokens": 401,
+      "outputTokens": 3999,
+      "totalTokens": 10357,
+      "costUSD": 0.001229775,
+      "durationMs": 35358,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 51,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 411,
+      "outputTokens": 3385,
+      "totalTokens": 10166,
+      "costUSD": 0.0010463249999999999,
+      "durationMs": 36597,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 52,
+      "status": "success",
+      "itemsExtracted": 0,
+      "inputTokens": 411,
+      "outputTokens": 20,
+      "totalTokens": 655,
+      "costUSD": 0.000036825,
+      "durationMs": 3056,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 53,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 409,
+      "outputTokens": 4128,
+      "totalTokens": 11712,
+      "costUSD": 0.001269075,
+      "durationMs": 39571,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 54,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 409,
+      "outputTokens": 3630,
+      "totalTokens": 9959,
+      "costUSD": 0.0011196749999999999,
+      "durationMs": 34355,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 55,
+      "status": "success",
+      "itemsExtracted": 1,
+      "inputTokens": 409,
+      "outputTokens": 2167,
+      "totalTokens": 8564,
+      "costUSD": 0.000680775,
+      "durationMs": 32290,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 56,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 410,
+      "outputTokens": 4026,
+      "totalTokens": 8290,
+      "costUSD": 0.00123855,
+      "durationMs": 29056,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 57,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 410,
+      "outputTokens": 3890,
+      "totalTokens": 14119,
+      "costUSD": 0.0011977499999999998,
+      "durationMs": 49861,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 58,
+      "status": "success",
+      "itemsExtracted": 1,
+      "inputTokens": 410,
+      "outputTokens": 2334,
+      "totalTokens": 6051,
+      "costUSD": 0.00073095,
+      "durationMs": 22727,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 59,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 418,
+      "outputTokens": 4350,
+      "totalTokens": 7570,
+      "costUSD": 0.00133635,
+      "durationMs": 26597,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 60,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 418,
+      "outputTokens": 3509,
+      "totalTokens": 13680,
+      "costUSD": 0.00108405,
+      "durationMs": 49417,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 61,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 418,
+      "outputTokens": 3272,
+      "totalTokens": 9499,
+      "costUSD": 0.00101295,
+      "durationMs": 32310,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 62,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 414,
+      "outputTokens": 3397,
+      "totalTokens": 11095,
+      "costUSD": 0.00105015,
+      "durationMs": 43244,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 63,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 414,
+      "outputTokens": 3913,
+      "totalTokens": 8146,
+      "costUSD": 0.0012049499999999998,
+      "durationMs": 28072,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 64,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 414,
+      "outputTokens": 3998,
+      "totalTokens": 8851,
+      "costUSD": 0.00123045,
+      "durationMs": 30247,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 65,
+      "status": "success",
+      "itemsExtracted": 2,
+      "inputTokens": 414,
+      "outputTokens": 3641,
+      "totalTokens": 10686,
+      "costUSD": 0.00112335,
+      "durationMs": 37173,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 66,
+      "status": "success",
+      "itemsExtracted": 3,
+      "inputTokens": 413,
+      "outputTokens": 3387,
+      "totalTokens": 11477,
+      "costUSD": 0.0010470749999999997,
+      "durationMs": 40046,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 67,
+      "status": "success",
+      "itemsExtracted": 3,
+      "inputTokens": 413,
+      "outputTokens": 3656,
+      "totalTokens": 7631,
+      "costUSD": 0.001127775,
+      "durationMs": 26157,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 68,
+      "status": "success",
+      "itemsExtracted": 0,
+      "inputTokens": 411,
+      "outputTokens": 22,
+      "totalTokens": 678,
+      "costUSD": 0.000037424999999999995,
+      "durationMs": 4502,
+      "retryCount": 0
+    },
+    {
+      "pageNumber": 69,
+      "status": "success",
+      "itemsExtracted": 3,
+      "inputTokens": 411,
+      "outputTokens": 4240,
+      "totalTokens": 10312,
+      "costUSD": 0.0013028249999999999,
+      "durationMs": 35300,
+      "retryCount": 0
+    }
+  ]
+}

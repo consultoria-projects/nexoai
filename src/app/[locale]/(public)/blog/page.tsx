@@ -7,8 +7,10 @@ import { ArrowRight } from 'lucide-react';
 import { blogPosts } from '@/lib/blog-posts';
 import type { Metadata } from 'next';
 import { constructMetadata } from '@/i18n/seo-utils';
+import { WebPageJsonLd, BreadcrumbJsonLd } from '@/components/seo/json-ld';
 
-export async function generateMetadata({ params: { locale } }: { params: { locale: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
   const dict = await getDictionary(locale as any);
   const t = dict.blog;
 
@@ -20,12 +22,23 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   });
 }
 
-export default async function BlogPage({ params: { locale } }: { params: { locale: any } }) {
-  const dict = await getDictionary(locale);
+export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale as any);
   const t = dict.blog;
 
   return (
     <>
+      <WebPageJsonLd
+        name={t.title}
+        description={t.subtitle}
+        url={`https://gruporg.es/${locale}/blog`}
+        type="CollectionPage"
+      />
+      <BreadcrumbJsonLd items={[
+        { name: 'Inicio', href: `/${locale}` },
+        { name: t.title || 'Blog', href: `/${locale}/blog` }
+      ]} />
       <section className="w-full py-20 md:py-28 bg-secondary/50">
         <div className="container-limited text-center">
           <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">

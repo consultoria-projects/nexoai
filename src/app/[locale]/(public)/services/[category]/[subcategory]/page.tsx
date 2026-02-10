@@ -1,23 +1,24 @@
 import { services } from '@/lib/services';
 import { notFound } from 'next/navigation';
-import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 import { getDictionary } from '@/lib/dictionaries';
 import { InterlinkingCloud } from '@/components/seo/interlinking-cloud';
 import { ProcessTimeline } from '@/components/services/process-timeline';
 import { FAQSection } from '@/components/services/faq-section';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
-import { ArrowRight, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { ChevronRight, CheckCircle2, ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
-// generateAlternates replaced by constructMetadata
+import { constructMetadata } from '@/i18n/seo-utils';
+import { ServiceJsonLd, BreadcrumbJsonLd } from '@/components/seo/json-ld';
+import { ServiceCTA } from '@/components/services/service-cta';
+import { Link } from '@/i18n/navigation';
+import { cn } from '@/lib/utils';
+import i18nConfig from '@/../i18nConfig';
 
 export async function generateStaticParams() {
     const params: { locale: string; category: string; subcategory: string }[] = [];
 
-    // Hardcoded locales for now to avoid async config reading issues in build
-    const locales = ['es', 'en', 'de', 'nl', 'ca'];
+    // Iterate through all locales defined in config
+    const locales = i18nConfig.locales;
 
     services.forEach((service) => {
         if (service.subservices) {
@@ -36,8 +37,6 @@ export async function generateStaticParams() {
     return params;
 }
 
-import { constructMetadata } from '@/i18n/seo-utils';
-
 export async function generateMetadata({ params }: { params: Promise<{ category: string, subcategory: string, locale: string }> }): Promise<Metadata> {
     const { category, subcategory, locale } = await params;
     const service = services.find((s) => s.id === category);
@@ -45,13 +44,13 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 
     if (!service) return {};
 
-    const categoryTranslation = dict.services[category];
+    const categoryTranslation = dict.services?.[category];
     const subserviceTranslation = categoryTranslation?.subservices?.[subcategory];
 
     if (!subserviceTranslation) return {};
 
     return constructMetadata({
-        title: `${subserviceTranslation.title} | ${categoryTranslation.title} en Mallorca`,
+        title: `${subserviceTranslation.title} en Mallorca | ${categoryTranslation.title} - Grupo RG`,
         description: subserviceTranslation.description,
         image: service.image,
         path: '/services/[category]/[subcategory]',
@@ -67,172 +66,189 @@ export default async function SubServicePage({ params }: { params: Promise<{ cat
 
     if (!service) notFound();
 
-    const categoryTranslation = dict.services[category];
+    const categoryTranslation = dict.services?.[category];
     const subserviceTranslation = categoryTranslation?.subservices?.[subcategory];
 
     if (!subserviceTranslation) {
         notFound();
     }
 
+    const breadcrumbItems = [
+        { name: 'Inicio', href: `/${locale}` },
+        { name: dict.header?.nav?.services || 'Servicios', href: `/${locale}/services` },
+        { name: categoryTranslation.title, href: `/${locale}/services/${category}` }, // This might redirect or 404 if not handled, but good for SEO structure
+        { name: subserviceTranslation.title, href: `/${locale}/services/${category}/${subcategory}` }
+    ];
+
     return (
         <>
-            <main className="flex-1">
-                {/* Breadcrumb / Hero */}
-                <section className="relative h-[40vh] min-h-[400px] w-full flex items-end pb-12">
+            <ServiceJsonLd
+                name={subserviceTranslation.title}
+                description={subserviceTranslation.description}
+                category={categoryTranslation.title}
+                image={service.image}
+                areaServed="Mallorca, Islas Baleares"
+            />
+            <BreadcrumbJsonLd items={breadcrumbItems} />
+
+            <main className="flex-1 bg-background">
+                {/* Cinematic Hero */}
+                <section className="relative h-[60vh] min-h-[500px] w-full flex items-end pb-16 overflow-hidden">
                     <Image
                         src={service.image}
-                        alt={`Imagen decorativa para ${subserviceTranslation.title}`}
+                        alt={`${subserviceTranslation.title} en Mallorca - Grupo RG`}
                         fill
-                        className="object-cover"
+                        className="object-cover animate-in fade-in duration-1000"
                         priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
+                    {/* Elaborate Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent" />
 
-                    <div className="relative container-limited w-full text-white space-y-4">
-                        <nav className="flex items-center text-sm md:text-base text-white/80 space-x-2 mb-4">
-                            <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-                            <ChevronRight className="h-4 w-4" />
-                            <Link href={{ pathname: '/services' }} className="hover:text-white transition-colors">
-                                {categoryTranslation.title}
+                    <div className="relative container-limited w-full space-y-6 z-10">
+                        {/* Breadcrumb */}
+                        <nav className="flex items-center flex-wrap text-sm text-muted-foreground/80 gap-2 mb-4 animate-in slide-in-from-bottom-4 duration-700 delay-100" aria-label="Breadcrumb">
+                            <Link href="/" className="hover:text-primary transition-colors">Inicio</Link>
+                            <ChevronRight className="h-3 w-3" />
+                            <Link href="/services" className="hover:text-primary transition-colors">
+                                {dict.header?.nav?.services || 'Servicios'}
                             </Link>
-                            <ChevronRight className="h-4 w-4" />
-                            <span className="text-white font-medium truncate max-w-[200px] md:max-w-none">
+                            <ChevronRight className="h-3 w-3" />
+                            <span className="text-foreground font-medium">
                                 {subserviceTranslation.title}
                             </span>
                         </nav>
 
-                        <h1 className="font-headline text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight max-w-4xl">
-                            {subserviceTranslation.title}
-                        </h1>
-                    </div>
-                </section>
+                        <div className="max-w-4xl space-y-6">
+                            <h1 className="font-headline text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] animate-in slide-in-from-bottom-6 duration-700 delay-200">
+                                {subserviceTranslation.title}
+                            </h1>
 
-                <section className="py-16 md:py-24">
-                    <div className="container-limited">
-                        <div className="grid md:grid-cols-12 gap-12">
+                            <p className="text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl animate-in slide-in-from-bottom-8 duration-700 delay-300">
+                                {subserviceTranslation.description}
+                            </p>
 
-                            {/* Main Content */}
-                            <div className="md:col-span-8 space-y-8">
-                                <div className="prose prose-lg prose-slate max-w-none">
-                                    <p className="lead text-xl md:text-2xl text-muted-foreground font-light leading-relaxed">
-                                        {subserviceTranslation.description}
-                                    </p>
-
-                                    <p>
-                                        En <strong>ExpressRenovationMallorca</strong>, entendemos que {subserviceTranslation.title.toLowerCase()} es una inversión importante.
-                                        Nuestro equipo de especialistas se encarga de cada detalle, garantizando acabados de lujo y durabilidad.
-                                    </p>
-                                </div>
-
-                                <div className="bg-muted/30 p-8 rounded-2xl border border-muted mt-8">
-                                    <h3 className="text-xl font-bold font-headline mb-4 flex items-center gap-2">
-                                        <CheckCircle2 className="text-primary h-6 w-6" />
-                                        ¿Por qué elegirnos para este servicio?
-                                    </h3>
-                                    <ul className="grid sm:grid-cols-2 gap-4">
-                                        <li className="flex items-start gap-3">
-                                            <span className="h-2 w-2 rounded-full bg-primary mt-2" />
-                                            <span className="text-muted-foreground">Expertos certificados en {categoryTranslation.title.toLowerCase()}.</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <span className="h-2 w-2 rounded-full bg-primary mt-2" />
-                                            <span className="text-muted-foreground">Materiales de primera calidad garantizados.</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <span className="h-2 w-2 rounded-full bg-primary mt-2" />
-                                            <span className="text-muted-foreground">Plazos de ejecución cerrados bajo contrato.</span>
-                                        </li>
-                                        <li className="flex items-start gap-3">
-                                            <span className="h-2 w-2 rounded-full bg-primary mt-2" />
-                                            <span className="text-muted-foreground">Presupuestos transparentes sin sorpresas.</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <div className="pt-4 animate-in slide-in-from-bottom-10 duration-700 delay-400">
+                                <div className="h-1 w-24 bg-primary rounded-full" />
                             </div>
-
-                            {/* Sidebar / CTA */}
-                            <aside className="md:col-span-4 space-y-8">
-                                <div className="bg-background border rounded-2xl p-6 shadow-lg sticky top-24">
-                                    <h3 className="font-headline text-xl font-bold mb-2">
-                                        ¿Interesado en {subserviceTranslation.title}?
-                                    </h3>
-                                    <p className="text-muted-foreground text-sm mb-6">
-                                        Obtén una estimación de precio inmediata y personalizada para tu proyecto.
-                                    </p>
-
-                                    <Button asChild className="w-full font-bold text-base py-6 shadow-md hover:shadow-xl transition-all">
-                                        <Link href={{ pathname: '/budget-request', query: { service: category } }}>
-                                            Calcular Precio Ahora
-                                            <ArrowRight className="ml-2 h-5 w-5" />
-                                        </Link>
-                                    </Button>
-
-                                    <div className="mt-6 pt-6 border-t text-center">
-                                        <p className="text-xs text-muted-foreground mb-2">O llámanos directamente</p>
-                                        <a href="tel:+34971000000" className="font-headline font-bold text-lg hover:text-primary transition-colors">
-                                            +34 971 000 000
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div className="pl-2">
-                                    <h4 className="font-bold text-sm uppercase tracking-wider text-muted-foreground mb-4">
-                                        Más en {categoryTranslation.title}
-                                    </h4>
-                                    <ul className="space-y-3">
-                                        {service.subservices?.filter(s => s.id !== subcategory).map(sibling => (
-                                            <li key={sibling.id}>
-                                                <Link
-                                                    href={{
-                                                        pathname: '/services/[category]/[subcategory]',
-                                                        params: { category, subcategory: sibling.id }
-                                                    }}
-                                                    className="text-foreground hover:text-primary transition-colors flex justify-between items-center group"
-                                                >
-                                                    <span className="text-sm">
-                                                        {categoryTranslation.subservices?.[sibling.id]?.title || sibling.id}
-                                                    </span>
-                                                    <ArrowRight className="h-3 w-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </aside>
                         </div>
                     </div>
                 </section>
 
-                {/* Process Section */}
-                {dict.services.common?.process && (
-                    <ProcessTimeline t={dict.services.common.process} />
+                {/* Main Content Layout */}
+                <section className="py-16 md:py-24">
+                    <div className="container-limited">
+                        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
+
+                            {/* Left Column: Content */}
+                            <div className="lg:col-span-7 space-y-16">
+                                {/* Bio / Intro */}
+                                <div className="prose prose-lg prose-slate dark:prose-invert max-w-none">
+                                    <p className="text-lg leading-relaxed text-muted-foreground">
+                                        En <strong className="text-foreground font-medium">Grupo RG</strong>, abordamos cada proyecto de
+                                        {' '}<span className="lowercase">{subserviceTranslation.title}</span> como una oportunidad para crear algo excepcional.
+                                        Combinamos décadas de experiencia técnica con una gestión eficiente para garantizar resultados que superan las expectativas.
+                                    </p>
+                                    <p className="text-lg leading-relaxed text-muted-foreground">
+                                        Nuestro enfoque integral asegura que cada detalle, desde la planificación inicial hasta los acabados finales,
+                                        esté perfectamente coordinado. Sin sorpresas, con plazos garantizados y total transparencia.
+                                    </p>
+                                </div>
+
+                                {/* Why Choose Us Grid */}
+                                <div className="bg-muted/30 rounded-3xl p-8 md:p-10 border border-border/50">
+                                    <h2 className="font-headline text-2xl font-bold mb-8 flex items-center gap-3">
+                                        <div className="p-2 rounded-lg bg-primary/10 text-primary">
+                                            <CheckCircle2 className="h-6 w-6" />
+                                        </div>
+                                        Por qué elegirnos
+                                    </h2>
+                                    <div className="grid sm:grid-cols-2 gap-x-8 gap-y-6">
+                                        {[
+                                            'Presupuesto cerrado sin sorpresas',
+                                            'Plazos de entrega garantizados',
+                                            'Materiales certificados de primera calidad',
+                                            'Equipo técnico propio especializado',
+                                            'Gestión integral de permisos',
+                                            'Garantía post-obra extendida'
+                                        ].map((item, i) => (
+                                            <div key={i} className="flex items-start gap-3 group">
+                                                <div className="h-2 w-2 rounded-full bg-primary mt-2.5 shrink-0 group-hover:scale-125 transition-transform duration-300 shadow-[0_0_8px_rgba(var(--primary),0.5)]" />
+                                                <span className="text-foreground/80 font-medium">{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Right Column: Sticky Sidebar */}
+                            <aside className="lg:col-span-5 space-y-10">
+                                {/* Sticky Wrapper */}
+                                <div className="sticky top-24 space-y-10">
+                                    {/* Primary CTA */}
+                                    <ServiceCTA
+                                        title={`¿Empezamos con tu proyecto?`}
+                                        description={`Calcula el precio de tu proyecto de ${subserviceTranslation.title.toLowerCase()} en segundos con nuestra IA.`}
+                                        ctaText="Calcular Presupuesto"
+                                        category={category}
+                                    />
+
+                                    {/* Other Services Navigation */}
+                                    {service.subservices && service.subservices.filter(s => s.id !== subcategory).length > 0 && (
+                                        <div className="rounded-2xl border border-border/50 bg-background p-6 shadow-sm">
+                                            <h3 className="font-headline font-bold text-lg mb-4 pb-4 border-b">
+                                                Más en {categoryTranslation.title}
+                                            </h3>
+                                            <nav className="space-y-1">
+                                                {service.subservices.filter(s => s.id !== subcategory).map(sibling => (
+                                                    <Link
+                                                        key={sibling.id}
+                                                        href={{
+                                                            pathname: '/services/[category]/[subcategory]',
+                                                            params: { category, subcategory: sibling.id }
+                                                        }}
+                                                        className="group flex items-center justify-between p-3 rounded-xl hover:bg-muted/50 transition-colors"
+                                                    >
+                                                        <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                                                            {categoryTranslation.subservices?.[sibling.id]?.title || sibling.id}
+                                                        </span>
+                                                        <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                                                            <ChevronRight className="h-4 w-4" />
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                            </nav>
+                                        </div>
+                                    )}
+                                </div>
+                            </aside>
+
+                        </div>
+                    </div>
+                </section>
+
+                {/* Full Width Process Section */}
+                {dict.services?.common?.process && (
+                    <div className="border-t border-border/50">
+                        <ProcessTimeline t={dict.services.common.process} className="bg-muted/10" />
+                    </div>
                 )}
 
-                {/* FAQ Section and Interlinking */}
-                <div className="bg-muted/10 border-t">
-                    {dict.services.common?.faq && (
+                {/* FAQ Section */}
+                {dict.services?.common?.faq && (
+                    <div className="border-t border-border/50">
                         <FAQSection t={dict.services.common.faq} />
-                    )}
+                    </div>
+                )}
 
+                {/* SEO Cloud (Hidden visually or subtle) */}
+                <div className="container-limited py-10 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
                     <InterlinkingCloud
                         serviceName={subserviceTranslation.title}
                         categorySlug={category}
                     />
                 </div>
-
-                <section className="w-full py-16 bg-secondary/30 border-t">
-                    <div className="container-limited text-center">
-                        <h2 className="font-headline text-3xl font-bold mb-4">
-                            Comienza tu {subserviceTranslation.title.toLowerCase()} hoy mismo
-                        </h2>
-                        <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary hover:text-white">
-                            <Link href="/contact">
-                                Contactar con un Agente
-                            </Link>
-                        </Button>
-                    </div>
-                </section>
-            </main >
+            </main>
         </>
     );
 }

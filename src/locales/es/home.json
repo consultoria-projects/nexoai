@@ -1,129 +1,267 @@
 {
     "hero": {
-        "title": "Transformamos Espacios <br/> <span class='text-primary italic'>en Experiencias</span>",
-        "subtitle": "Reformas integrales de alta gama en Mallorca. Donde la calidad se encuentra con la exclusividad.",
-        "cta": "Solicitar Presupuesto Premium",
-        "ctaSecondary": "Descubrir Servicios"
-    },
-    "vision": {
-        "label": "Nuestra Filosofía",
-        "title": "La Nueva Era de la <br/> <span class='text-primary'>Construcción Moderna</span>",
-        "description": "En Express Renovation Mallorca, redefinimos el estándar de las reformas de lujo. Dejamos atrás la incertidumbre tradicional para abrazar la precisión tecnológica y la excelencia artesanal.",
-        "points": [
-            "Estándares de calidad europeos certificados.",
-            "Tecnología de visualización 3D antes de empezar.",
-            "Plazos cerrados bajo contrato.",
-            "Acabados premium y materiales sostenibles."
+        "subtitle": "Más de 30 años construyendo en Baleares",
+        "title": "Creamos espacios que perduran",
+        "description": "GRUPO RG es una empresa de construcción especializada en reformas integrales, obra nueva e interiorismo de alta gama en Mallorca y Baleares.",
+        "cta": "Solicitar Presupuesto",
+        "ctaSecondary": "Ver proyectos",
+        "stats": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Años de experiencia"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Proyectos completados"
+            }
         ],
-        "cta": "Conoce nuestra historia"
+        "floating": {
+            "featured": "Destacado",
+            "clients": "+500 Clientes",
+            "renovate": "¿Pensando en reformar?",
+            "estimate": "Presupuesto gratis en segundos",
+            "scroll": "Desliza para explorar"
+        }
+    },
+    "philosophy": {
+        "label": "Filosofía",
+        "quote": "No construimos casas. Creamos el escenario de tu vida.",
+        "author": "Grupo RG",
+        "description": "Cada proyecto es único porque cada cliente es único. Combinamos experiencia artesanal con innovación tecnológica para resultados excepcionales."
+    },
+    "expertise": {
+        "subtitle": "Nuestras Especialidades",
+        "title": "Excelencia en cada proyecto",
+        "viewProject": "Ver Proyecto",
+        "items": [
+            {
+                "title": "Obra Nueva",
+                "description": "Construcción de viviendas, locales comerciales y edificios desde cero con los más altos estándares de calidad.",
+                "link": "/services/obra-nueva",
+                "featured": true
+            },
+            {
+                "title": "Reformas Integrales",
+                "description": "Transformación completa de espacios, coordinando todos los gremios bajo un único proyecto.",
+                "link": "/services/reformas-integrales"
+            },
+            {
+                "title": "Mantenimiento",
+                "description": "Servicios de fontanería, electricidad, albañilería y reparaciones generales.",
+                "link": "/services/mantenimiento"
+            },
+            {
+                "title": "Interiorismo",
+                "description": "Diseño y decoración de interiores que reflejan tu personalidad y estilo de vida.",
+                "link": "/services/interiorismo"
+            },
+            {
+                "title": "Trabajos Especializados",
+                "description": "Placas solares, reformas de piscinas, accesibilidad y servicios técnicos avanzados.",
+                "link": "/services/trabajos-especializados"
+            }
+        ]
+    },
+    "numbers": {
+        "items": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Años de experiencia"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Proyectos completados"
+            },
+            {
+                "value": 98,
+                "suffix": "%",
+                "label": "Clientes satisfechos"
+            },
+            {
+                "value": 50,
+                "suffix": "+",
+                "label": "Profesionales"
+            }
+        ]
+    },
+    "territories": {
+        "label": "Cobertura",
+        "title": "Presencia en todas las Islas Baleares",
+        "description": "Operamos en todo el archipiélago balear, adaptándonos a las normativas y características únicas de cada ubicación.",
+        "locations": [
+            "Palma de Mallorca",
+            "Calvià",
+            "Sóller",
+            "Pollença",
+            "Alcúdia",
+            "Manacor",
+            "Menorca",
+            "Ibiza",
+            "Formentera"
+        ]
+    },
+    "contact": {
+        "title": "¿Tienes un proyecto en mente?",
+        "cta": "Solicitar Presupuesto Gratuito"
     },
     "servicesGrid": {
         "label": "Nuestras Especialidades",
         "title": "Excelencia en Cada Detalle",
-        "subtitle": "Dominamos las disciplinas clave para crear hogares excepcionales.",
+        "subtitle": "Dominamos las disciplinas clave para crear espacios excepcionales.",
         "items": [
             {
+                "title": "Obra Nueva",
+                "description": "Construcción de viviendas, locales comerciales, hoteles y edificios desde cero con los más altos estándares.",
+                "link": "/services/obra-nueva"
+            },
+            {
                 "title": "Reformas Integrales",
-                "description": "Transformación completa de espacios residenciales y comerciales. Coordinación total de gremios.",
-                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
+                "description": "Reformamos tu vivienda, local comercial u oficina de forma integral, desde la planificación hasta la ejecución final.",
+                "link": "/services/reformas-integrales"
             },
             {
-                "title": "Cocinas de Diseño",
-                "description": "El corazón del hogar, diseñado para inspirar. Ergonomía, materiales nobles y tecnología.",
-                "link": "/services/reformas-de-interiores/mobiliario-medida"
+                "title": "Mantenimiento y Reparaciones",
+                "description": "Fontanería, electricidad, albañilería y todo tipo de reparaciones para mantener tu propiedad en perfecto estado.",
+                "link": "/services/mantenimiento"
             },
             {
-                "title": "Baños & Wellness",
-                "description": "Oasis de relajación privados. Duchas de lluvia, bañeras exentas y acabados spa.",
-                "link": "/services/reformas-de-interiores/banos-sanitarios"
+                "title": "Interiorismo",
+                "description": "Diseñamos y decoramos tu espacio interior, creando un ambiente único y personalizado.",
+                "link": "/services/interiorismo"
             },
             {
-                "title": "Exteriores & Paisajismo",
-                "description": "Terrazas, piscinas y jardines que extienden tu espacio vital hacia la naturaleza mallorquina.",
-                "link": "/services/piscinas/diseno-personalizado"
+                "title": "Trabajos Especializados",
+                "description": "Instalación de placas solares, reformas de piscinas, accesibilidad y otros servicios técnicos.",
+                "link": "/services/trabajos-especializados"
             },
             {
-                "title": "Restauración de Fachadas",
-                "description": "Recuperamos el esplendor original de edificios históricos y modernos. Técnicas respetuosas con el patrimonio.",
-                "link": "/services/paramentos-verticales/rehabilitacion-fachadas"
-            },
-            {
-                "title": "Aislamiento SATE",
-                "description": "Eficiencia energética superior. Revestimiento térmico exterior que reduce el consumo y mejora el confort.",
-                "link": "/services/paramentos-verticales/aislamiento-sate"
+                "title": "Gestión de Permisos",
+                "description": "Tramitación de licencias, permisos de obra y todo el papeleo burocrático necesario.",
+                "link": "/services/otros-servicios"
             }
         ],
         "cta": "Ver detalles"
     },
-    "transformations": {
-        "label": "Antes y Después",
-        "title": "Transformaciones Reales",
-        "subtitle": "Más allá de las palabras, nuestros resultados hablan. Desliza para ver el cambio.",
-        "sidebarTitle": "¿Listo para tu transformación?",
-        "sidebarDescription": "Cada proyecto comienza con una visión. Nosotros te ayudamos a definirla y ejecutarla sin desviaciones.",
-        "sidebarStep1Title": "Análisis Estructural",
-        "sidebarStep1Desc": "Evaluamos la viabilidad técnica.",
-        "sidebarStep2Title": "Propuesta de Diseño",
-        "sidebarStep2Desc": "Renders fotorrealistas de tu futuro hogar.",
-        "cta": "Ver Galería Completa"
+    "contactStrip": {
+        "badge": "Empieza tu proyecto",
+        "title": "¿Cómo podemos ",
+        "titleHighlight": "ayudarte",
+        "subtitle": "Elige la opción que mejor encaje con tu proyecto. Cada herramienta está diseñada para una necesidad diferente.",
+        "options": {
+            "chat": {
+                "title": "Chat Arquitecto IA",
+                "description": "Conversa con nuestra IA experta para explorar ideas, validar conceptos y dar forma a tu visión.",
+                "whyChoose": "Ideal si aún estás definiendo el proyecto y necesitas orientación profesional."
+            },
+            "wizard": {
+                "title": "Presupuesto Smart",
+                "description": "Análisis 360° de tu reforma con desglose detallado. Nuestra IA analiza cada aspecto de tu proyecto.",
+                "whyChoose": "Perfecto si ya sabes lo que quieres y necesitas un presupuesto preciso."
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "description": "Estudio de viabilidad y estimación completa para proyectos de construcción desde cero.",
+                "whyChoose": "Para proyectos de nueva construcción: viviendas, locales o edificios completos."
+            },
+            "reform": {
+                "title": "Presupuesto Rápido",
+                "description": "Estimación exprés para reformas sencillas. Resultado en menos de 2 minutos.",
+                "whyChoose": "Ideal para trabajos puntuales: baño, cocina, pintura, instalaciones."
+            }
+        },
+        "cta": "Comenzar",
+        "trust1": "Sin compromiso",
+        "trust2": "Respuesta inmediata",
+        "trust3": "+500 proyectos completados",
+        "trust4": "30+ años de experiencia"
     },
     "processSteps": {
-        "label": "Transparencia Total",
-        "title": "El Método Express: Sin Sorpresas",
-        "subtitle": "Un proceso lineal y predecible diseñado para tu tranquilidad.",
+        "label": "Nuestro Proceso",
+        "title": "Cómo Trabajamos",
+        "subtitle": "Un proceso inteligente que combina tecnología IA con experiencia humana para tu tranquilidad.",
         "steps": [
             {
-                "title": "Consulta Inicial",
-                "description": "Reunión in-situ para entender tus necesidades y presupuesto."
+                "title": "Presupuesto Inteligente",
+                "description": "Usa nuestro sistema de presupuestos con IA. Describe tu proyecto y obtén un desglose de costes preliminar en segundos, sin compromiso.",
+                "badge": "IA"
             },
             {
-                "title": "Diseño & Planificación",
-                "description": "Creación de planos, renders 3D y presupuesto detallado."
+                "title": "Revisión por Experto",
+                "description": "Un agente humano analiza tu estimación, verifica las especificaciones técnicas y ajusta el presupuesto con criterio profesional."
             },
             {
-                "title": "Ejecución Experta",
-                "description": "Construcción bajo supervisión constante y plazos fijos."
+                "title": "Visita Técnica",
+                "description": "Organizamos una visita opcional para tomar medidas, evaluar el espacio y definir los detalles finales de la propuesta técnica."
             },
             {
-                "title": "Entrega Llave en Mano",
-                "description": "Limpieza final, revisión de calidad y entrega de llaves."
+                "title": "Presupuesto Definitivo",
+                "description": "Recibes un presupuesto detallado y cerrado, listo para aprobar. Consulta cualquier duda con nuestro asistente inteligente.",
+                "badge": "IA"
             }
         ]
     },
     "locations": {
-        "label": "Cobertura Exclusiva",
-        "title": "Reformas en las Mejores Ubicaciones de Mallorca",
-        "subtitle": "Nuestra logística y equipo están preparados para operar en las zonas más exigentes de la isla, garantizando discreción y cumplimiento de normativas locales.",
-        "link": "Ver todas las zonas de actuación"
+        "label": "Áreas de Servicio",
+        "title": "Construcción y Reformas en Baleares",
+        "subtitle": "Operamos en todo el archipiélago balear: Mallorca, Menorca, Ibiza y Formentera.",
+        "link": "Ver todas las zonas"
     },
     "faq": {
-        "label": "Dudas Resueltas",
-        "title": "Expertise que Genera Tranquilidad",
-        "subtitle": "Sabemos que una reforma genera preguntas. Aquí respondemos a las más habituales con la honestidad que nos caracteriza.",
+        "label": "Preguntas Frecuentes",
+        "title": "Resolvemos tus dudas",
+        "subtitle": "Las preguntas más habituales sobre nuestros servicios.",
         "items": [
             {
-                "question": "¿Cuánto tarda una reforma integral en Mallorca?",
-                "answer": "El tiempo varía según la complejidad, pero una reforma integral estándar suele oscilar entre 3 y 5 meses. En Express Renovation Mallorca, garantizamos plazos cerrados por contrato gracias a nuestra planificación previa con tecnología 3D, evitando los retrasos habituales del sector."
+                "question": "¿Cuánto tarda una reforma integral?",
+                "answer": "El tiempo varía según la complejidad del proyecto. Una reforma integral estándar suele oscilar entre 3 y 6 meses. En GRUPO RG garantizamos plazos realistas y los cumplimos gracias a nuestra experiencia de más de 30 años."
             },
             {
                 "question": "¿Gestionáis las licencias de obra?",
-                "answer": "Sí, nos encargamos de todo el proceso burocrático. Desde la solicitud de licencias municipales (obra mayor o menor) hasta la gestión de ocupación de vía pública. Nuestro equipo técnico conoce al detalle las normativas de cada ayuntamiento."
-            },
-            {
-                "question": "¿Puedo ver el diseño antes de empezar la obra?",
-                "answer": "Absolutamente. Es parte fundamental de nuestro Método Express. Desarrollamos renders fotorrealistas y planos detallados antes de poner el primer ladrillo, asegurando que el resultado final coincida exactamente con tu visión."
+                "answer": "Sí, nos encargamos de todo el proceso burocrático. Desde la solicitud de licencias municipales hasta la gestión de ocupación de vía pública. Conocemos las normativas de cada ayuntamiento de Baleares."
             },
             {
                 "question": "¿Trabajáis con presupuesto cerrado?",
-                "answer": "Sí. Nuestra política de transparencia elimina las sorpresas. Una vez aprobado el diseño y los materiales, el precio es fijo, salvo que tú decidas realizar cambios durante la obra."
+                "answer": "Sí. Nuestra política de transparencia elimina las sorpresas. Una vez aprobado el diseño y los materiales, el precio es fijo, salvo que decidas realizar cambios durante la obra."
+            },
+            {
+                "question": "¿En qué zonas de Baleares trabajáis?",
+                "answer": "Operamos en todas las Islas Baleares: Mallorca, Menorca, Ibiza y Formentera. Nuestra sede está en Mallorca pero nos desplazamos a todas las islas."
             }
         ]
     },
     "cta": {
         "title": "Tu Proyecto, Nuestra Prioridad",
-        "subtitle": "No dejes tu inversión en manos del azar. Agenda una consulta gratuita y descubre el potencial real de tu propiedad.",
-        "buttonPrimary": "Solicitar Presupuesto Ahora",
-        "buttonSecondary": "Hablar con un Agente",
-        "note": "Plazas limitadas por mes para garantizar calidad"
+        "subtitle": "30 años de experiencia avalan nuestro trabajo. Solicita tu presupuesto gratuito sin compromiso.",
+        "buttonPrimary": "Solicitar Presupuesto",
+        "buttonSecondary": "Contactar",
+        "note": "Respuesta en menos de 24 horas"
+    },
+    "vision": {
+        "label": "Nuestra Filosofía",
+        "title": "Más de 30 años <br/> <span class='text-primary'>construyendo confianza</span>",
+        "description": "En GRUPO RG, cada proyecto es un compromiso personal. Combinamos la experiencia de tres décadas con las técnicas más avanzadas para ofrecer resultados que superan expectativas.",
+        "points": [
+            "Equipo propio de profesionales especializados.",
+            "Materiales de primera calidad certificados.",
+            "Plazos realistas y cumplimiento garantizado.",
+            "Comunicación constante durante todo el proceso."
+        ],
+        "cta": "Conoce nuestra historia"
+    },
+    "transformations": {
+        "label": "Proyectos Reales",
+        "title": "Transformaciones que Hablan",
+        "subtitle": "Más de 500 proyectos completados con éxito en Baleares.",
+        "sidebarTitle": "¿Listo para tu proyecto?",
+        "sidebarDescription": "Cada proyecto comienza con una conversación. Cuéntanos tu visión y la haremos realidad.",
+        "sidebarStep1Title": "Evaluación Técnica",
+        "sidebarStep1Desc": "Analizamos la viabilidad de tu proyecto.",
+        "sidebarStep2Title": "Propuesta Personalizada",
+        "sidebarStep2Desc": "Diseño y presupuesto a tu medida.",
+        "cta": "Ver más proyectos"
     }
 }

@@ -79,15 +79,70 @@
     "trigger": {
         "title": "Denkt u aan renoveren?",
         "subtitle": "Krijg uw gratis schatting in seconden.",
+        "badge": "Start uw project",
         "mobileSubtitle": "Klik om te starten",
+        "features": [
+            "Gratis AI-consultatie",
+            "Vrijblijvend",
+            "Onmiddellijk antwoord"
+        ],
         "modes": {
-            "general": "Offerte Aanvragen",
+            "general": "Offerte aanvragen",
             "pool": "Zwembad Offerte",
             "reform": "Renovatiekosten",
             "new_build": "Nieuwbouw Studie",
             "kitchen": "Keuken Budget",
             "bathroom": "Badkamer Budget",
-            "wizard": "360º Budget"
+            "wizard": "360º Budget",
+            "chat": "Architect Chat"
+        },
+        "cards": {
+            "chat": {
+                "title": "Architect Chat",
+                "description": "Praat met onze expert AI om uw ideale project te definiëren.",
+                "badge": "NIEUW"
+            },
+            "wizard": {
+                "title": "Smart Budget",
+                "description": "Professionele 360°-analyse van uw renovatie.",
+                "badge": "AANBEVOLEN"
+            },
+            "newBuild": {
+                "title": "Nieuwbouw",
+                "description": "Haalbaarheidsstudie en kosten voor nieuwbouw."
+            },
+            "reform": {
+                "title": "Snelle Offerte",
+                "description": "Express schatting voor eenvoudige renovaties."
+            }
+        },
+        "identity": {
+            "title": {
+                "contact": "Start Project",
+                "accessTo": "Toegang tot",
+                "otp": "Beveiligingsverificatie"
+            },
+            "subtitle": {
+                "contact": "Uw gegevens zijn veilig. We gebruiken ze alleen om uw project te beheren.",
+                "otp": "We hebben een beveiligingscode naar uw e-mail gestuurd."
+            },
+            "buttons": {
+                "cancel": "Annuleren"
+            },
+            "form": {
+                "name": "Volledige Naam",
+                "email": "E-mailadres",
+                "phone": "Mobiele Telefoon",
+                "country": "Land",
+                "submit": "Doorgaan",
+                "verifying": "Verifiëren...",
+                "back": "Terug / Corrigeren",
+                "placeholders": {
+                    "name": "Uw volledige naam",
+                    "email": "uw@email.com",
+                    "phone": "06 12345678"
+                }
+            }
         }
     },
     "quickForm": {

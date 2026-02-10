@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useBudgetEditor } from '@/hooks/use-budget-editor';
 import { BudgetEditorGrid } from './BudgetEditorGrid';
 import { BudgetEditorToolbar } from './BudgetEditorToolbar';
@@ -12,7 +13,8 @@ import { BudgetEconomicSummary } from './BudgetEconomicSummary';
 import { BudgetLibrarySidebar } from './BudgetLibrarySidebar';
 import { RenovationGallery } from '@/components/dream-renovator/RenovationGallery';
 import { BudgetRequestViewer } from './BudgetRequestViewer';
-import React from 'react';
+import { Sparkles, FileText, User, Home } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface BudgetEditorWrapperProps {
     budget: Budget;
@@ -46,6 +48,21 @@ export const BudgetEditorWrapper = ({ budget }: BudgetEditorWrapperProps) => {
 
     const { toast } = useToast();
     const [isGhostMode, setIsGhostMode] = React.useState(false);
+
+    // Helper for source
+    const getSourceInfo = (source?: string) => {
+        switch (source) {
+            case 'wizard':
+                return { icon: Sparkles, label: 'Asistente IA', color: 'bg-purple-500/10 text-purple-600 border-purple-200 dark:border-purple-800 dark:text-purple-400' };
+            case 'pdf_measurement':
+                return { icon: FileText, label: 'Mediciones PDF', color: 'bg-amber-500/10 text-amber-600 border-amber-200 dark:border-amber-800 dark:text-amber-400' };
+            default:
+                return { icon: User, label: 'Manual', color: 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400' };
+        }
+    };
+
+    const sourceInfo = getSourceInfo(budget.source);
+    const SourceIcon = sourceInfo.icon;
 
     // Handle Save
     const handleSave = async () => {
@@ -82,7 +99,7 @@ export const BudgetEditorWrapper = ({ budget }: BudgetEditorWrapperProps) => {
     };
 
     return (
-        <div className="flex flex-col min-h-screen bg-slate-50/50">
+        <div className="flex flex-col min-h-screen bg-slate-50/50 dark:bg-transparent">
             <BudgetEditorToolbar
                 hasUnsavedChanges={state.hasUnsavedChanges}
                 isSaving={state.isSaving}
@@ -100,19 +117,50 @@ export const BudgetEditorWrapper = ({ budget }: BudgetEditorWrapperProps) => {
                 onToggleGhostMode={() => setIsGhostMode(!isGhostMode)}
             />
 
-            <main className="flex-1 max-w-[1400px] mx-auto w-full p-6 space-y-6 animate-in fade-in duration-500">
+            <main className="flex-1 max-w-[1600px] mx-auto w-full p-6 space-y-8 animate-in fade-in duration-500">
 
                 {/* Header Info */}
-                <div className="flex justify-between items-start">
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-900">{budget.clientData.name}</h1>
-                        <p className="text-slate-500 text-sm mt-1 flex items-center gap-2">
-                            <span className="bg-slate-200 px-2 py-0.5 rounded text-xs font-semibold text-slate-700 capitalize">
-                                {(budget.clientData as any).projectScope === 'integral' ? 'Reforma Integral' : 'Reforma Parcial'}
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-2">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-3">
+                            <Badge variant="outline" className={`gap-1.5 px-2.5 py-1 ${sourceInfo.color} font-medium tracking-wide`}>
+                                <SourceIcon className="w-3.5 h-3.5" />
+                                {sourceInfo.label}
+                            </Badge>
+                            <span className="text-xs font-mono text-muted-foreground">#{budget.id.substring(0, 8).toUpperCase()}</span>
+                        </div>
+
+                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight font-headline text-foreground">
+                            {budget.clientData.name}
+                        </h1>
+
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground pt-1">
+                            <div className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800/50 px-3 py-1 rounded-full border border-zinc-200 dark:border-zinc-700/50">
+                                <span className="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                <span className="font-medium text-foreground">
+                                    {(budget.clientData as any).projectScope === 'integral' ? 'Reforma Integral' : 'Reforma Parcial'}
+                                </span>
+                            </div>
+
+                            <span className="text-muted-foreground/30">•</span>
+
+                            <span className="capitalize flex items-center gap-1.5">
+                                <Home className="w-4 h-4 text-muted-foreground" />
+                                {(budget.clientData as any).propertyType === 'residential' ? 'Vivienda' : 'Local / Oficina'}
                             </span>
-                            <span className="text-slate-400">•</span>
-                            <span className="capitalize">{(budget.clientData as any).propertyType === 'residential' ? 'Vivienda' : 'Local / Oficina'}</span>
-                        </p>
+
+                            {budget.pricingMetadata?.uploadedFileName && (
+                                <>
+                                    <span className="text-muted-foreground/30">•</span>
+                                    <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
+                                        <FileText className="w-4 h-4" />
+                                        <span className="underline decoration-blue-300 dark:decoration-blue-700 underline-offset-4">
+                                            {budget.pricingMetadata.uploadedFileName}
+                                        </span>
+                                    </span>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -121,7 +169,7 @@ export const BudgetEditorWrapper = ({ budget }: BudgetEditorWrapperProps) => {
                     {/* LEFT COLUMN: Main Content Area (Tabs) */}
                     <div className="min-w-0">
                         <Tabs defaultValue="editor" className="space-y-6">
-                            <TabsList className="bg-white border shadow-sm">
+                            <TabsList className="bg-white dark:bg-white/5 border dark:border-white/10 shadow-sm">
                                 <TabsTrigger value="editor">Editor de Partidas</TabsTrigger>
                                 <TabsTrigger value="details">Detalles Solicitud</TabsTrigger>
                                 <TabsTrigger value="renovation" className="text-purple-600 data-[state=active]:text-purple-800 data-[state=active]:bg-purple-50">
@@ -158,7 +206,7 @@ export const BudgetEditorWrapper = ({ budget }: BudgetEditorWrapperProps) => {
                     {/* RIGHT COLUMN: Sidebar (Summary + Library) */}
                     <div className="sticky top-24">
                         <Tabs defaultValue="summary" className="w-full">
-                            <TabsList className="w-full grid grid-cols-2 bg-white/50 mb-4 border shadow-sm">
+                            <TabsList className="w-full grid grid-cols-2 bg-white/50 dark:bg-white/5 mb-4 border dark:border-white/10 shadow-sm">
                                 <TabsTrigger value="summary">Resumen</TabsTrigger>
                                 <TabsTrigger value="library">Biblioteca</TabsTrigger>
                             </TabsList>

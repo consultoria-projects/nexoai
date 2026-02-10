@@ -1,4 +1,4 @@
-import { routing } from '@/i18n/routing';
+﻿import { routing } from '@/i18n/routing';
 
 export function getLocalizedPath(pathTemplate: string, locale: string, params?: Record<string, string>) {
     let path = pathTemplate;
@@ -63,7 +63,7 @@ export function constructMetadata({ title, description, image, path, locale, par
             title,
             description,
             url: alternates.canonical,
-            siteName: 'Express Renovation Mallorca',
+            siteName: 'Grupo RG',
             images: [
                 {
                     url: socialImage,

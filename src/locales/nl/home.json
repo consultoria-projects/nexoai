@@ -1,14 +1,70 @@
-{
+﻿{
     "hero": {
         "title": "Wij transformeren ruimtes <br/> <span class='text-primary italic'>in ervaringen</span>",
         "subtitle": "Hoogwaardige totaalrenovaties op Mallorca. Waar kwaliteit en exclusiviteit samenkomen.",
         "cta": "Vraag premium offerte aan",
-        "ctaSecondary": "Bekijk diensten"
+        "ctaSecondary": "Bekijk diensten",
+        "floating": {
+            "featured": "Uitgelicht",
+            "clients": "+500 Klanten",
+            "renovate": "Denkt u aan renoveren?",
+            "estimate": "Gratis offerte in seconden",
+            "scroll": "Scroll om te ontdekken"
+        },
+        "stats": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Jaren ervaring"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Voltooide projecten"
+            }
+        ]
+    },
+    "philosophy": {
+        "quote": "Wij bouwen geen huizen. Wij creëren het podium voor uw leven.",
+        "author": "Grupo RG",
+        "description": "Elk project is uniek omdat elke klant uniek is. Wij combineren ambachtelijke ervaring met technologische innovatie voor uitzonderlijke resultaten."
+    },
+    "expertise": {
+        "subtitle": "Onze Expertise",
+        "title": "Excellentie in elk project",
+        "items": [
+            {
+                "title": "Nieuwbouw",
+                "description": "Bouw van woningen, commerciële ruimtes en gebouwen vanaf nul met de hoogste kwaliteitsnormen.",
+                "link": "/servicios/construccion",
+                "featured": true
+            },
+            {
+                "title": "Totaalrenovaties",
+                "description": "Volledige transformatie van ruimtes, coördinatie van alle vakmensen onder één project.",
+                "link": "/servicios/reformas-integrales"
+            },
+            {
+                "title": "Onderhoud",
+                "description": "Loodgieterswerk, elektra, metselwerk en algemene reparaties.",
+                "link": "/servicios/mantenimiento"
+            },
+            {
+                "title": "Interieurontwerp",
+                "description": "Interieurdesign en decoratie die uw persoonlijkheid en levensstijl weerspiegelen.",
+                "link": "/servicios/interiorismo"
+            },
+            {
+                "title": "Gespecialiseerde Werken",
+                "description": "Zonnepanelen, zwembadrenovaties, toegankelijkheid en geavanceerde technische diensten.",
+                "link": "/servicios/trabajos-especializados"
+            }
+        ]
     },
     "vision": {
         "label": "Onze Filosofie",
         "title": "Het nieuwe tijdperk van <br/> <span class='text-primary'>moderne bouw</span>",
-        "description": "Bij Express Renovation Mallorca herdefiniëren we de standaard voor luxe renovaties. We laten traditionele onzekerheid achter ons en omarmen technologische precisie en ambachtelijke excellentie.",
+        "description": "Bij Grupo RG herdefiniëren we de standaard voor luxe renovaties. We laten traditionele onzekerheid achter ons en omarmen technologische precisie en ambachtelijke excellentie.",
         "points": [
             "Gecertificeerde Europese kwaliteitsnormen.",
             "3D-visualisatietechnologie vóór de start.",
@@ -55,6 +111,50 @@
         ],
         "cta": "Bekijk details"
     },
+    "numbers": {
+        "items": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Jaren ervaring"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Voltooide projecten"
+            },
+            {
+                "value": 98,
+                "suffix": "%",
+                "label": "Tevreden klanten"
+            },
+            {
+                "value": 50,
+                "suffix": "+",
+                "label": "Professionals"
+            }
+        ]
+    },
+    "territories": {
+        "label": "Dekking",
+        "title": "Aanwezigheid op de Balearen",
+        "description": "We zijn actief in de hele archipel en passen ons aan aan de regelgeving en unieke kenmerken van elke locatie.",
+        "locations": [
+            "Palma de Mallorca",
+            "Calvià",
+            "Sóller",
+            "Pollença",
+            "Alcúdia",
+            "Manacor",
+            "Menorca",
+            "Ibiza",
+            "Formentera"
+        ]
+    },
+    "contact": {
+        "title": "Heeft u een project in gedachten?",
+        "cta": "Vraag gratis offerte aan"
+    },
     "transformations": {
         "label": "Voor & Na",
         "title": "Echte Transformaties",
@@ -67,26 +167,61 @@
         "sidebarStep2Desc": "Fotorealistische renders van uw toekomstige huis.",
         "cta": "Bekijk volledige galerij"
     },
+    "contactStrip": {
+        "badge": "Start uw project",
+        "title": "Hoe kunnen wij ",
+        "titleHighlight": "u helpen",
+        "subtitle": "Kies de optie die het beste bij uw project past. Elke tool is ontworpen voor een andere behoefte.",
+        "options": {
+            "chat": {
+                "title": "AI-Architect Chat",
+                "description": "Chat met onze expert-AI om ideeën te verkennen, concepten te valideren en uw visie vorm te geven.",
+                "whyChoose": "Ideaal als u het project nog aan het definiëren bent en professionele begeleiding nodig hebt."
+            },
+            "wizard": {
+                "title": "Smart Budget",
+                "description": "360°-analyse van uw renovatie met gedetailleerde uitsplitsing. Onze AI analyseert elk aspect van uw project.",
+                "whyChoose": "Perfect als u weet wat u wilt en een nauwkeurige schatting nodig hebt."
+            },
+            "newBuild": {
+                "title": "Nieuwbouw",
+                "description": "Haalbaarheidsstudie en volledige schatting voor bouwprojecten vanaf nul.",
+                "whyChoose": "Voor nieuwbouwprojecten: woningen, commerciële ruimtes of complete gebouwen."
+            },
+            "reform": {
+                "title": "Snel Offerte",
+                "description": "Express-schatting voor eenvoudige renovaties. Resultaat in minder dan 2 minuten.",
+                "whyChoose": "Ideaal voor specifiek werk: badkamer, keuken, schilderen, installaties."
+            }
+        },
+        "cta": "Starten",
+        "trust1": "Vrijblijvend",
+        "trust2": "Onmiddellijk antwoord",
+        "trust3": "+500 voltooide projecten",
+        "trust4": "30+ jaar ervaring"
+    },
     "processSteps": {
-        "label": "Totale Transparantie",
-        "title": "De Express Methode: Geen Verrassingen",
-        "subtitle": "Een lineair en voorspelbaar proces ontworpen voor uw gemoedsrust.",
+        "label": "Ons Proces",
+        "title": "Hoe wij werken",
+        "subtitle": "Een slim proces dat AI-technologie combineert met menselijke expertise voor uw gemoedsrust.",
         "steps": [
             {
-                "title": "Eerste Consultatie",
-                "description": "Ontmoeting ter plaatse om uw behoeften en budget te begrijpen."
+                "title": "Smart Budget",
+                "description": "Gebruik ons AI-begrotingssysteem. Beschrijf uw project en krijg in seconden een eerste kostenoverzicht, vrijblijvend.",
+                "badge": "AI"
             },
             {
-                "title": "Design & Planning",
-                "description": "Creatie van plannen, 3D-renders en gedetailleerde begroting."
+                "title": "Expert Review",
+                "description": "Een menselijke agent analyseert uw schatting, verifieert technische specificaties en past het budget aan met professionele criteria."
             },
             {
-                "title": "Expertuitvoering",
-                "description": "Bouw onder constant toezicht en vaste termijnen."
+                "title": "Technisch Bezoek",
+                "description": "We organiseren een optioneel bezoek om maten te nemen, de ruimte te beoordelen en details van het technische voorstel te definiëren."
             },
             {
-                "title": "Sleutelklare Oplevering",
-                "description": "Eindschoonmaak, kwaliteitscontrole en sleuteloverdracht."
+                "title": "Definitief Budget",
+                "description": "Ontvang een gedetailleerd, gesloten budget klaar voor goedkeuring. Bespreek eventuele twijfels met onze intelligente assistent.",
+                "badge": "AI"
             }
         ]
     },
@@ -103,7 +238,7 @@
         "items": [
             {
                 "question": "Hoe lang duurt een totaalrenovatie op Mallorca?",
-                "answer": "De tijd varieert afhankelijk van de complexiteit, maar een standaard totaalrenovatie duurt meestal tussen 3 en 5 maanden. Bij Express Renovation Mallorca garanderen we contractueel vastgelegde termijnen dankzij onze planning met 3D-technologie, waardoor gebruikelijke vertragingen in de sector worden voorkomen."
+                "answer": "De tijd varieert afhankelijk van de complexiteit, maar een standaard totaalrenovatie duurt meestal tussen 3 en 5 maanden. Bij Grupo RG garanderen we contractueel vastgelegde termijnen dankzij onze planning met 3D-technologie, waardoor gebruikelijke vertragingen in de sector worden voorkomen."
             },
             {
                 "question": "Regelen jullie de bouwvergunningen?",

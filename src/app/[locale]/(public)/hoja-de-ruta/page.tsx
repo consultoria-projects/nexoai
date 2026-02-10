@@ -93,7 +93,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
                         <div className="relative w-64 h-auto mx-auto mb-8">
                             <Image
                                 src={logoUrl}
-                                alt="Logo Express Renovation Mallorca"
+                                alt="Logo Grupo RG"
                                 width={276}
                                 height={116}
                                 className="object-contain"
@@ -101,7 +101,7 @@ export default async function RoadmapPage({ params }: { params: Promise<{ locale
                             />
                         </div>
                         <h1 className="font-headline text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                            Plan Constructor Total Express Renovation Mallorca
+                            Plan Constructor Total Grupo RG
                         </h1>
                         <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
                             El sistema completo para visualizar, presupuestar y cerrar más proyectos en automático. A continuación, nuestra hoja de ruta detallada para hacerlo realidad.

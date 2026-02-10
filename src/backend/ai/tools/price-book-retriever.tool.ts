@@ -1,9 +1,11 @@
 
 import { z } from 'zod';
-import { ai, embeddingModel } from '@/backend/ai/config/genkit.config';
+import { ai } from '@/backend/ai/config/genkit.config';
 import { FirestorePriceBookRepository } from '@/backend/price-book/infrastructure/firestore-price-book-repository';
+import { RestApiVectorizerAdapter } from '@/backend/price-book/infrastructure/ai/rest-api-vectorizer.adapter';
 
 const priceBookRepo = new FirestorePriceBookRepository();
+const vectorizer = new RestApiVectorizerAdapter();
 
 export const priceBookRetrieverTool = ai.defineTool(
     {
@@ -27,16 +29,8 @@ export const priceBookRetrieverTool = ai.defineTool(
         try {
             console.log(`[Tool:PriceBookRetriever] Searching for: "${input.query}" (Year: ${input.year})`);
 
-            // 1. Generate Embedding for the query
-            const embeddingResult = await ai.embed({
-                embedder: embeddingModel,
-                content: input.query,
-            });
-
-            // Handle array or object return type from Genkit
-            const embedding = Array.isArray(embeddingResult)
-                ? embeddingResult[0].embedding
-                : (embeddingResult as any).embedding;
+            // 1. Generate Embedding for the query using the Adapter (forces 768 dims)
+            const embedding = await vectorizer.embedText(input.query);
 
             // 2. Search in Repository
             const results = await priceBookRepo.searchByVector(embedding, input.limit, input.year);

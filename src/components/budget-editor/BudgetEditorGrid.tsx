@@ -96,162 +96,175 @@ const DraggableRow = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode }: 
             dragListener={false}
             dragControls={controls}
             className={cn(
-                "group relative bg-white border rounded-xl mb-4 shadow-sm hover:shadow-md transition-all overflow-hidden",
-                item.isDirty && "border-amber-200 bg-amber-50/10"
+                "group relative bg-white dark:bg-white/5 border dark:border-white/10 rounded-xl mb-4 shadow-sm hover:shadow-md transition-all overflow-hidden",
+                item.isDirty && "border-amber-200 dark:border-amber-500/30 bg-amber-50/10"
             )}
         >
-            <div className="flex items-stretch bg-slate-50/50 border-b p-3">
-                {/* Drag Handle */}
-                <div
-                    onPointerDown={(e) => controls.start(e)}
-                    className="mr-3 cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500 flex flex-col justify-center"
-                >
-                    <GripVertical className="w-5 h-5" />
-                </div>
+            <div className="flex flex-col sm:flex-row sm:items-stretch bg-slate-50/50 dark:bg-white/[0.03] border-b dark:border-white/10 p-3 gap-3 sm:gap-0">
 
-                {/* Index Number */}
-                <div className="flex flex-col justify-center mr-4">
-                    <span className="text-xs font-mono font-bold text-slate-400 border bg-white px-2 py-1 rounded">
-                        {String(item.order || 0).padStart(2, '0')}
-                    </span>
-                </div>
+                {/* Mobile Top Row: Handle, Index, Title, Actions */}
+                <div className="flex items-center w-full sm:w-auto sm:flex-1">
+                    {/* Drag Handle */}
+                    <div
+                        onPointerDown={(e) => controls.start(e)}
+                        className="mr-3 cursor-grab active:cursor-grabbing text-slate-300 dark:text-white/20 hover:text-slate-500 dark:hover:text-white/50 flex flex-col justify-center"
+                    >
+                        <GripVertical className="w-5 h-5" />
+                    </div>
 
-                {/* Header Title */}
-                <div className="flex-1 flex flex-col justify-center py-1">
-                    <EditableCell
-                        value={item.originalTask || "Nueva Partida"}
-                        onChange={(val) => onUpdate(item.id, { originalTask: val as string })}
-                        className="font-bold text-base text-slate-700 bg-transparent border-transparent hover:border-slate-200 focus:bg-white px-0"
-                        placeholder="Título de la partida..."
-                    />
-                    {isDeviated && (
-                        <div className="flex items-center gap-1 text-amber-600 text-[10px] mt-0.5">
-                            <AlertTriangle className="w-3 h-3" />
-                            <span>Desviación significativa (+20%)</span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Price Logic */}
-                <div className="flex flex-col items-end gap-1 justify-center">
-                    {/* Ghost Mode Original Total */}
-                    {showGhostMode && item.originalState && (
-                        <span className="text-xs text-slate-400 line-through font-mono mr-2">
-                            {(item.originalState.quantity * item.originalState.unitPrice).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                    {/* Index Number */}
+                    <div className="flex flex-col justify-center mr-4">
+                        <span className="text-xs font-mono font-bold text-slate-400 dark:text-white/40 border dark:border-white/10 bg-white dark:bg-white/5 px-2 py-1 rounded">
+                            {String(item.order || 0).padStart(2, '0')}
                         </span>
-                    )}
+                    </div>
 
-                    <div className={cn(
-                        "flex items-center gap-2 border rounded-lg px-3 py-1 ml-4 shadow-sm transition-colors bg-white",
-                        isDeviated ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-100"
-                    )}>
-                        {/* Quantity x Unit Price = Total */}
+                    {/* Header Title */}
+                    <div className="flex-1 flex flex-col justify-center py-1 min-w-0">
+                        <EditableCell
+                            value={item.originalTask || "Nueva Partida"}
+                            onChange={(val) => onUpdate(item.id, { originalTask: val as string })}
+                            className="font-bold text-base text-slate-700 dark:text-white/90 bg-transparent border-transparent hover:border-slate-200 dark:hover:border-white/10 focus:bg-white dark:focus:bg-white/10 px-0 truncate w-full"
+                            placeholder="Título de la partida..."
+                        />
+                        {isDeviated && (
+                            <div className="flex items-center gap-1 text-amber-600 text-[10px] mt-0.5">
+                                <AlertTriangle className="w-3 h-3" />
+                                <span>Desviación significativa (+20%)</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Mobile Actions (Visible here on mobile, hidden on desktop? Or kept?) */}
+                    {/* Actually, let's keep Actions at the end of the flex container for desktop, but for mobile we might want them accessible. 
+                        Let's keep the desktop structure but wrap it. 
+                     */}
+                </div>
+
+                {/* Price Logic + Actions Wrapper */}
+                <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
+
+                    {/* Price Logic */}
+                    <div className="flex flex-col items-end gap-1 justify-center flex-1 sm:flex-none">
+                        {/* Ghost Mode Original Total */}
+                        {showGhostMode && item.originalState && (
+                            <span className="text-xs text-slate-400 line-through font-mono mr-2">
+                                {(item.originalState.quantity * item.originalState.unitPrice).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                            </span>
+                        )}
+
                         <div className={cn(
-                            "flex items-center gap-1 text-sm",
-                            isDeviated ? "text-amber-800" : "text-green-800"
+                            "flex items-center gap-2 border rounded-lg px-3 py-1 ml-0 sm:ml-4 shadow-sm transition-colors bg-white dark:bg-white/5 w-full sm:w-auto justify-between sm:justify-start",
+                            isDeviated ? "bg-amber-50 border-amber-200" : "bg-green-50 border-green-100"
                         )}>
-                            <EditableCell
-                                value={item.item?.quantity || 0}
-                                onChange={(val) => onUpdate(item.id, { item: { ...item.item!, quantity: Number(val) } })}
-                                type="number"
-                                className={cn(
-                                    "w-12 h-6 text-right bg-transparent border-transparent hover:bg-white focus:bg-white font-mono p-0",
-                                    isDeviated ? "text-amber-800" : "text-green-800"
-                                )}
-                            />
-                            <div className="flex flex-col items-center leading-none">
-                                <span className={cn("text-[10px] uppercase", isDeviated ? "text-amber-500" : "text-green-500")}>
-                                    <EditableCell
-                                        value={item.item?.unit || 'ud'}
-                                        onChange={(val) => onUpdate(item.id, { item: { ...item.item!, unit: val as string } })}
-                                        className="w-8 text-center bg-transparent border-transparent hover:bg-white focus:bg-white p-0 h-4"
-                                    />
-                                </span>
+                            {/* Quantity x Unit Price = Total */}
+                            <div className={cn(
+                                "flex items-center gap-1 text-sm",
+                                isDeviated ? "text-amber-800" : "text-green-800"
+                            )}>
+                                <EditableCell
+                                    value={item.item?.quantity || 0}
+                                    onChange={(val) => onUpdate(item.id, { item: { ...item.item!, quantity: Number(val) } })}
+                                    type="number"
+                                    className={cn(
+                                        "w-12 h-6 text-right bg-transparent border-transparent hover:bg-white focus:bg-white font-mono p-0",
+                                        isDeviated ? "text-amber-800" : "text-green-800"
+                                    )}
+                                />
+                                <div className="flex flex-col items-center leading-none">
+                                    <span className={cn("text-[10px] uppercase", isDeviated ? "text-amber-500" : "text-green-500")}>
+                                        <EditableCell
+                                            value={item.item?.unit || 'ud'}
+                                            onChange={(val) => onUpdate(item.id, { item: { ...item.item!, unit: val as string } })}
+                                            className="w-8 text-center bg-transparent border-transparent hover:bg-white focus:bg-white p-0 h-4"
+                                        />
+                                    </span>
+                                </div>
+
+                                <span className={cn("mx-1 text-xs opacity-50", isDeviated ? "text-amber-800" : "text-green-800")}>x</span>
+
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <div>
+                                                <EditableCell
+                                                    value={item.item?.unitPrice || 0}
+                                                    onChange={(val) => onUpdate(item.id, { item: { ...item.item!, unitPrice: Number(val) } })}
+                                                    type="currency"
+                                                    className={cn(
+                                                        "w-20 h-6 text-right bg-transparent border-transparent hover:bg-white focus:bg-white font-mono p-0",
+                                                        isDeviated ? "text-amber-800" : "text-green-800"
+                                                    )}
+                                                />
+                                            </div>
+                                        </TooltipTrigger>
+                                        {isDeviated && item.originalState && (
+                                            <TooltipContent side="top">
+                                                Original: {item.originalState.unitPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                                            </TooltipContent>
+                                        )}
+                                    </Tooltip>
+                                </TooltipProvider>
                             </div>
 
-                            <span className={cn("mx-1 text-xs opacity-50", isDeviated ? "text-amber-800" : "text-green-800")}>x</span>
+                            <div className={cn("h-4 w-px mx-2", isDeviated ? "bg-amber-200" : "bg-green-200")} />
 
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <div>
-                                            <EditableCell
-                                                value={item.item?.unitPrice || 0}
-                                                onChange={(val) => onUpdate(item.id, { item: { ...item.item!, unitPrice: Number(val) } })}
-                                                type="currency"
-                                                className={cn(
-                                                    "w-20 h-6 text-right bg-transparent border-transparent hover:bg-white focus:bg-white font-mono p-0",
-                                                    isDeviated ? "text-amber-800" : "text-green-800"
-                                                )}
-                                            />
-                                        </div>
-                                    </TooltipTrigger>
-                                    {isDeviated && item.originalState && (
-                                        <TooltipContent side="top">
-                                            Original: {item.originalState.unitPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
-                                        </TooltipContent>
-                                    )}
-                                </Tooltip>
-                            </TooltipProvider>
-                        </div>
-
-                        <div className={cn("h-4 w-px mx-2", isDeviated ? "bg-amber-200" : "bg-green-200")} />
-
-                        {/* Editable Total Price */}
-                        <div className={cn("font-bold text-lg", isDeviated ? "text-amber-700" : "text-green-700")}>
-                            <EditableCell
-                                value={item.item?.totalPrice || 0}
-                                onChange={handleTotalChange}
-                                type="currency"
-                                className="w-24 h-7 text-right bg-transparent border-transparent hover:bg-white focus:bg-white font-mono p-0"
-                            />
+                            {/* Editable Total Price */}
+                            <div className={cn("font-bold text-lg", isDeviated ? "text-amber-700" : "text-green-700")}>
+                                <EditableCell
+                                    value={item.item?.totalPrice || 0}
+                                    onChange={handleTotalChange}
+                                    type="currency"
+                                    className="w-24 h-7 text-right bg-transparent border-transparent hover:bg-white focus:bg-white font-mono p-0"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-1 ml-3 border-l pl-3 self-center">
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
+                    {/* Actions */}
+                    <div className="flex items-center gap-1 ml-0 sm:ml-3 pl-0 sm:pl-3 border-l-0 sm:border-l self-center shrink-0">
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-slate-300 dark:text-white/20 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10"
+                                        onClick={() => onDuplicate(item.id)}
+                                    >
+                                        <Copy className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Duplicar partida</TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 text-slate-300 hover:text-blue-500 hover:bg-blue-50"
-                                    onClick={() => onDuplicate(item.id)}
+                                    className="h-8 w-8 text-slate-300 dark:text-white/20 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
                                 >
-                                    <Copy className="w-4 h-4" />
+                                    <Trash2 className="w-4 h-4" />
                                 </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Duplicar partida</TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-slate-300 hover:text-red-500 hover:bg-red-50"
-                            >
-                                <Trash2 className="w-4 h-4" />
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Esta acción eliminará la partida "{item.originalTask}" permanentemente.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => onRemove(item.id)} className="bg-red-600 hover:bg-red-700">
-                                    Eliminar
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Esta acción eliminará la partida "{item.originalTask}" permanentemente.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => onRemove(item.id)} className="bg-red-600 hover:bg-red-700">
+                                        Eliminar
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
                 </div>
             </div>
 
@@ -262,7 +275,7 @@ const DraggableRow = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode }: 
                     isExpanded ? "h-auto block" : "max-h-[3rem] overflow-hidden" // Slightly smaller collapsed height
                 )}>
                     {!isExpanded && (
-                        <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none z-10" />
+                        <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent pointer-events-none z-10" />
                     )}
 
                     {/* Description Editor */}
@@ -272,7 +285,7 @@ const DraggableRow = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode }: 
                             onChange={(val) => onUpdate(item.id, { item: { ...item.item!, description: val as string } })}
                             type="textarea"
                             className={cn(
-                                "text-sm text-slate-600 leading-relaxed bg-transparent border-slate-100 focus:bg-white focus:border-primary/20 w-full",
+                                "text-sm text-slate-600 dark:text-white/60 leading-relaxed bg-transparent border-slate-100 dark:border-white/10 focus:bg-white dark:focus:bg-white/10 focus:border-primary/20 w-full",
                                 isExpanded ? "min-h-[4rem]" : "h-full"
                             )}
                             placeholder="Descripción técnica detallada..."
@@ -293,7 +306,7 @@ const DraggableRow = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode }: 
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsExpanded(!isExpanded)}
-                        className="h-5 w-full hover:bg-slate-50 text-slate-300 hover:text-slate-500 flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider"
+                        className="h-5 w-full hover:bg-slate-50 dark:hover:bg-white/5 text-slate-300 dark:text-white/20 hover:text-slate-500 dark:hover:text-white/50 flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider"
                     >
                         {isExpanded ? (
                             <>Menos <ChevronUp className="w-3 h-3" /></>
@@ -346,9 +359,9 @@ const ChapterGroup = ({
     };
 
     return (
-        <div className="mb-6 border border-slate-200 rounded-xl overflow-hidden bg-slate-50/50 shadow-sm">
+        <div className="mb-6 border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden bg-slate-50/50 dark:bg-white/[0.02] shadow-sm">
             {/* Chapter Header */}
-            <div className="flex items-center justify-between p-4 bg-white border-b border-slate-200">
+            <div className="flex items-center justify-between p-4 bg-white dark:bg-white/5 border-b border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-3 flex-1">
                     <Button
                         variant="ghost"
@@ -370,11 +383,11 @@ const ChapterGroup = ({
                         />
                     ) : (
                         <h3
-                            className="font-bold text-lg text-slate-800 cursor-pointer hover:underline decoration-dashed decoration-slate-300 underline-offset-4"
+                            className="font-bold text-lg text-slate-800 dark:text-white cursor-pointer hover:underline decoration-dashed decoration-slate-300 dark:decoration-white/30 underline-offset-4"
                             onClick={() => setIsEditingName(true)}
                         >
                             {chapterName}
-                            <span className="ml-3 text-xs font-normal text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                            <span className="ml-3 text-xs font-normal text-slate-400 dark:text-white/40 bg-slate-100 dark:bg-white/10 px-2 py-0.5 rounded-full">
                                 {items.length} partidas
                             </span>
                         </h3>
@@ -406,7 +419,7 @@ const ChapterGroup = ({
 
             {/* Chapter Items */}
             {isOpen && (
-                <div className="p-4 bg-slate-50/30">
+                <div className="p-4 bg-slate-50/30 dark:bg-transparent">
                     <Reorder.Group axis="y" values={items} onReorder={onReorder} className="space-y-4">
                         {items.length === 0 ? (
                             <div className="text-center py-8 border border-dashed rounded-lg text-slate-400 text-sm">
@@ -465,7 +478,7 @@ export const BudgetEditorGrid = ({
 
             <Button
                 variant="outline"
-                className="w-full border-dashed py-6 text-slate-500 hover:text-primary hover:border-primary/50 hover:bg-primary/5"
+                className="w-full border-dashed py-6 text-slate-500 dark:text-white/40 hover:text-primary hover:border-primary/50 hover:bg-primary/5"
                 onClick={() => onAddChapter(`Nuevo Capítulo ${chapters.length + 1}`)}
             >
                 <FolderPlus className="w-5 h-5 mr-2" />

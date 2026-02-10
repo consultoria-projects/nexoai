@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
     Accordion,
@@ -10,7 +10,7 @@ import {
 const faqs = [
     {
         question: "¿cuánto tiempo tarda una reforma integral en Mallorca?",
-        answer: "El tiempo varía según la complejidad, pero una reforma integral estándar suele oscilar entre 3 y 5 meses. En Express Renovation Mallorca, garantizamos plazos cerrados por contrato gracias a nuestra planificación previa con tecnología 3D, evitando los retrasos habituales del sector."
+        answer: "El tiempo varía según la complejidad, pero una reforma integral estándar suele oscilar entre 3 y 5 meses. En Grupo RG, garantizamos plazos cerrados por contrato gracias a nuestra planificación previa con tecnología 3D, evitando los retrasos habituales del sector."
     },
     {
         question: "¿Gestionáis las licencias de obra?",

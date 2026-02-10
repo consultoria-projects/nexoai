@@ -1,27 +1,43 @@
 import { getDictionary } from '@/lib/dictionaries';
-import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Link } from '@/i18n/navigation';
-import { VisionSection } from '@/components/home/vision-section';
-import { ServicesGrid } from '@/components/home/services-grid';
-import { TransformationsSection } from '@/components/home/transformations-section';
-import { ProcessSteps } from '@/components/home/process-steps';
-import { LocationsGrid } from '@/components/home/locations-grid';
-import { FaqSection } from '@/components/home/faq-section';
-import { CtaSection } from '@/components/home/cta-section';
-import { HeroSection } from '@/components/home/hero-section';
-
-
-
+import { Building2, Hammer, Wrench, Palette, Zap, FileCheck } from 'lucide-react';
 import { constructMetadata } from '@/i18n/seo-utils';
+import { OrganizationJsonLd, FAQJsonLd } from '@/components/seo/json-ld';
+
+// New Modular Components
+import { HeroHybrid as Hero } from '@/components/home/sections/hero-hybrid'; // Using HeroHybrid V3
+import { PhilosophySection } from '@/components/home/sections/philosophy';
+import { ExpertiseSection } from '@/components/home/sections/expertise';
+import { NumbersSection } from '@/components/home/sections/numbers';
+import { TerritoriesSection } from '@/components/home/sections/territories';
+import { ContactStrip } from '@/components/home/sections/contact-strip';
+
+// Keeping legacy components for now if needed, but primarily using new ones
+import { FaqSection } from '@/components/home/faq-section';
+import { ProcessSteps } from '@/components/home/process-steps';
+
+// Service icons mapping
+const serviceIcons: Record<string, React.ReactNode> = {
+  'Obra Nueva': <Building2 className="w-8 h-8" />,
+  'New Construction': <Building2 className="w-8 h-8" />,
+  'Reformas Integrales': <Hammer className="w-8 h-8" />,
+  'Complete Renovations': <Hammer className="w-8 h-8" />,
+  'Mantenimiento': <Wrench className="w-8 h-8" />,
+  'Maintenance': <Wrench className="w-8 h-8" />,
+  'Interiorismo': <Palette className="w-8 h-8" />,
+  'Interior Design': <Palette className="w-8 h-8" />,
+  'Trabajos Especializados': <Zap className="w-8 h-8" />,
+  'Specialized Works': <Zap className="w-8 h-8" />,
+  'Gestión de Permisos': <FileCheck className="w-8 h-8" />,
+  'Permit Management': <FileCheck className="w-8 h-8" />,
+};
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const dict = await getDictionary(locale as any);
 
   return constructMetadata({
-    title: dict.home.hero.title || 'Express Renovation Mallorca',
-    description: dict.home.hero.subtitle || 'Reformas integrales en Mallorca',
+    title: 'Grupo RG - Construcción y Reformas en Mallorca',
+    description: dict.home.hero.description || 'Reformas integrales de alta gama en Mallorca.',
     path: '/',
     locale
   });
@@ -29,32 +45,68 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const dict = await getDictionary(locale as any); // Cast because 'nl' might not be fully inferred yet in some IDEs or strict check
+  const dict = await getDictionary(locale as any);
+  const t = dict.home;
+
+  // Clean data for props (remove HTML from strings if possible manually here or use raw strings)
+  // For V2, we assume the translations are clean strings. If they have HTML, we strip it or handle it.
+  // The new components assume plain text strings.
+
+  // Expertise Items Transformation
+  const expertiseItems = t.expertise?.items?.map((item: any, index: number) => ({
+    ...item,
+    icon: serviceIcons[item.title] || <Building2 className="w-8 h-8" />,
+    href: item.link || '/services',
+    featured: index === 0 // Force first item as featured
+  })) || [];
 
   return (
-    <main className="flex-1">
-      {/* Hero Section */}
-      {/* <HeroSection t={dict.home.hero} />
+    <>
+      <OrganizationJsonLd />
+      {t.faq?.items && <FAQJsonLd items={t.faq.items} />}
+      <main className="flex-1 overflow-x-hidden">
+        <Hero
+          title={t.hero.title.replace(/<[^>]*>?/gm, ' ')} // Strip HTML tags for safety
+          subtitle={t.hero.subtitle}
+          description={t.hero.description}
+          ctaText={t.hero.cta}
+          ctaLink="/budget-request"
+          secondaryCtaText={t.hero.ctaSecondary}
+          secondaryCtaLink="/services"
+          floatingCards={t.hero.floating}
+        />
 
-      <VisionSection t={dict.home.vision} />
+        <PhilosophySection
+          quote={t.philosophy?.quote || "Construimos sueños, no solo paredes."}
+          author="Grupo RG"
+          description={t.philosophy?.description}
+          label={t.philosophy?.label}
+        />
 
-      <ServicesGrid t={dict.home.servicesGrid} />
+        <ExpertiseSection
+          title={t.expertise?.title || "Nuestros Servicios"}
+          subtitle={t.expertise?.subtitle || "Especialidades"}
+          items={expertiseItems}
+          viewProjectLabel={t.expertise?.viewProject}
+        />
 
-      <TransformationsSection t={dict.home.transformations} />
+        <NumbersSection
+          items={t.numbers?.items}
+        />
 
-        
+        <ProcessSteps t={t.processSteps} />
 
+        <TerritoriesSection
+          title={t.territories?.title}
+          description={t.territories?.description}
+          locations={t.territories?.locations}
+          label={t.territories?.label}
+        />
 
-      <ProcessSteps t={dict.home.processSteps} />
+        <FaqSection t={t.faq} />
 
-      <LocationsGrid t={dict.home.locations} />
-
-      <FaqSection t={dict.home.faq} />
-
-      <CtaSection t={dict.home.cta} /> */}
-
-      <h1 className="text-4xl font-bold" >Home Constructor</h1>
-
-    </main>
+        <ContactStrip t={t.contactStrip} />
+      </main>
+    </>
   );
 }

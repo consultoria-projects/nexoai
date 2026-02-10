@@ -55,6 +55,20 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
                     createdAt: item.createdAt || new Date()
                 };
 
+                // Sanitize undefined breakdown
+                if (dbPayload.breakdown === undefined) {
+                    delete dbPayload.breakdown;
+                } else if (Array.isArray(dbPayload.breakdown)) {
+                    // Sanitize undefineds inside breakdown objects
+                    dbPayload.breakdown = dbPayload.breakdown.map((b: any) => {
+                        const cleanB = { ...b };
+                        Object.keys(cleanB).forEach(key => {
+                            if (cleanB[key] === undefined) delete cleanB[key];
+                        });
+                        return cleanB;
+                    });
+                }
+
                 if (embedding) {
                     dbPayload.embedding = FieldValue.vector(embedding);
                 }
@@ -160,6 +174,51 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
             return {
                 id: doc.id,
                 createdAt: createdDate, // Next.js handles Date objects if they are "true" Date objects
+                ...rest
+            } as PriceBookItem;
+        });
+    }
+
+    async searchByVectorWithFilters(
+        embedding: number[],
+        filters: import('../domain/price-book-repository').SearchFilters,
+        limit: number = 10
+    ): Promise<PriceBookItem[]> {
+        const collectionRef = this.db.collection('price_book_items');
+
+        let queryRef: any = collectionRef;
+
+        // Apply Structured Filters BEFORE Vector Search (Hybrid)
+        if (filters.chapter) {
+            queryRef = queryRef.where('chapter', '==', filters.chapter);
+        }
+        if (filters.section) {
+            queryRef = queryRef.where('section', '==', filters.section);
+        }
+        if (filters.year) {
+            queryRef = queryRef.where('year', '==', filters.year);
+        }
+        if (filters.maxPrice) {
+            queryRef = queryRef.where('priceTotal', '<=', filters.maxPrice);
+        }
+
+        // Apply Vector Search on the filtered query
+        // This requires a Firestore Composite Index (Vector + Fields)
+        const vectorValue = FieldValue.vector(embedding);
+
+        const vectorQuery = queryRef.findNearest('embedding', vectorValue, {
+            limit: limit,
+            distanceMeasure: 'COSINE'
+        });
+
+        console.log(`[Firestore] Executing Hybrid Search... Filters:`, filters);
+
+        const snapshot = await vectorQuery.get();
+        return snapshot.docs.map((doc: any) => {
+            const data = doc.data();
+            const { embedding, createdAt, ...rest } = data;
+            return {
+                id: doc.id,
                 ...rest
             } as PriceBookItem;
         });

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ export function VisionSection({ t }: { t: any }) {
 
     const [isVideoOpen, setIsVideoOpen] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
-    const videoUrl = "https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2Fdochevi%2Fexpress_corporativo.mp4?alt=media&token=3916f648-aa3a-4b9c-9f62-17e9ff8ff74d"
+    const videoUrl = "https://firebasestorage.googleapis.com/v0/b/local-digital-eye.firebasestorage.app/o/business%2FGRUPO RG%2Fexpress_corporativo.mp4?alt=media&token=3916f648-aa3a-4b9c-9f62-17e9ff8ff74d"
 
     const ref = useRef(null);
     const { scrollYProgress } = useScroll({

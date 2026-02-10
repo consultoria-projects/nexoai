@@ -1,0 +1,119 @@
+{
+  "timestamp": "2026-02-07T19:53:53.018Z",
+  "pdfFile": "Libro Precios 46_COAATMCA.pdf",
+  "totalPages": 441,
+  "sampledPages": [
+    15,
+    55,
+    100,
+    150,
+    200
+  ],
+  "findings": {
+    "codeFormats": [
+      {
+        "example": "DEH020",
+        "pattern": "3 uppercase letters + 3 digits + optional lowercase letter",
+        "isMainItem": true,
+        "count": 1
+      },
+      {
+        "example": "mq05mai030",
+        "pattern": "2 lowercase letters + 2 digits + 3 lowercase letters + 3 digits",
+        "isMainItem": false,
+        "count": 1
+      },
+      {
+        "example": "mo019",
+        "pattern": "2 lowercase letters + 3 digits",
+        "isMainItem": false,
+        "count": 1
+      },
+      {
+        "example": "%",
+        "pattern": "Percentage symbol for 'Medios auxiliares'",
+        "isMainItem": false,
+        "count": 1
+      }
+    ],
+    "breakdownIndicators": [
+      "Indented compared to the main item code",
+      "Uses lowercase codes (or a percentage symbol) vs. uppercase for main items",
+      "Has a 'Unit Price' column that main items don't explicitly show on their primary line"
+    ],
+    "totalMainItemsInSample": 6,
+    "avgItemsPerPage": "3.0"
+  },
+  "pageAnalyses": [
+    {
+      "pageNumber": 15,
+      "codeFormats": [
+        {
+          "example": "DEH020",
+          "pattern": "3 uppercase letters + 3 digits + optional lowercase letter",
+          "isMainItem": true
+        },
+        {
+          "example": "mq05mai030",
+          "pattern": "2 lowercase letters + 2 digits + 3 lowercase letters + 3 digits",
+          "isMainItem": false
+        },
+        {
+          "example": "mo019",
+          "pattern": "2 lowercase letters + 3 digits",
+          "isMainItem": false
+        },
+        {
+          "example": "%",
+          "pattern": "Percentage symbol for 'Medios auxiliares'",
+          "isMainItem": false
+        }
+      ],
+      "columnStructure": "Code | Quantity/Unit | Description | Unit Price | Total/Subtotal Price",
+      "mainItemCount": 6,
+      "breakdownIndicators": [
+        "Indented compared to the main item code",
+        "Uses lowercase codes (or a percentage symbol) vs. uppercase for main items",
+        "Has a 'Unit Price' column that main items don't explicitly show on their primary line"
+      ],
+      "priceColumnPosition": "rightmost column",
+      "sampleItems": [
+        {
+          "code": "DEH020",
+          "description": "Demolición de losa maciza de hormigón armado de hasta 20 cm de canto total, con medios manuales, mar",
+          "unit": "m²",
+          "priceTotal": 65.95,
+          "hasBreakdown": true
+        },
+        {
+          "code": "DEA020",
+          "description": "Demolición de forjado de viguetas metálicas y entrevigado de tablero cerámico machihembrado con capa",
+          "unit": "m²",
+          "priceTotal": 47.87,
+          "hasBreakdown": true
+        },
+        {
+          "code": "DEF060b",
+          "description": "Demolición de escalera de fábrica con bóveda tabicada o catalana, peldañeado y revestimientos, con ",
+          "unit": "m²",
+          "priceTotal": 15.94,
+          "hasBreakdown": true
+        }
+      ],
+      "chapterTitle": "Hormigones",
+      "sectionTitle": "DEMOLICIONES"
+    },
+    {
+      "pageNumber": 150,
+      "codeFormats": [],
+      "columnStructure": "No itemized content or columns visible on this page.",
+      "mainItemCount": 0,
+      "breakdownIndicators": [],
+      "priceColumnPosition": "No itemized content or prices visible on this page.",
+      "sampleItems": [],
+      "chapterTitle": "REVOCOS Y ENLUCIDOS",
+      "sectionTitle": "Enfoscados"
+    }
+  ],
+  "recommendedPrompt": "Role: Expert Construction Price Book Extractor\n\nTASK: Extract ALL main items (partidas) from this price book page.\n\n═══════════════════════════════════════════════════════════════\nCRITICAL RULES FOR ACCURATE EXTRACTION:\n═══════════════════════════════════════════════════════════════\n\n1. MAIN ITEM IDENTIFICATION:\n   - A MAIN ITEM has: Code + Unit + Description + TOTAL PRICE (rightmost column)\n   - Each row with a TOTAL PRICE in the far right is a SEPARATE item\n   - Examples of main item codes: DEH020\n   - DO NOT merge similar items. Each unique code = 1 item.\n\n2. BREAKDOWN (DESCOMPUESTO) IDENTIFICATION:\n   - Breakdown items appear BELOW their parent main item\n   - Visual indicators: Indented compared to the main item code, Uses lowercase codes (or a percentage symbol) vs. uppercase for main items, Has a 'Unit Price' column that main items don't explicitly show on their primary line\n   - Resource codes examples: mq05mai030, mo019, %\n   - Breakdown items do NOT have a total price in the rightmost column\n\n3. COUNTING:\n   - Before outputting, COUNT the main items on the page\n   - If you see 3 codes with total prices, output 3 items, not 1.\n\n4. PRICE EXTRACTION:\n   - Total price is ALWAYS in the rightmost column\n   - Extract as number (e.g., 110.38 not \"110,38\")\n   - Convert Spanish decimals (comma) to dots\n\n5. CONTEXT:\n   - Current Chapter: [CONTEXT_CHAPTER]\n   - Current Section: [CONTEXT_SECTION]\n   - Update these if you see new headers."
+}

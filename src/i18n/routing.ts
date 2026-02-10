@@ -56,6 +56,7 @@ export const routing = defineRouting({
         '/privacy': '/privacy',
         '/terms': '/terms',
         '/login': '/login',
+        '/signup': '/signup',
         '/zonas/[zone]': {
             es: '/zonas/[zone]',
             en: '/locations/[zone]',

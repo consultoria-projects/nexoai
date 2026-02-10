@@ -1,20 +1,60 @@
-import { Building } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-export function Logo({ className, width = 60, height = 20 }: { className?: string, width?: number, height?: number }) {
+interface LogoProps {
+  className?: string;
+  width?: number;
+  height?: number;
+  variant?: 'default' | 'light' | 'dark';
+}
+
+export function Logo({
+  className,
+  width = 120,
+  height = 40,
+  variant = 'default'
+}: LogoProps) {
   return (
-    <Link href="/" className={cn("block relative", className)}>
-      {/* Use a standard img for simplicity with external URLs unless domains are configured in next.config.js, 
-           but unoptimized Next Image is better for layout stability if we know dimensions. 
-           Given constraints, a simple img with object-contain is safest for external hotlinks if we lack config access.
-           However, let's try standard Next Image with unoptimized prop to allow external without config changes if needed, 
-           or just standard img tag. */}
-      <img
-        src="/images/logo.png"
-        alt="Dochevi Construction"
-        style={{ width: width, height: 'auto', maxHeight: height * 2, objectFit: 'contain' }}
+    <Link
+      href="/"
+      className={cn(
+        "block relative transition-opacity hover:opacity-80",
+        className
+      )}
+    >
+      <Image
+        src="/images/logo.avif"
+        alt="Grupo RG - Construcción y Reformas"
+        width={width}
+        height={height}
+        className={cn(
+          "object-contain",
+          variant === 'light' && "brightness-0 invert",
+          variant === 'dark' && "brightness-0"
+        )}
+        priority
       />
+    </Link>
+  );
+}
+
+// Text-based logo alternative for situations where image doesn't fit
+export function LogoText({ className }: { className?: string }) {
+  return (
+    <Link
+      href="/"
+      className={cn(
+        "flex items-center gap-2 transition-opacity hover:opacity-80",
+        className
+      )}
+    >
+      <span className="font-display text-2xl tracking-tight text-foreground">
+        GRUPO RG
+      </span>
+      <span className="hidden sm:inline text-xs text-muted-foreground uppercase tracking-widest">
+        Construcción
+      </span>
     </Link>
   );
 }

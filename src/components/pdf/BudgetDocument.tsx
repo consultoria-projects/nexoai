@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         marginTop: 20,
-        color: '#B45309', // Dochevi Orange/Amber
+        color: '#B45309', // GRUPO RG Orange/Amber
         borderBottom: 1,
         borderBottomColor: '#FDE68A',
         paddingBottom: 4,
@@ -181,8 +181,8 @@ const Footer = ({ pageNumber }: { pageNumber: number }) => (
     <View style={styles.footerContainer} fixed>
         <View style={styles.footerLine} />
         <Text style={styles.footerText}>
-            DOCHEVI CONSTRUCCION Y REFORMAS SL - CIF: B75257238 - C/ Ramón de Montcada 37, 07183 Calviá {"\n"}
-            www.expressrenovationmallorca.com - Tlf: 697 26 22 21 - Página {pageNumber}
+            GRUPO RG CONSTRUCCION Y REFORMAS SL - CIF: B75257238 - C/ Ramón de Montcada 37, 07183 Calviá {"\n"}
+            www.Grupo RG.com - Tlf: 697 26 22 21 - Página {pageNumber}
         </Text>
     </View>
 );
@@ -197,7 +197,7 @@ const Header = ({ budgetNumber, date, logoUrl }: { budgetNumber: string, date: s
                 />
             ) : (
                 <View style={[styles.companyLogo, { backgroundColor: '#F1F5F9', justifyContent: 'center', alignItems: 'center' }]}>
-                    <Text style={{ fontSize: 8, color: '#94A3B8' }}>DOCHEVI</Text>
+                    <Text style={{ fontSize: 8, color: '#94A3B8' }}>GRUPO RG</Text>
                 </View>
             )}
         </View>
@@ -228,7 +228,7 @@ export const BudgetDocument = ({
                 <Text style={styles.title}>Propuesta Técnica y Económica</Text>
                 <View style={{ flexDirection: 'row', gap: 10, marginTop: 5 }}>
                     <Text style={styles.badge}>Reforma Personalizada</Text>
-                    <Text style={styles.badge}>Dochevi Estándar de Calidad</Text>
+                    <Text style={styles.badge}>GRUPO RG Estándar de Calidad</Text>
                 </View>
             </View>
 

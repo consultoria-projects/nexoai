@@ -24,6 +24,31 @@
             }
         }
     },
+    "premiumSelector": {
+        "badge": "Empieza tu proyecto",
+        "title": "Cómo podemos <br /> <span class=\"text-[#e8c42f]\">ayudarte?</span>",
+        "subtitle": "Elige la opción que mejor encaje con tu proyecto.",
+        "features": [
+            "Consultoría gratuita",
+            "Sin compromiso",
+            "Respuesta en 24h"
+        ],
+        "options": {
+            "smart": {
+                "badge": "Recomendado",
+                "title": "Presupuesto Smart",
+                "desc": "Análisis 360º con IA."
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "desc": "Construcción desde cero."
+            },
+            "quick": {
+                "title": "Presupuesto Rápido",
+                "desc": "Estimación exprés."
+            }
+        }
+    },
     "modal": {
         "headers": {
             "newBuild": {
@@ -79,7 +104,13 @@
     "trigger": {
         "title": "¿Pensando en renovar?",
         "subtitle": "Obtén tu estimación gratuita en segundos.",
+        "badge": "Empieza tu proyecto",
         "mobileSubtitle": "Click para comenzar",
+        "features": [
+            "Consultoría gratuita con IA",
+            "Sin compromiso",
+            "Respuesta inmediata"
+        ],
         "modes": {
             "general": "Solicitar Presupuesto",
             "pool": "Cotizar Piscina",
@@ -87,7 +118,56 @@
             "new_build": "Estudio Obra Nueva",
             "kitchen": "Presupuesto Cocina",
             "bathroom": "Presupuesto Baño",
-            "wizard": "Presupuesto 360º"
+            "wizard": "Presupuesto 360º",
+            "chat": "Chat Arquitecto"
+        },
+        "cards": {
+            "chat": {
+                "title": "Chat Arquitecto",
+                "description": "Habla con nuestra IA experta para definir tu proyecto ideal.",
+                "badge": "NUEVO"
+            },
+            "wizard": {
+                "title": "Presupuesto Smart",
+                "description": "Análisis 360º de tu reforma con detalle profesional.",
+                "badge": "RECOMENDADO"
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "description": "Estudio de viabilidad y costes para construcción desde cero."
+            },
+            "reform": {
+                "title": "Presupuesto Rápido",
+                "description": "Estimación exprés para reformas sencillas."
+            }
+        },
+        "identity": {
+            "title": {
+                "contact": "Comenzar Proyecto",
+                "accessTo": "Acceder a",
+                "otp": "Verificación de Seguridad"
+            },
+            "subtitle": {
+                "contact": "Tus datos están seguros. Solo los usaremos para gestionar tu proyecto.",
+                "otp": "Hemos enviado un código seguro a tu email."
+            },
+            "buttons": {
+                "cancel": "Cancelar"
+            },
+            "form": {
+                "name": "Nombre Completo",
+                "email": "Correo Electrónico",
+                "phone": "Teléfono Móvil",
+                "country": "País",
+                "submit": "Continuar",
+                "verifying": "Verificando...",
+                "back": "Volver / Corregir",
+                "placeholders": {
+                    "name": "Tu nombre completo",
+                    "email": "tu@email.com",
+                    "phone": "600 000 000"
+                }
+            }
         }
     },
     "quickForm": {

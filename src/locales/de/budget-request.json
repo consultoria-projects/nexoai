@@ -79,15 +79,70 @@
     "trigger": {
         "title": "Denken Sie an eine Renovierung?",
         "subtitle": "Erhalten Sie Ihre kostenlose Schätzung in Sekunden.",
+        "badge": "Starten Sie Ihr Projekt",
         "mobileSubtitle": "Klicken zum Starten",
+        "features": [
+            "Kostenlose KI-Beratung",
+            "Unverbindlich",
+            "Sofortige Antwort"
+        ],
         "modes": {
             "general": "Angebot anfordern",
             "pool": "Pool Angebot",
             "reform": "Renovierungskosten",
             "new_build": "Neubau Studie",
             "kitchen": "Küche Budget",
-            "bathroom": "Bad Budget",
-            "wizard": "360º Budget"
+            "bathroom": "Badezimmer Budget",
+            "wizard": "360º Budget",
+            "chat": "Architekt Chat"
+        },
+        "cards": {
+            "chat": {
+                "title": "Architekt Chat",
+                "description": "Sprechen Sie mit unserer Experten-KI, um Ihr ideales Projekt zu definieren.",
+                "badge": "NEU"
+            },
+            "wizard": {
+                "title": "Smart Budget",
+                "description": "Professionelle 360°-Analyse Ihrer Renovierung.",
+                "badge": "EMPFOHLEN"
+            },
+            "newBuild": {
+                "title": "Neubau",
+                "description": "Machbarkeitsstudie und Kosten für den Bau von Grund auf."
+            },
+            "reform": {
+                "title": "Schnelles Angebot",
+                "description": "Express-Schätzung für einfache Renovierungen."
+            }
+        },
+        "identity": {
+            "title": {
+                "contact": "Projekt Starten",
+                "accessTo": "Zugang zu",
+                "otp": "Sicherheitsüberprüfung"
+            },
+            "subtitle": {
+                "contact": "Ihre Daten sind sicher. Wir verwenden sie nur zur Verwaltung Ihres Projekts.",
+                "otp": "Wir haben einen Sicherheitscode an Ihre E-Mail gesendet."
+            },
+            "buttons": {
+                "cancel": "Abbrechen"
+            },
+            "form": {
+                "name": "Vollständiger Name",
+                "email": "E-Mail-Adresse",
+                "phone": "Handynummer",
+                "country": "Land",
+                "submit": "Weiter",
+                "verifying": "Überprüfung...",
+                "back": "Zurück / Korrigieren",
+                "placeholders": {
+                    "name": "Ihr vollständiger Name",
+                    "email": "ihre@email.com",
+                    "phone": "123 456 789"
+                }
+            }
         }
     },
     "quickForm": {

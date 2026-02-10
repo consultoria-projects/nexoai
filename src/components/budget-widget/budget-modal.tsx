@@ -21,9 +21,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { NewBuildForm } from '@/components/budget-request/new-build-form';
 import { QuickBudgetForm } from '@/components/budget-request/quick-budget-form';
-import { Home, Hammer, Palmtree, Sparkles, Zap } from 'lucide-react';
+import { Home, Hammer, Palmtree, Sparkles, Zap, CheckCircle2, ArrowRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { BudgetRequestWizard } from '@/components/budget-request-wizard';
 import { services } from '@/lib/services';
+import { SmartTriggerContainer } from '@/components/smart-trigger/smart-trigger-container';
+import { BudgetWizardChat } from '@/components/budget/wizard/BudgetWizardChat';
 
 // Temporary mock for t translations
 const mockT = {
@@ -205,6 +208,21 @@ const mockT = {
                 fast: { title: "Presupuesto Rápido", desc: "Estimación express para reformas" }
             }
         },
+        premiumSelector: {
+            badge: "Empieza tu proyecto",
+            title: "Cómo podemos <br /> <span class=\"text-[#e8c42f]\">ayudarte?</span>",
+            subtitle: "Elige la opción que mejor encaje con tu proyecto.",
+            features: [
+                "Consultoría gratuita",
+                "Sin compromiso",
+                "Respuesta en 24h"
+            ],
+            options: {
+                smart: { badge: "Recomendado", title: "Presupuesto Smart", desc: "Análisis 360º con IA." },
+                newBuild: { title: "Obra Nueva", desc: "Construcción desde cero." },
+                quick: { title: "Presupuesto Rápido", desc: "Estimación exprés." }
+            }
+        },
         modal: {
             headers: {
                 newBuild: { title: "Estudio de Obra Nueva", desc: "Déjanos analizar la viabilidad de tu proyecto." },
@@ -240,106 +258,74 @@ const mockT = {
     }
 };
 
-function BudgetSelector({ onSelect, t }: { onSelect: (mode: 'wizard' | 'new-build' | 'reform') => void, t?: any }) {
-    const options = [
-        {
-            id: 'wizard',
-            label: t.budgetRequest.selector.options.wizard.title,
-            icon: Sparkles,
-            desc: t.budgetRequest.selector.options.wizard.desc,
-            color: 'bg-purple-100 text-purple-600',
-            badge: t.budgetRequest.selector.options.wizard.badge
-        },
-        {
-            id: 'new-build',
-            label: t.budgetRequest.selector.options.newBuild.title,
-            icon: Home,
-            desc: t.budgetRequest.selector.options.newBuild.desc,
-            color: 'bg-slate-100 text-slate-700'
-        },
-        {
-            id: 'reform',
-            label: t.budgetRequest.selector.options.fast.title,
-            icon: Zap,
-            desc: t.budgetRequest.selector.options.fast.desc,
-            color: 'bg-orange-100 text-orange-600'
-        }
-    ];
 
-    return (
-        <div className="grid gap-4 py-4">
-            {options.map((opt) => (
-                <div
-                    key={opt.id}
-                    onClick={() => onSelect(opt.id as any)}
-                    className="flex items-center gap-4 p-4 rounded-xl border hover:border-primary hover:bg-muted/50 cursor-pointer transition-all group relative overflow-hidden"
-                >
-                    {opt.badge && (
-                        <div className="absolute top-0 right-0 bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">
-                            {opt.badge}
-                        </div>
-                    )}
-                    <div className={`p-3 rounded-full ${opt.color} group-hover:scale-110 transition-transform`}>
-                        <opt.icon className="w-6 h-6" />
-                    </div>
-                    <div className="flex-1">
-                        <h3 className="font-semibold text-lg">{opt.label}</h3>
-                        <p className="text-sm text-muted-foreground">{opt.desc}</p>
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-}
+
+// ... (mockT remains the same, omitted for brevity if no changes needed, but replace_file_content needs full block if I replace whole file. 
+// CHECK: Is mockT huge? Yes. I should try to preserve it or just replace the component logic part.
+// But I need to add PremiumBudgetSelector. I'll add it before SmartBudgetModal.
+
+// ... mockT ... (I will assume mockT is unchanged and focus on replacing the components below it 
+// or I can target the specific function if I look at line numbers, but indentation is tricky.
+// Better to replace from 'function BudgetSelector' onwards.)
+
+
 
 export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
-    const { isOpen, closeWidget, activeMode, openWidget } = useWidgetContext();
+    const { isOpen, closeWidget, activeMode, openWidget, leadId } = useWidgetContext();
     const isDesktop = useMediaQuery("(min-width: 768px)");
 
     // Use dictionary if available, otherwise mockT
-    // The wizard expects t.budgetRequest to exist, so we wrap dictionary if it comes from dict.budgetRequest
     const t = dictionary ? { budgetRequest: dictionary } : mockT;
 
     // Define render content
     const renderContent = () => {
+        // If not verified and trying to access a specific mode, show identity form via SmartTriggerContainer
+        if (!leadId && activeMode !== 'general') {
+            return <SmartTriggerContainer dictionary={dictionary} intent={activeMode} />;
+        }
+
         if (activeMode === 'general') {
-            return <BudgetSelector onSelect={(mode) => openWidget(mode)} t={t} />;
+            return <SmartTriggerContainer dictionary={dictionary} />;
         }
         if (activeMode === 'new-build') {
             return <NewBuildForm t={t} onSuccess={closeWidget} onBack={() => openWidget('general')} />;
         }
         if (activeMode === 'wizard') {
-            // Pass necessary props to wizard
             return <BudgetRequestWizard t={t} services={services} onBack={() => openWidget('general')} isWidget={true} />;
         }
-        // reform / pool / kitchen / bathroom default to QuickForm for now
-        // Ideally pool goes to QuickForm with pool preselected
+        if (activeMode === 'chat') {
+            return <BudgetWizardChat />;
+        }
+        // Fallback for Quick Budget or others
         return <QuickBudgetForm t={t} onBack={() => openWidget('general')} />;
     };
 
-    // Define helper text
-    const getHeaderText = () => {
-        const selector = t.budgetRequest.selector;
-        const headers = t.budgetRequest.modal.headers;
-
-        if (activeMode === 'general') return { title: selector.title, desc: selector.subtitle };
-        if (activeMode === 'new-build') return headers.newBuild;
-        if (activeMode === 'wizard') return headers.wizard;
-        if (activeMode === 'pool') return headers.pool;
-        return headers.fast;
-    };
-
-    const header = getHeaderText();
+    const header = activeMode !== 'general' && activeMode !== 'chat'
+        ? t.budgetRequest.modal.headers[activeMode === 'wizard' ? 'wizard' : activeMode === 'new-build' ? 'newBuild' : 'fast']
+        : { title: '', desc: '' };
 
     if (isDesktop) {
         return (
             <Dialog open={isOpen} onOpenChange={closeWidget}>
-                <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle className="font-headline text-3xl">{header.title}</DialogTitle>
-                        <DialogDescription className="text-lg">{header.desc}</DialogDescription>
+                <DialogContent className={cn(
+                    "transition-all duration-300",
+                    activeMode === 'chat' ? "overflow-hidden" : "overflow-y-auto",
+                    activeMode === 'general'
+                        ? "sm:max-w-[850px] p-0 bg-[#FBFBFB] border-none shadow-2xl rounded-3xl"
+                        : activeMode === 'chat'
+                            ? "w-[95vw] h-[90vh] sm:max-w-none p-0 bg-transparent border-none shadow-none" // Full screen for chat
+                            : "sm:max-w-4xl max-h-[90vh] bg-background border-border"
+                )}>
+                    <DialogHeader className={cn((activeMode === 'general' || activeMode === 'chat') && "sr-only")}>
+                        <DialogTitle className="font-headline text-3xl">
+                            {activeMode === 'general' || activeMode === 'chat' ? "Asistente Dochevi" : header.title}
+                        </DialogTitle>
+                        <DialogDescription className="text-lg">
+                            {activeMode === 'general' || activeMode === 'chat' ? "Solicitud de presupuesto y asistencia" : header.desc}
+                        </DialogDescription>
                     </DialogHeader>
-                    <div className="pt-6 px-2">
+
+                    <div className={cn(activeMode === 'general' ? "" : "pt-6 px-2", activeMode === 'chat' ? "h-[90vh]" : "h-full")}>
                         {renderContent()}
                     </div>
                 </DialogContent>
@@ -347,21 +333,30 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
         );
     }
 
+    // ... mobile drawer implementation ...
     return (
         <Drawer open={isOpen} onOpenChange={closeWidget}>
-            <DrawerContent className="max-h-[95vh] flex flex-col">
-                <DrawerHeader className="text-left shrink-0">
-                    <DrawerTitle className="font-headline text-2xl">{header.title}</DrawerTitle>
-                    <DrawerDescription>{header.desc}</DrawerDescription>
+            <DrawerContent className="max-h-[95vh] flex flex-col bg-[#FBFBFB]">
+                <DrawerHeader className={cn("text-left shrink-0", (activeMode === 'general' || activeMode === 'chat') && "sr-only")}>
+                    <DrawerTitle className="font-headline text-2xl">
+                        {activeMode === 'general' || activeMode === 'chat' ? "Asistente Dochevi" : header.title}
+                    </DrawerTitle>
+                    <DrawerDescription>
+                        {activeMode === 'general' || activeMode === 'chat' ? "Solicitud de presupuesto y asistencia" : header.desc}
+                    </DrawerDescription>
                 </DrawerHeader>
-                <div className="p-4 overflow-y-auto flex-1">
+
+                <div className={cn("overflow-y-auto flex-1", activeMode === 'general' ? "p-0" : "p-4")}>
                     {renderContent()}
                 </div>
-                <DrawerFooter className="pt-2 shrink-0">
-                    <DrawerClose asChild>
-                        <Button variant="outline">Cancelar</Button>
-                    </DrawerClose>
-                </DrawerFooter>
+
+                {activeMode !== 'general' && (
+                    <DrawerFooter className="pt-2 shrink-0">
+                        <DrawerClose asChild>
+                            <Button variant="outline">Cancelar</Button>
+                        </DrawerClose>
+                    </DrawerFooter>
+                )}
             </DrawerContent>
         </Drawer>
     );

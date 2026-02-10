@@ -1,0 +1,349 @@
+{
+  "jobId": "improved_test_1770494233472",
+  "promptVersion": "IMPROVED_V1",
+  "pdfFile": "Libro Precios 46_COAATMCA.pdf",
+  "startPage": 50,
+  "endPage": 69,
+  "timestamp": "2026-02-07T20:06:52.056Z",
+  "summary": {
+    "totalPages": 20,
+    "successfulPages": 20,
+    "totalItems": 38,
+    "totalTokens": 167858,
+    "totalCostUSD": 0.0195606,
+    "avgItemsPerPage": "1.90",
+    "totalDurationMs": 578433
+  },
+  "pageDetails": [
+    {
+      "page": 50,
+      "status": "success",
+      "extracted": 3,
+      "items": [
+        {
+          "code": "EHE010",
+          "priceTotal": 168.4
+        },
+        {
+          "code": "EHE010e",
+          "priceTotal": 197.33
+        },
+        {
+          "code": "EHE010c",
+          "priceTotal": 200.05
+        }
+      ],
+      "tokens": 8133,
+      "cost": "0.001263"
+    },
+    {
+      "page": 51,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHE020c",
+          "priceTotal": 250.28
+        },
+        {
+          "code": "EHE020",
+          "priceTotal": 254.48
+        }
+      ],
+      "tokens": 7712,
+      "cost": "0.001110"
+    },
+    {
+      "page": 52,
+      "status": "success",
+      "extracted": 0,
+      "items": [],
+      "tokens": 1203,
+      "cost": "0.000073"
+    },
+    {
+      "page": 53,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHU010",
+          "priceTotal": 144.3
+        },
+        {
+          "code": "EHU010b",
+          "priceTotal": 148.55
+        }
+      ],
+      "tokens": 12395,
+      "cost": "0.001306"
+    },
+    {
+      "page": 54,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHU010c",
+          "priceTotal": 166.24
+        },
+        {
+          "code": "EHU026c",
+          "priceTotal": 119.32
+        }
+      ],
+      "tokens": 10124,
+      "cost": "0.000881"
+    },
+    {
+      "page": 55,
+      "status": "success",
+      "extracted": 1,
+      "items": [
+        {
+          "code": "EHU026",
+          "priceTotal": 133.76
+        }
+      ],
+      "tokens": 8212,
+      "cost": "0.000727"
+    },
+    {
+      "page": 56,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHU010d",
+          "priceTotal": 151.75
+        },
+        {
+          "code": "EHU010e",
+          "priceTotal": 153.55
+        }
+      ],
+      "tokens": 7535,
+      "cost": "0.001026"
+    },
+    {
+      "page": 57,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHU010",
+          "priceTotal": 156.06
+        },
+        {
+          "code": "EHU010g",
+          "priceTotal": 179.95
+        }
+      ],
+      "tokens": 12717,
+      "cost": "0.001235"
+    },
+    {
+      "page": 58,
+      "status": "success",
+      "extracted": 1,
+      "items": [
+        {
+          "code": "EHU010h",
+          "priceTotal": 151.04
+        }
+      ],
+      "tokens": 5567,
+      "cost": "0.000584"
+    },
+    {
+      "page": 59,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHU010i",
+          "priceTotal": 140.34
+        },
+        {
+          "code": "EHU010j",
+          "priceTotal": 142.14
+        }
+      ],
+      "tokens": 8749,
+      "cost": "0.001374"
+    },
+    {
+      "page": 60,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHU010k",
+          "priceTotal": 144.4
+        },
+        {
+          "code": "EHU0101",
+          "priceTotal": 160.57
+        }
+      ],
+      "tokens": 13630,
+      "cost": "0.001237"
+    },
+    {
+      "page": 61,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHL010e",
+          "priceTotal": 226.25
+        },
+        {
+          "code": "EHL010",
+          "priceTotal": 236.1
+        }
+      ],
+      "tokens": 8535,
+      "cost": "0.001014"
+    },
+    {
+      "page": 62,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHL010b",
+          "priceTotal": 246.76
+        },
+        {
+          "code": "EHL010",
+          "priceTotal": 255.4
+        }
+      ],
+      "tokens": 8736,
+      "cost": "0.000999"
+    },
+    {
+      "page": 63,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHR010d",
+          "priceTotal": 143.67
+        },
+        {
+          "code": "EHR010",
+          "priceTotal": 146.37
+        }
+      ],
+      "tokens": 6828,
+      "cost": "0.000930"
+    },
+    {
+      "page": 64,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EHR010b",
+          "priceTotal": 154.86
+        },
+        {
+          "code": "EHR015b",
+          "priceTotal": 145.09
+        }
+      ],
+      "tokens": 13554,
+      "cost": "0.001257"
+    },
+    {
+      "page": 65,
+      "status": "success",
+      "extracted": 2,
+      "items": [
+        {
+          "code": "EMF010c",
+          "priceTotal": 84.96
+        },
+        {
+          "code": "EMF010b",
+          "priceTotal": 107.45
+        }
+      ],
+      "tokens": 7066,
+      "cost": "0.000858"
+    },
+    {
+      "page": 66,
+      "status": "success",
+      "extracted": 3,
+      "items": [
+        {
+          "code": "EMF050",
+          "priceTotal": 180.67
+        },
+        {
+          "code": "EMF051",
+          "priceTotal": 184.07
+        },
+        {
+          "code": "D0405.0050",
+          "priceTotal": 197.3
+        }
+      ],
+      "tokens": 9138,
+      "cost": "0.001083"
+    },
+    {
+      "page": 67,
+      "status": "success",
+      "extracted": 3,
+      "items": [
+        {
+          "code": "EPF010e",
+          "priceTotal": 110.38
+        },
+        {
+          "code": "EPF010",
+          "priceTotal": 120.96
+        },
+        {
+          "code": "EPF010b",
+          "priceTotal": 145.94
+        }
+      ],
+      "tokens": 8119,
+      "cost": "0.001211"
+    },
+    {
+      "page": 68,
+      "status": "success",
+      "extracted": 0,
+      "items": [],
+      "tokens": 1154,
+      "cost": "0.000069"
+    },
+    {
+      "page": 69,
+      "status": "success",
+      "extracted": 3,
+      "items": [
+        {
+          "code": "EPF010c",
+          "priceTotal": 162.23
+        },
+        {
+          "code": "EPF010d",
+          "priceTotal": 130.1
+        },
+        {
+          "code": "EPF010f",
+          "priceTotal": 140.68
+        }
+      ],
+      "tokens": 8751,
+      "cost": "0.001325"
+    }
+  ]
+}

@@ -1,14 +1,70 @@
-{
+﻿{
     "hero": {
         "title": "Wir verwandeln Räume <br/> <span class='text-primary italic'>in Erlebnisse</span>",
         "subtitle": "Hochwertige Komplettrenovierungen auf Mallorca. Wo Qualität auf Exklusivität trifft.",
         "cta": "Premium-Kostenvoranschlag anfordern",
-        "ctaSecondary": "Dienstleistungen entdecken"
+        "ctaSecondary": "Dienstleistungen entdecken",
+        "floating": {
+            "featured": "Hervorgehoben",
+            "clients": "+500 Kunden",
+            "renovate": "Planen Sie eine Renovierung?",
+            "estimate": "Kostenloses Angebot in Sekunden",
+            "scroll": "Scrollen zum Entdecken"
+        },
+        "stats": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Jahre Erfahrung"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Abgeschlossene Projekte"
+            }
+        ]
+    },
+    "philosophy": {
+        "quote": "Wir bauen keine Häuser. Wir schaffen die Bühne für Ihr Leben.",
+        "author": "Grupo RG",
+        "description": "Jedes Projekt ist einzigartig, weil jeder Kunde einzigartig ist. Wir kombinieren handwerkliche Erfahrung mit technologischer Innovation für außergewöhnliche Ergebnisse."
+    },
+    "expertise": {
+        "subtitle": "Unsere Expertise",
+        "title": "Exzellenz in jedem Projekt",
+        "items": [
+            {
+                "title": "Neubau",
+                "description": "Bau von Häusern, Geschäftsräumen und Gebäuden von Grund auf mit den höchsten Qualitätsstandards.",
+                "link": "/servicios/construccion",
+                "featured": true
+            },
+            {
+                "title": "Komplettrenovierungen",
+                "description": "Vollständige Umgestaltung von Räumen, Koordination aller Gewerke unter einem einzigen Projekt.",
+                "link": "/servicios/reformas-integrales"
+            },
+            {
+                "title": "Instandhaltung",
+                "description": "Sanitär, Elektro, Mauerwerk und allgemeine Reparaturen.",
+                "link": "/servicios/mantenimiento"
+            },
+            {
+                "title": "Innenarchitektur",
+                "description": "Innendesign und Dekoration, die Ihre Persönlichkeit und Ihren Lebensstil widerspiegeln.",
+                "link": "/servicios/interiorismo"
+            },
+            {
+                "title": "Spezialisierte Arbeiten",
+                "description": "Solaranlagen, Poolrenovierungen, Barrierefreiheit und fortgeschrittene technische Dienstleistungen.",
+                "link": "/servicios/trabajos-especializados"
+            }
+        ]
     },
     "vision": {
         "label": "Unsere Philosophie",
         "title": "Die neue Ära des <br/> <span class='text-primary'>modernen Bauens</span>",
-        "description": "Bei Express Renovation Mallorca definieren wir den Standard für Luxusrenovierungen neu. Wir lassen die traditionelle Unsicherheit hinter uns und setzen auf technologische Präzision und handwerkliche Exzellenz.",
+        "description": "Bei Grupo RG definieren wir den Standard für Luxusrenovierungen neu. Wir lassen die traditionelle Unsicherheit hinter uns und setzen auf technologische Präzision und handwerkliche Exzellenz.",
         "points": [
             "Zertifizierte europäische Qualitätsstandards.",
             "3D-Visualisierungstechnologie vor Baubeginn.",
@@ -55,6 +111,50 @@
         ],
         "cta": "Details ansehen"
     },
+    "numbers": {
+        "items": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Jahre Erfahrung"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Abgeschlossene Projekte"
+            },
+            {
+                "value": 98,
+                "suffix": "%",
+                "label": "Zufriedene Kunden"
+            },
+            {
+                "value": 50,
+                "suffix": "+",
+                "label": "Profis"
+            }
+        ]
+    },
+    "territories": {
+        "label": "Abdeckung",
+        "title": "Präsenz auf den Balearen",
+        "description": "Wir sind auf dem gesamten Inselarchipel tätig und passen uns den Vorschriften und einzigartigen Merkmalen jedes Ortes an.",
+        "locations": [
+            "Palma de Mallorca",
+            "Calvià",
+            "Sóller",
+            "Pollença",
+            "Alcúdia",
+            "Manacor",
+            "Menorca",
+            "Ibiza",
+            "Formentera"
+        ]
+    },
+    "contact": {
+        "title": "Haben Sie ein Projekt im Kopf?",
+        "cta": "Kostenloses Angebot anfordern"
+    },
     "transformations": {
         "label": "Vorher & Nachher",
         "title": "Reale Verwandlungen",
@@ -67,26 +167,61 @@
         "sidebarStep2Desc": "Fotorealistische Renderings Ihres zukünftigen Zuhauses.",
         "cta": "Vollständige Galerie ansehen"
     },
+    "contactStrip": {
+        "badge": "Starten Sie Ihr Projekt",
+        "title": "Wie können wir ",
+        "titleHighlight": "Ihnen helfen",
+        "subtitle": "Wählen Sie die Option, die am besten zu Ihrem Projekt passt. Jedes Tool ist für unterschiedliche Bedürfnisse konzipiert.",
+        "options": {
+            "chat": {
+                "title": "KI-Architekten-Chat",
+                "description": "Chatten Sie mit unserer Experten-KI, um Ideen zu erkunden, Konzepte zu validieren und Ihre Vision zu formen.",
+                "whyChoose": "Ideal, wenn Sie das Projekt noch definieren und professionelle Orientierung benötigen."
+            },
+            "wizard": {
+                "title": "Smart-Budget",
+                "description": "360°-Analyse Ihrer Renovierung mit detaillierter Aufschlüsselung. Unsere KI analysiert jeden Aspekt Ihres Projekts.",
+                "whyChoose": "Perfekt, wenn Sie wissen, was Sie wollen, und eine genaue Schätzung benötigen."
+            },
+            "newBuild": {
+                "title": "Neubau",
+                "description": "Machbarkeitsstudie und vollständige Kostenschätzung für Bauprojekte von Grund auf.",
+                "whyChoose": "Für Neubauprojekte: Häuser, Gewerberäume oder komplette Gebäude."
+            },
+            "reform": {
+                "title": "Schnellangebot",
+                "description": "Express-Schätzung für einfache Renovierungen. Ergebnis in unter 2 Minuten.",
+                "whyChoose": "Ideal für punktuelle Arbeiten: Bad, Küche, Malen, Installationen."
+            }
+        },
+        "cta": "Starten",
+        "trust1": "Unverbindlich",
+        "trust2": "Sofortige Antwort",
+        "trust3": "+500 abgeschlossene Projekte",
+        "trust4": "30+ Jahre Erfahrung"
+    },
     "processSteps": {
-        "label": "Absolute Transparenz",
-        "title": "Die Express-Methode: Keine Überraschungen",
-        "subtitle": "Ein linearer und vorhersehbarer Prozess für Ihre Sicherheit.",
+        "label": "Unser Prozess",
+        "title": "Wie wir arbeiten",
+        "subtitle": "Ein intelligenter Prozess, der KI-Technologie mit menschlicher Expertise für Ihre Sicherheit verbindet.",
         "steps": [
             {
-                "title": "Erstberatung",
-                "description": "Vor-Ort-Termin, um Ihre Bedürfnisse und Ihr Budget zu verstehen."
+                "title": "Smart-Budget",
+                "description": "Nutzen Sie unser KI-Budgetierungssystem. Beschreiben Sie Ihr Projekt und erhalten Sie in Sekunden eine erste Kostenschätzung, unverbindlich.",
+                "badge": "KI"
             },
             {
-                "title": "Design & Planung",
-                "description": "Erstellung von Plänen, 3D-Renderings und detailliertem Kostenvoranschlag."
+                "title": "Expertenprüfung",
+                "description": "Ein menschlicher Agent analysiert Ihre Schätzung, überprüft technische Spezifikationen und passt das Budget mit professionellen Kriterien an."
             },
             {
-                "title": "Experten-Ausführung",
-                "description": "Bau unter ständiger Aufsicht und festen Terminen."
+                "title": "Technischer Besuch",
+                "description": "Wir organisieren einen optionalen Besuch, um Maße zu nehmen, den Raum zu bewerten und die Details des technischen Vorschlags zu definieren."
             },
             {
-                "title": "Schlüsselfertige Übergabe",
-                "description": "Endreinigung, Qualitätsprüfung und Schlüsselübergabe."
+                "title": "Endgültiges Budget",
+                "description": "Erhalten Sie ein detailliertes, geschlossenes Budget zur Genehmigung. Besprechen Sie alle Zweifel mit unserem intelligenten Assistenten.",
+                "badge": "KI"
             }
         ]
     },
@@ -103,7 +238,7 @@
         "items": [
             {
                 "question": "Wie lange dauert eine Komplettrenovierung auf Mallorca?",
-                "answer": "Die Zeit variiert je nach Komplexität, aber eine Standard-Komplettrenovierung dauert in der Regel zwischen 3 und 5 Monaten. Bei Express Renovation Mallorca garantieren wir vertraglich festgelegte Termine dank unserer Vorplanung mit 3D-Technologie, wodurch die üblichen Verzögerungen der Branche vermieden werden."
+                "answer": "Die Zeit variiert je nach Komplexität, aber eine Standard-Komplettrenovierung dauert in der Regel zwischen 3 und 5 Monaten. Bei Grupo RG garantieren wir vertraglich festgelegte Termine dank unserer Vorplanung mit 3D-Technologie, wodurch die üblichen Verzögerungen der Branche vermieden werden."
             },
             {
                 "question": "Kümmern Sie sich um Baugenehmigungen?",
