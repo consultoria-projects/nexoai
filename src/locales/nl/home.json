@@ -36,28 +36,28 @@
             {
                 "title": "Nieuwbouw",
                 "description": "Bouw van woningen, commerciële ruimtes en gebouwen vanaf nul met de hoogste kwaliteitsnormen.",
-                "link": "/servicios/construccion",
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva",
                 "featured": true
             },
             {
                 "title": "Totaalrenovaties",
                 "description": "Volledige transformatie van ruimtes, coördinatie van alle vakmensen onder één project.",
-                "link": "/servicios/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Onderhoud",
                 "description": "Loodgieterswerk, elektra, metselwerk en algemene reparaties.",
-                "link": "/servicios/mantenimiento"
+                "link": "/services/fontaneria/redes-fontaneria-desagues"
             },
             {
                 "title": "Interieurontwerp",
                 "description": "Interieurdesign en decoratie die uw persoonlijkheid en levensstijl weerspiegelen.",
-                "link": "/servicios/interiorismo"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Gespecialiseerde Werken",
                 "description": "Zonnepanelen, zwembadrenovaties, toegankelijkheid en geavanceerde technische diensten.",
-                "link": "/servicios/trabajos-especializados"
+                "link": "/services/pintura/tratamiento-humedades"
             }
         ]
     },
@@ -81,32 +81,32 @@
             {
                 "title": "Totaalrenovaties",
                 "description": "Volledige transformatie van residentiële en commerciële ruimtes. Totale coördinatie van vakmensen.",
-                "link": "/servicios/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Designkeukens",
                 "description": "Het hart van het huis, ontworpen om te inspireren. Ergonomie, edele materialen en technologie.",
-                "link": "/servicios/cocinas"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Badkamers & Wellness",
                 "description": "Privé-ontspanningsoases. Regendouches, vrijstaande baden en spa-afwerking.",
-                "link": "/servicios/banos"
+                "link": "/services/reformas-de-interiores/banos-sanitarios"
             },
             {
                 "title": "Buitenruimtes & Tuinaanleg",
                 "description": "Terrassen, zwembaden en tuinen die uw leefruimte uitbreiden naar de natuur van Mallorca.",
-                "link": "/servicios/exteriores"
+                "link": "/services/construccion-y-reformas/ampliaciones-redistribucion"
             },
             {
                 "title": "Restauratie van Gevels",
                 "description": "We herstellen de oorspronkelijke pracht van historische en moderne gebouwen. Technieken met respect voor erfgoed.",
-                "link": "/servicios/fachadas"
+                "link": "/services/paramentos-verticales/rehabilitacion-fachadas"
             },
             {
                 "title": "SATE Isolatie",
                 "description": "Superieure energie-efficiëntie. Thermische gevelbekleding die verbruik vermindert en comfort verbetert.",
-                "link": "/servicios/aislamiento"
+                "link": "/services/paramentos-verticales/aislamiento-sate"
             }
         ],
         "cta": "Bekijk details"

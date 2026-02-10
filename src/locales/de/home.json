@@ -36,28 +36,28 @@
             {
                 "title": "Neubau",
                 "description": "Bau von Häusern, Geschäftsräumen und Gebäuden von Grund auf mit den höchsten Qualitätsstandards.",
-                "link": "/servicios/construccion",
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva",
                 "featured": true
             },
             {
                 "title": "Komplettrenovierungen",
                 "description": "Vollständige Umgestaltung von Räumen, Koordination aller Gewerke unter einem einzigen Projekt.",
-                "link": "/servicios/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Instandhaltung",
                 "description": "Sanitär, Elektro, Mauerwerk und allgemeine Reparaturen.",
-                "link": "/servicios/mantenimiento"
+                "link": "/services/fontaneria/redes-fontaneria-desagues"
             },
             {
                 "title": "Innenarchitektur",
                 "description": "Innendesign und Dekoration, die Ihre Persönlichkeit und Ihren Lebensstil widerspiegeln.",
-                "link": "/servicios/interiorismo"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Spezialisierte Arbeiten",
                 "description": "Solaranlagen, Poolrenovierungen, Barrierefreiheit und fortgeschrittene technische Dienstleistungen.",
-                "link": "/servicios/trabajos-especializados"
+                "link": "/services/pintura/tratamiento-humedades"
             }
         ]
     },
@@ -81,32 +81,32 @@
             {
                 "title": "Komplettrenovierungen",
                 "description": "Vollständige Umgestaltung von Wohn- und Gewerberäumen. Totale Koordination aller Gewerke.",
-                "link": "/servicios/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Designküchen",
                 "description": "Das Herz des Hauses, zum Inspirieren entworfen. Ergonomie, edle Materialien und Technologie.",
-                "link": "/servicios/cocinas"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Bäder & Wellness",
                 "description": "Private Entspannungsoasen. Regenduschen, freistehende Badewannen und Spa-Finish.",
-                "link": "/servicios/banos"
+                "link": "/services/reformas-de-interiores/banos-sanitarios"
             },
             {
                 "title": "Außenbereiche & Landschaftsbau",
                 "description": "Terrassen, Pools und Gärten, die Ihren Lebensraum in die mallorquinische Natur erweitern.",
-                "link": "/servicios/exteriores"
+                "link": "/services/construccion-y-reformas/ampliaciones-redistribucion"
             },
             {
                 "title": "Fassadenrestaurierung",
                 "description": "Wir stellen die ursprüngliche Pracht historischer und moderner Gebäude wieder her. Denkmalschonende Techniken.",
-                "link": "/servicios/fachadas"
+                "link": "/services/paramentos-verticales/rehabilitacion-fachadas"
             },
             {
                 "title": "SATE-Isolierung",
                 "description": "Überlegene Energieeffizienz. Thermische Außenverkleidung zur Reduzierung des Verbrauchs und Verbesserung des Komforts.",
-                "link": "/servicios/aislamiento"
+                "link": "/services/paramentos-verticales/aislamiento-sate"
             }
         ],
         "cta": "Details ansehen"

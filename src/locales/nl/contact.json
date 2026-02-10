@@ -1,6 +1,14 @@
 {
-    "title": "Contact",
-    "subtitle": "Have a question or want to start a project? We're here to help. Fill out the form or use our contact details.",
+    "hero": {
+        "badge": "Contact",
+        "title": "Uw visie werkelijkheid maken",
+        "description": "Heeft u een vraag of wilt u een project starten? Wij staan voor u klaar. Vul het formulier in of gebruik onze contactgegevens."
+    },
+    "cta": {
+        "title": "Klaar om uw ruimte te transformeren?",
+        "subtitle": "Plan een gratis consultatie en ontdek hoe we uw visie tot leven kunnen brengen.",
+        "buttonPrimary": "Offerte aanvragen"
+    },
     "formTitle": "Send us a Message",
     "infoTitle": "Our Information",
     "form": {

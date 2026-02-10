@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { BentoGrid, BentoCard, BentoTitle, BentoDescription } from '@/components/ui/bento-grid';
 
 interface ExpertiseItem {
@@ -61,7 +61,7 @@ export function ExpertiseSection({
                         backgroundImage={featuredItem.image || "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2670&auto=format&fit=crop"}
                         className="group cursor-pointer relative overflow-hidden"
                     >
-                        <Link href={featuredItem.href} className="absolute inset-0 z-20" />
+                        <Link href={featuredItem.href as any} className="absolute inset-0 z-20" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-500" />
 
                         <div className="relative z-10 h-full flex flex-col justify-end p-8">
@@ -89,7 +89,7 @@ export function ExpertiseSection({
                             variant="default"
                             className="group cursor-pointer hover:border-primary/50 transition-colors"
                         >
-                            <Link href={item.href} className="flex flex-col h-full justify-between">
+                            <Link href={item.href as any} className="flex flex-col h-full justify-between">
                                 <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                                     {item.icon}
                                 </div>

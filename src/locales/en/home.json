@@ -37,28 +37,28 @@
             {
                 "title": "New Construction",
                 "description": "Construction of homes, commercial spaces and buildings from scratch with the highest quality standards.",
-                "link": "/services/new-construction",
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva",
                 "featured": true
             },
             {
                 "title": "Complete Renovations",
                 "description": "Full transformation of spaces, coordinating all trades under a single project.",
-                "link": "/services/renovations"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Maintenance",
                 "description": "Plumbing, electrical, masonry and general repairs services.",
-                "link": "/services/maintenance"
+                "link": "/services/fontaneria/redes-fontaneria-desagues"
             },
             {
                 "title": "Interior Design",
                 "description": "Interior design and decoration that reflects your personality and lifestyle.",
-                "link": "/services/interior-design"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Specialized Works",
                 "description": "Solar panels, pool renovations, accessibility and advanced technical services.",
-                "link": "/services/specialized-works"
+                "link": "/services/pintura/tratamiento-humedades"
             }
         ]
     },
@@ -113,32 +113,32 @@
             {
                 "title": "New Construction",
                 "description": "Construction of homes, commercial spaces, hotels and buildings from scratch with the highest standards.",
-                "link": "/services/new-construction"
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva"
             },
             {
                 "title": "Complete Renovations",
                 "description": "We renovate your home, commercial space or office comprehensively, from planning to final execution.",
-                "link": "/services/renovations"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Maintenance & Repairs",
                 "description": "Plumbing, electrical, masonry and all types of repairs to keep your property in perfect condition.",
-                "link": "/services/maintenance"
+                "link": "/services/fontaneria/redes-fontaneria-desagues"
             },
             {
                 "title": "Interior Design",
                 "description": "We design and decorate your interior space, creating a unique and personalized environment.",
-                "link": "/services/interior-design"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Specialized Works",
                 "description": "Solar panel installation, pool renovations, accessibility and other technical services.",
-                "link": "/services/specialized-works"
+                "link": "/services/pintura/tratamiento-humedades"
             },
             {
                 "title": "Permit Management",
                 "description": "Processing of licenses, building permits and all necessary bureaucratic paperwork.",
-                "link": "/services/other-services"
+                "link": "/services/paramentos-verticales/aislamiento-sate"
             }
         ],
         "cta": "View details"

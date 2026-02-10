@@ -39,13 +39,13 @@
             {
                 "title": "Obra Nueva",
                 "description": "Construcción de viviendas, locales comerciales y edificios desde cero con los más altos estándares de calidad.",
-                "link": "/services/obra-nueva",
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva",
                 "featured": true
             },
             {
                 "title": "Reformas Integrales",
                 "description": "Transformación completa de espacios, coordinando todos los gremios bajo un único proyecto.",
-                "link": "/services/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Mantenimiento",
@@ -55,12 +55,12 @@
             {
                 "title": "Interiorismo",
                 "description": "Diseño y decoración de interiores que reflejan tu personalidad y estilo de vida.",
-                "link": "/services/interiorismo"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Trabajos Especializados",
                 "description": "Placas solares, reformas de piscinas, accesibilidad y servicios técnicos avanzados.",
-                "link": "/services/trabajos-especializados"
+                "link": "/services/pintura/tratamiento-humedades"
             }
         ]
     },
@@ -116,12 +116,12 @@
             {
                 "title": "Obra Nueva",
                 "description": "Construcción de viviendas, locales comerciales, hoteles y edificios desde cero con los más altos estándares.",
-                "link": "/services/obra-nueva"
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva"
             },
             {
                 "title": "Reformas Integrales",
                 "description": "Reformamos tu vivienda, local comercial u oficina de forma integral, desde la planificación hasta la ejecución final.",
-                "link": "/services/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Mantenimiento y Reparaciones",
@@ -131,17 +131,17 @@
             {
                 "title": "Interiorismo",
                 "description": "Diseñamos y decoramos tu espacio interior, creando un ambiente único y personalizado.",
-                "link": "/services/interiorismo"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Trabajos Especializados",
                 "description": "Instalación de placas solares, reformas de piscinas, accesibilidad y otros servicios técnicos.",
-                "link": "/services/trabajos-especializados"
+                "link": "/services/pintura/tratamiento-humedades"
             },
             {
                 "title": "Gestión de Permisos",
                 "description": "Tramitación de licencias, permisos de obra y todo el papeleo burocrático necesario.",
-                "link": "/services/otros-servicios"
+                "link": "/services/paramentos-verticales/aislamiento-sate"
             }
         ],
         "cta": "Ver detalles"

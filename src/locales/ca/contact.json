@@ -1,6 +1,14 @@
 {
-    "title": "Contacte",
-    "subtitle": "Tens alguna pregunta o vols iniciar un projecte? Som aquí per ajudar-te. Omple el formulari o utilitza les nostres dades de contacte.",
+    "hero": {
+        "badge": "Contacte",
+        "title": "Portem la teva visió a la realitat",
+        "description": "Tens alguna pregunta o vols iniciar un projecte? Som aquí per ajudar-te. Omple el formulari o utilitza les nostres dades de contacte."
+    },
+    "cta": {
+        "title": "Llest per transformar el teu espai?",
+        "subtitle": "Agenda una consulta gratuïta i descobreix com podem fer realitat la teva visió.",
+        "buttonPrimary": "Sol·licitar Pressupost"
+    },
     "formTitle": "Envia'ns un Missatge",
     "infoTitle": "La Nostra Informació",
     "form": {

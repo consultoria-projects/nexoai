@@ -1,6 +1,14 @@
 {
-    "title": "Contacto",
-    "subtitle": "¿Tienes alguna pregunta o quieres iniciar un proyecto? Estamos aquí para ayudarte. Rellena el formulario o utiliza nuestros datos de contacto.",
+    "hero": {
+        "badge": "Contacto",
+        "title": "Llevemos su visión a la realidad",
+        "description": "¿Tienes alguna pregunta o quieres iniciar un proyecto? Estamos aquí para ayudarte. Rellena el formulario o utiliza nuestros datos de contacto."
+    },
+    "cta": {
+        "title": "¿Listo para transformar tu espacio?",
+        "subtitle": "Agenda una consulta gratuita y descubre cómo podemos hacer realidad tu visión.",
+        "buttonPrimary": "Solicitar Presupuesto"
+    },
     "formTitle": "Envíanos un Mensaje",
     "infoTitle": "Nuestra Información",
     "form": {

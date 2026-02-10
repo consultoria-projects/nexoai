@@ -90,32 +90,32 @@
             {
                 "title": "Reformes Integrals",
                 "description": "Transformació completa d'espais residencials i comercials. Coordinació total de gremis.",
-                "link": "/servicios/reformas-integrales"
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
             },
             {
                 "title": "Cuines de Disseny",
                 "description": "El cor de la llar, dissenyat per inspirar. Ergonomia, materials nobles i tecnologia.",
-                "link": "/servicios/cocinas"
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
             },
             {
                 "title": "Banys & Wellness",
                 "description": "Oasis de relaxació privats. Dutxes de pluja, banyeres exemptes i acabats spa.",
-                "link": "/servicios/banos"
+                "link": "/services/reformas-de-interiores/banos-sanitarios"
             },
             {
                 "title": "Exteriors & Paisatgisme",
                 "description": "Terrasses, piscines i jardins que estenen el teu espai vital cap a la natura mallorquina.",
-                "link": "/servicios/exteriores"
+                "link": "/services/construccion-y-reformas/ampliaciones-redistribucion"
             },
             {
                 "title": "Restauració de Façanes",
                 "description": "Recuperem l'esplendor original d'edificis històrics i moderns. Tècniques respectuoses amb el patrimoni.",
-                "link": "/servicios/fachadas"
+                "link": "/services/paramentos-verticales/rehabilitacion-fachadas"
             },
             {
                 "title": "Aïllament SATE",
                 "description": "Eficiència energètica superior. Revestiment tèrmic exterior que redueix el consum i millora el confort.",
-                "link": "/servicios/aislamiento"
+                "link": "/services/paramentos-verticales/aislamiento-sate"
             }
         ],
         "cta": "Veure detalls"
