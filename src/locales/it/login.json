@@ -1,0 +1,9 @@
+{
+    "title": "Bienvenido de nuevo",
+    "description": "Inicia sesión en tu cuenta para continuar.",
+    "emailLabel": "Correo Electrónico",
+    "passwordLabel": "Contraseña",
+    "button": "Iniciar Sesión",
+    "noAccount": "¿No tienes una cuenta?",
+    "signupLink": "Regístrate"
+}

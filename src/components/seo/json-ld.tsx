@@ -33,7 +33,7 @@ interface OrganizationSchemaProps {
 
 // Organization JSON-LD
 export function OrganizationJsonLd({
-    name = 'Grupo RG',
+    name = 'Basis',
     description = 'Empresa de construcción y reformas con más de 30 años de experiencia en Mallorca y las Islas Baleares.',
     url = 'https://gruporg.es',
     logo = '/logo.webp',
@@ -112,7 +112,7 @@ export function ServiceJsonLd({
         category,
         provider: {
             '@type': 'HomeAndConstructionBusiness',
-            name: 'Grupo RG',
+            name: 'Basis',
             url: 'https://gruporg.es'
         },
         areaServed: {
@@ -175,7 +175,7 @@ export function WebPageJsonLd({
         url,
         isPartOf: {
             '@type': 'WebSite',
-            name: 'Grupo RG',
+            name: 'Basis',
             url: 'https://gruporg.es'
         }
     };

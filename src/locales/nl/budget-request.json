@@ -118,13 +118,13 @@
         },
         "identity": {
             "title": {
-                "contact": "Start Project",
+                "contact": "Project Starten",
                 "accessTo": "Toegang tot",
                 "otp": "Beveiligingsverificatie"
             },
             "subtitle": {
                 "contact": "Uw gegevens zijn veilig. We gebruiken ze alleen om uw project te beheren.",
-                "otp": "We hebben een beveiligingscode naar uw e-mail gestuurd."
+                "otp": "We hebben een veilige code naar uw e-mailadres gestuurd."
             },
             "buttons": {
                 "cancel": "Annuleren"
@@ -140,7 +140,7 @@
                 "placeholders": {
                     "name": "Uw volledige naam",
                     "email": "uw@email.com",
-                    "phone": "06 12345678"
+                    "phone": "600 000 000"
                 }
             }
         }

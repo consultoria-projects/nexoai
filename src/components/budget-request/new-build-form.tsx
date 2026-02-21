@@ -100,7 +100,7 @@ export function NewBuildForm({ t, onSuccess, onBack }: { t: any, onSuccess?: () 
 
             // Send email via Firebase Extension (mail collection)
             await addDoc(collection(db, 'mail'), {
-                to: ['info@Grupo RG.com'], // Replace with real admin email
+                to: ['info@Basis.com'], // Replace with real admin email
                 message: {
                     subject: '🎯 Nuevo Lead: OBRA NUEVA',
                     html: `

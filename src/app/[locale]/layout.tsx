@@ -13,25 +13,25 @@ import { getDictionary } from '@/lib/dictionaries';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { SmartBudgetWrapper } from '@/components/budget-widget/smart-budget-wrapper';
+import { AnalyticsTracker } from '@/components/analytics/analytics-tracker';
 import localFont from 'next/font/local';
 import { getTranslations } from 'next-intl/server';
 import { constructMetadata } from '@/i18n/seo-utils';
 
-import { Inter } from 'next/font/google';
+import { Inter, PT_Sans } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
-const gencha = localFont({
-  src: '../../../public/fonts/GenchaRegularDemo.otf',
-  variable: '--font-headline',
-  display: 'swap',
-});
-
-const genchaDisplay = localFont({
-  src: '../../../public/fonts/GenchaRegularDemo.otf',
+const ptSans = PT_Sans({
+  weight: ['400', '700'],
+  subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
 });
+
+// We can map ptSans to both display and headline variables for uniform styling
+const gencha = ptSans;
+const genchaDisplay = ptSans;
 
 export async function generateMetadata({
   params
@@ -80,7 +80,7 @@ export default async function RootLayout({
       <body className={cn('font-body antialiased min-h-screen bg-background flex flex-col', gencha.variable, genchaDisplay.variable, inter.variable)}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="theme-gold"
+          defaultTheme="dark-theme-gold"
           enableSystem={false}
           themes={[
             'theme-gold', 'dark-theme-gold',
@@ -96,6 +96,7 @@ export default async function RootLayout({
                 <BudgetWidgetProvider>
                   {children}
                   <SmartBudgetWrapper dictionary={dict?.budgetRequest} />
+                  <AnalyticsTracker />
                   <Toaster /> {/* Radix Toaster */}
                   <SileoToaster /> {/* Sileo Toaster */}
                 </BudgetWidgetProvider>

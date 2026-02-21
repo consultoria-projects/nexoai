@@ -1,0 +1,35 @@
+﻿
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\budget-editor\MaterialPicker.tsx
+  89:44  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  89:66  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\budget-request-wizard.tsx
+  80:9  warning  The 'partialScope' logical expression could make the dependencies of useMemo Hook (at line 134) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'partialScope' in its own useMemo() Hook  react-hooks/exhaustive-deps
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\budget-request\steps\MultimediaStep.tsx
+  207:49  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  260:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  317:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  346:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\dream-renovator\RenovationGallery.tsx
+  245:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\home\basis\Testimonials.tsx
+  27:25  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  27:38  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\pdf\BudgetDocument.tsx
+  218:17  warning  Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images  jsx-a11y/alt-text
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\prices\price-book-table.tsx
+  77:8  warning  React Hook useEffect has a missing dependency: 'fetchItems'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\components\ui\simple-file-upload.tsx
+  116:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\Usuario\Documents\github\works\nexoai\src\hooks\use-budget-editor.ts
+  386:8  warning  React Hook useEffect has a missing dependency: 'state.items'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Ô£û 14 problems (4 errors, 10 warnings)
+

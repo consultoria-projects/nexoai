@@ -47,7 +47,7 @@ const rl = readline.createInterface({
 
 function printHeader() {
     console.log('\n' + colors.bright + colors.cyan + '='.repeat(60) + colors.reset);
-    console.log(colors.bright + colors.cyan + '   🏗️  PriceCloud Budget Wizard - Dev Chat CLI' + colors.reset);
+    console.log(colors.bright + colors.cyan + '   🏗️  Basis Budget Wizard - Dev Chat CLI' + colors.reset);
     console.log(colors.bright + colors.cyan + '='.repeat(60) + colors.reset);
     console.log(colors.dim + 'Type your message to chat with the AI agent.' + colors.reset);
     console.log(colors.dim + 'Commands: /status, /generate, /reset, /exit' + colors.reset);

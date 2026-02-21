@@ -1,0 +1,608 @@
+{
+    "hero": {
+        "subtitle": "Más de 30 años construyendo en Baleares",
+        "title": "Creamos espacios que perduran",
+        "description": "Basis es una empresa de construcción especializada en reformas integrales, obra nueva e interiorismo de alta gama en Mallorca y Baleares.",
+        "cta": "Solicitar Presupuesto",
+        "ctaSecondary": "Ver proyectos",
+        "stats": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Años de experiencia"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Proyectos completados"
+            }
+        ],
+        "floating": {
+            "featured": "Destacado",
+            "clients": "+500 Clientes",
+            "renovate": "¿Pensando en reformar?",
+            "estimate": "Presupuesto gratis en segundos",
+            "scroll": "Desliza para explorar"
+        }
+    },
+    "philosophy": {
+        "label": "Filosofía",
+        "quote": "No construimos casas. Creamos el escenario de tu vida.",
+        "author": "Basis",
+        "description": "Cada proyecto es único porque cada cliente es único. Combinamos experiencia artesanal con innovación tecnológica para resultados excepcionales."
+    },
+    "expertise": {
+        "subtitle": "Nuestras Especialidades",
+        "title": "Excelencia en cada proyecto",
+        "viewProject": "Ver Proyecto",
+        "items": [
+            {
+                "title": "Obra Nueva",
+                "description": "Construcción de viviendas, locales comerciales y edificios desde cero con los más altos estándares de calidad.",
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva",
+                "featured": true
+            },
+            {
+                "title": "Reformas Integrales",
+                "description": "Transformación completa de espacios, coordinando todos los gremios bajo un único proyecto.",
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
+            },
+            {
+                "title": "Mantenimiento",
+                "description": "Servicios de fontanería, electricidad, albañilería y reparaciones generales.",
+                "link": "/services/mantenimiento"
+            },
+            {
+                "title": "Interiorismo",
+                "description": "Diseño y decoración de interiores que reflejan tu personalidad y estilo de vida.",
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
+            },
+            {
+                "title": "Trabajos Especializados",
+                "description": "Placas solares, reformas de piscinas, accesibilidad y servicios técnicos avanzados.",
+                "link": "/services/pintura/tratamiento-humedades"
+            }
+        ]
+    },
+    "numbers": {
+        "items": [
+            {
+                "value": 30,
+                "suffix": "+",
+                "label": "Años de experiencia"
+            },
+            {
+                "value": 500,
+                "suffix": "+",
+                "label": "Proyectos completados"
+            },
+            {
+                "value": 98,
+                "suffix": "%",
+                "label": "Clientes satisfechos"
+            },
+            {
+                "value": 50,
+                "suffix": "+",
+                "label": "Profesionales"
+            }
+        ]
+    },
+    "territories": {
+        "label": "Cobertura",
+        "title": "Presencia en todas las Islas Baleares",
+        "description": "Operamos en todo el archipiélago balear, adaptándonos a las normativas y características únicas de cada ubicación.",
+        "locations": [
+            "Palma de Mallorca",
+            "Calvià",
+            "Sóller",
+            "Pollença",
+            "Alcúdia",
+            "Manacor",
+            "Menorca",
+            "Ibiza",
+            "Formentera"
+        ]
+    },
+    "contact": {
+        "title": "¿Tienes un proyecto en mente?",
+        "cta": "Solicitar Presupuesto Gratuito"
+    },
+    "servicesGrid": {
+        "label": "Nuestras Especialidades",
+        "title": "Excelencia en Cada Detalle",
+        "subtitle": "Dominamos las disciplinas clave para crear espacios excepcionales.",
+        "items": [
+            {
+                "title": "Obra Nueva",
+                "description": "Construcción de viviendas, locales comerciales, hoteles y edificios desde cero con los más altos estándares.",
+                "link": "/services/construccion-y-reformas/gestion-integral-obra-nueva"
+            },
+            {
+                "title": "Reformas Integrales",
+                "description": "Reformamos tu vivienda, local comercial u oficina de forma integral, desde la planificación hasta la ejecución final.",
+                "link": "/services/construccion-y-reformas/reformas-integrales-viviendas-locales"
+            },
+            {
+                "title": "Mantenimiento y Reparaciones",
+                "description": "Fontanería, electricidad, albañilería y todo tipo de reparaciones para mantener tu propiedad en perfecto estado.",
+                "link": "/services/mantenimiento"
+            },
+            {
+                "title": "Interiorismo",
+                "description": "Diseñamos y decoramos tu espacio interior, creando un ambiente único y personalizado.",
+                "link": "/services/reformas-de-interiores/mobiliario-medida"
+            },
+            {
+                "title": "Trabajos Especializados",
+                "description": "Instalación de placas solares, reformas de piscinas, accesibilidad y otros servicios técnicos.",
+                "link": "/services/pintura/tratamiento-humedades"
+            },
+            {
+                "title": "Gestión de Permisos",
+                "description": "Tramitación de licencias, permisos de obra y todo el papeleo burocrático necesario.",
+                "link": "/services/paramentos-verticales/aislamiento-sate"
+            }
+        ],
+        "cta": "Ver detalles"
+    },
+    "contactStrip": {
+        "badge": "Empieza tu proyecto",
+        "title": "¿Cómo podemos ",
+        "titleHighlight": "ayudarte",
+        "subtitle": "Elige la opción que mejor encaje con tu proyecto. Cada herramienta está diseñada para una necesidad diferente.",
+        "options": {
+            "chat": {
+                "title": "Chat Arquitecto IA",
+                "description": "Conversa con nuestra IA experta para explorar ideas, validar conceptos y dar forma a tu visión.",
+                "whyChoose": "Ideal si aún estás definiendo el proyecto y necesitas orientación profesional."
+            },
+            "wizard": {
+                "title": "Presupuesto Smart",
+                "description": "Análisis 360° de tu reforma con desglose detallado. Nuestra IA analiza cada aspecto de tu proyecto.",
+                "whyChoose": "Perfecto si ya sabes lo que quieres y necesitas un presupuesto preciso."
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "description": "Estudio de viabilidad y estimación completa para proyectos de construcción desde cero.",
+                "whyChoose": "Para proyectos de nueva construcción: viviendas, locales o edificios completos."
+            },
+            "reform": {
+                "title": "Presupuesto Rápido",
+                "description": "Estimación exprés para reformas sencillas. Resultado en menos de 2 minutos.",
+                "whyChoose": "Ideal para trabajos puntuales: baño, cocina, pintura, instalaciones."
+            }
+        },
+        "cta": "Comenzar",
+        "trust1": "Sin compromiso",
+        "trust2": "Respuesta inmediata",
+        "trust3": "+500 proyectos completados",
+        "trust4": "30+ años de experiencia"
+    },
+    "processSteps": {
+        "label": "Nuestro Proceso",
+        "title": "Cómo Trabajamos",
+        "subtitle": "Un proceso inteligente que combina tecnología IA con experiencia humana para tu tranquilidad.",
+        "steps": [
+            {
+                "title": "Presupuesto Inteligente",
+                "description": "Usa nuestro sistema de presupuestos con IA. Describe tu proyecto y obtén un desglose de costes preliminar en segundos, sin compromiso.",
+                "badge": "IA"
+            },
+            {
+                "title": "Revisión por Experto",
+                "description": "Un agente humano analiza tu estimación, verifica las especificaciones técnicas y ajusta el presupuesto con criterio profesional."
+            },
+            {
+                "title": "Visita Técnica",
+                "description": "Organizamos una visita opcional para tomar medidas, evaluar el espacio y definir los detalles finales de la propuesta técnica."
+            },
+            {
+                "title": "Presupuesto Definitivo",
+                "description": "Recibes un presupuesto detallado y cerrado, listo para aprobar. Consulta cualquier duda con nuestro asistente inteligente.",
+                "badge": "IA"
+            }
+        ]
+    },
+    "locations": {
+        "label": "Áreas de Servicio",
+        "title": "Construcción y Reformas en Baleares",
+        "subtitle": "Operamos en todo el archipiélago balear: Mallorca, Menorca, Ibiza y Formentera.",
+        "link": "Ver todas las zonas"
+    },
+    "faq": {
+        "label": "Preguntas Frecuentes",
+        "title": "Resolvemos tus dudas",
+        "subtitle": "Las preguntas más habituales sobre nuestros servicios.",
+        "items": [
+            {
+                "question": "¿Cuánto tarda una reforma integral?",
+                "answer": "El tiempo varía según la complejidad del proyecto. Una reforma integral estándar suele oscilar entre 3 y 6 meses. En Basis garantizamos plazos realistas y los cumplimos gracias a nuestra experiencia de más de 30 años."
+            },
+            {
+                "question": "¿Gestionáis las licencias de obra?",
+                "answer": "Sí, nos encargamos de todo el proceso burocrático. Desde la solicitud de licencias municipales hasta la gestión de ocupación de vía pública. Conocemos las normativas de cada ayuntamiento de Baleares."
+            },
+            {
+                "question": "¿Trabajáis con presupuesto cerrado?",
+                "answer": "Sí. Nuestra política de transparencia elimina las sorpresas. Una vez aprobado el diseño y los materiales, el precio es fijo, salvo que decidas realizar cambios durante la obra."
+            },
+            {
+                "question": "¿En qué zonas de Baleares trabajáis?",
+                "answer": "Operamos en todas las Islas Baleares: Mallorca, Menorca, Ibiza y Formentera. Nuestra sede está en Mallorca pero nos desplazamos a todas las islas."
+            }
+        ]
+    },
+    "cta": {
+        "title": "Tu Proyecto, Nuestra Prioridad",
+        "subtitle": "30 años de experiencia avalan nuestro trabajo. Solicita tu presupuesto gratuito sin compromiso.",
+        "buttonPrimary": "Solicitar Presupuesto",
+        "buttonSecondary": "Contactar",
+        "note": "Respuesta en menos de 24 horas"
+    },
+    "vision": {
+        "label": "Nuestra Filosofía",
+        "title": "Más de 30 años <br/> <span class='text-primary'>construyendo confianza</span>",
+        "description": "En Basis, cada proyecto es un compromiso personal. Combinamos la experiencia de tres décadas con las técnicas más avanzadas para ofrecer resultados que superan expectativas.",
+        "points": [
+            "Equipo propio de profesionales especializados.",
+            "Materiales de primera calidad certificados.",
+            "Plazos realistas y cumplimiento garantizado.",
+            "Comunicación constante durante todo el proceso."
+        ],
+        "cta": "Conoce nuestra historia"
+    },
+    "transformations": {
+        "label": "Proyectos Reales",
+        "title": "Transformaciones que Hablan",
+        "subtitle": "Más de 500 proyectos completados con éxito en Baleares.",
+        "sidebarTitle": "¿Listo para tu proyecto?",
+        "sidebarDescription": "Cada proyecto comienza con una conversación. Cuéntanos tu visión y la haremos realidad.",
+        "sidebarStep1Title": "Evaluación Técnica",
+        "sidebarStep1Desc": "Analizamos la viabilidad de tu proyecto.",
+        "sidebarStep2Title": "Propuesta Personalizada",
+        "sidebarStep2Desc": "Diseño y presupuesto a tu medida.",
+        "cta": "Ver más proyectos"
+    },
+    "basis": {
+        "hero": {
+            "eyebrow": "AI-First Custom Software",
+            "titlePart1": "Riduci le tue ore di preventivo a",
+            "titlePart2": "esattamente 15 minuti.",
+            "description": "Il generatore AI-First che automatizza preventivi complessi, certificazioni e contratti su misura per te. Smetti di perdere redditività gestendo i lavori alla cieca.",
+            "ctaPrimary": "Prova il Generatore Gratis",
+            "ctaSecondary": "Prenota Valutazione Tecnica"
+        },
+        "wizard": {
+            "title": "Il test del veleno.",
+            "description": "Descrivi il tuo progetto in linguaggio naturale. La nostra IA incrocerà i prezzi di mercato reali e strutturerà le tue voci in pochi secondi.",
+            "examples": {
+                "kitchen": "Carica Esempio: Cucina",
+                "roof": "Carica Esempio: Tetto"
+            },
+            "placeholder": "Es: Ristrutturazione bagno 6mq. Rimozione vasca, piatto doccia in resina...",
+            "analyze": "Analizzatore semantico attivato",
+            "generateBtn": "Genera Preventivo",
+            "loadingTitle": "Estrazione voci...",
+            "loadingDesc": "Incrocio scarti, rese e basi di prezzo.",
+            "proposalTitle": "Riepilogo Proposta",
+            "proposalDesc": "Stima automatica IA",
+            "estimatedBudget": "Preventivo Stimato",
+            "readyTitle": "Il tuo dettaglio tecnico è pronto!",
+            "readyDesc": "A quale email dovremmo inviare il PDF professionale?",
+            "emailPlaceholder": "La tua email...",
+            "sendBtn": "Invia PDF",
+            "successTitle": "PDF inviato con successo.",
+            "successDesc": "Giri tassi di mercato. Immagina di farlo con i tuoi tassi reali.",
+            "upsellTitle": "Con Basis Core su Misura:",
+            "upsellFeatures": [
+                "Integrazione di Excel o tariffe PDF.",
+                "Pannelli di deviazione in tempo reale.",
+                "Fatture generate automaticamente."
+            ],
+            "demoBtn": "Prenota Demo su Misura"
+        },
+        "painPoints": {
+            "titlePart1": "Gestire alla cieca ti costa ",
+            "titleHighlight": "decine di migliaia",
+            "titlePart3": " di euro l'anno.",
+            "description": "Il conto più caro è il tempo perso in attività manuali e la mancanza di visibilità finanziaria.",
+            "items": [
+                {
+                    "title": "Deviazioni Occulte",
+                    "description": "Scopri le perdite solo all'ultima certificazione."
+                },
+                {
+                    "title": "Perdita del Weekend",
+                    "description": "Passare la domenica a incrociare Excel e fatture."
+                },
+                {
+                    "title": "Caos Comunicativo",
+                    "description": "Email perse, chiamate e PDF su WhatsApp."
+                },
+                {
+                    "title": "Rischi nelle Certificazioni",
+                    "description": "Fatturare sotto il reale avanzamento."
+                }
+            ]
+        },
+        "benefits": {
+            "title": "Fine delle scartoffie.<br />Controllo assoluto sui lavori.",
+            "description": "Basis è il motore che unifica vendite e controllo su misura.",
+            "items": [
+                {
+                    "title": "Software su misura. In 4 settimane.",
+                    "description": "Adattiamo Basis ai tuoi processi, integrando flussi di lavoro storici.",
+                    "features": [
+                        "Sviluppo Core + Livelli Personalizzati",
+                        "Nessuna curva di apprendimento ardua",
+                        "Connessione con le tue banche"
+                    ],
+                    "cta": "Voglio valutare il mio sviluppo"
+                },
+                {
+                    "title": "Chiudi i lavori 10x più velocemente.",
+                    "description": "La nostra IA legge le tue tariffe PDF e redige preventivi in minuti.",
+                    "features": [
+                        "Ricerca semantica istantanea",
+                        "Autocompletamento di rese e ore",
+                        "Esportazione PDF con un clic"
+                    ],
+                    "cta": "Automatizza i preventivi con l'IA"
+                },
+                {
+                    "title": "Governa l'esecuzione.",
+                    "description": "Il sistema incrocia ogni bolla e ora rispetto al budget originale.",
+                    "features": [
+                        "Avvisi in tempo reale per la redditività",
+                        "Generazione certificazioni automatiche",
+                        "Controllo documentale integrato"
+                    ],
+                    "cta": "Voglio vedere il pannello di controllo"
+                }
+            ]
+        },
+        "testimonials": {
+            "title": "Non fidarti solo del nostro algoritmo.",
+            "description": "Chiedilo a chi ha già recuperato i margini.",
+            "quote": "Prima passavamo il fine settimana su Excel. Ora l'incaricato carica le ore dal telefono e lunedì la fattura è pronta.",
+            "authorName": "Javier Martínez",
+            "authorRole": "Socio Direttore, VM Plus",
+            "stats": [
+                {
+                    "value": "98%",
+                    "label": "Precisione Preventivi"
+                },
+                {
+                    "value": "-12h",
+                    "label": "Admin a settimana"
+                },
+                {
+                    "value": "+14%",
+                    "label": "Controllo Margine"
+                },
+                {
+                    "value": "0",
+                    "label": "Excel Persi"
+                }
+            ]
+        },
+        "cta": {
+            "title": "Trova la perdita di denaro <br /> nei tuoi cantieri.",
+            "description": "Prenota una valutazione tecnica di 15 minuti. Carichiamo un tuo listino e facciamo un preventivo in tempo reale.",
+            "btnPrimary": "Prenota Valutazione Gratuita",
+            "features": [
+                "Nessun vincolo",
+                "Per le PMI, non per multinazionali",
+                "Demo pratica"
+            ],
+            "note": "⏳ Nota: Facciamo l'onboarding di **solo 3 aziende al mese**."
+        },
+        "agenda": {
+            "badge": "Demo Personalizzata",
+            "titleHighlight": "Gratuita",
+            "title": "Prenota la tua Consulenza ",
+            "description": "30 minuti con uno specialista di edilizia digitale. Ti mostreremo come Basis si integra nel tuo vero flusso di lavoro.",
+            "calendar": {
+                "months": [
+                    "Gennaio",
+                    "Febbraio",
+                    "Marzo",
+                    "Aprile",
+                    "Maggio",
+                    "Giugno",
+                    "Luglio",
+                    "Agosto",
+                    "Settembre",
+                    "Ottobre",
+                    "Novembre",
+                    "Dicembre"
+                ],
+                "days": [
+                    "Lun",
+                    "Mar",
+                    "Mer",
+                    "Gio",
+                    "Ven",
+                    "Sab",
+                    "Dom"
+                ],
+                "availableTime": "Orari Disponibili"
+            },
+            "form": {
+                "title": "I Tuoi Dati",
+                "name": "Nome Completo",
+                "namePlaceholder": "Mario Rossi",
+                "email": "Email",
+                "emailPlaceholder": "mario@azienda.com",
+                "phone": "Telefono",
+                "phoneOptional": "(opzionale)",
+                "phonePlaceholder": "+39 300 000 0000",
+                "submit": "Continua",
+                "loading": "Caricamento...",
+                "privacy": " Nessun impegno. Cancellabile in qualsiasi momento.",
+                "summaryText": "30 min · Videochiamata"
+            },
+            "verification": {
+                "title": "Verifica",
+                "subtitle": "Abbiamo inviato un codice a ",
+                "verifying": "Verifica in corso..."
+            },
+            "success": {
+                "title": "Riunione Confermata!",
+                "message": "Ti invieremo une-mail di conferma con il link della videochiamata a "
+            },
+            "errors": {
+                "process": "Errore durante lelaborazione della richiesta.",
+                "invalidCode": "Codice errato.",
+                "confirmation": "Errore durante la conferma della prenotazione."
+            }
+        },
+        "floatingTrigger": {
+            "desktopTitle": "Parlare con Basis AI?",
+            "desktopSubtitle": "Automatizza il tuo preventivo in pochi secondi.",
+            "mobileTitle": "Parlare con Basis AI?",
+            "mobileSubtitle": "Fai un preventivo in pochi secondi."
+        },
+        "profiling": {
+            "step1": {
+                "title": "Quale processo ti porta via più tempo alla settimana?",
+                "subtitle": "Aiutaci a personalizzare la tua esperienza concentrandoci su ciò che conta.",
+                "options": {
+                    "budgeting": "Preventivazione e ricerca prezzi",
+                    "costControl": "Controllo degli scostamenti e dei margini",
+                    "certifications": "Consuntivazione ore e SAL"
+                }
+            },
+            "step2": {
+                "title1": "Quanti cantieri gestite contemporaneamente?",
+                "options1": {
+                    "1-3": {
+                        "label": "1 – 3 cantieri",
+                        "desc": "Lavoratore autonomo"
+                    },
+                    "4-10": {
+                        "label": "4 – 10 cantieri",
+                        "desc": "PMI"
+                    },
+                    "10+": {
+                        "label": "+10 cantieri",
+                        "desc": "Impresa Edile"
+                    }
+                },
+                "title2": "Qual è il tuo ruolo?",
+                "options2": {
+                    "owner": "Titolare",
+                    "projectManager": "Direttore Lavori",
+                    "admin": "Amministrazione",
+                    "surveyor": "Geometra / Computista"
+                }
+            },
+            "step3": {
+                "title1": "Quanto spendi all'anno per geometri o gestione tecnica?",
+                "options1": {
+                    "<10k": "Meno di 10k €",
+                    "10-30k": "Tra 10k e 30k €",
+                    "30-60k": "Tra 30k e 60k €",
+                    "60k+": "Più di 60k €"
+                },
+                "title2": "Quante ore a settimana dedichi al lavoro manuale (Excel, carta)?",
+                "options2": {
+                    "<5h": "Meno di 5h",
+                    "5-15h": "5 - 15 ore",
+                    "15-30h": "15 - 30 ore",
+                    "30h+": "+30 ore"
+                }
+            },
+            "step4": {
+                "title": "Ultimo passo",
+                "subtitle": "Dati base della tua azienda.",
+                "companyNameLabel": "Come si chiama la tua azienda?",
+                "companyNamePlaceholder": "Inserisci il nome della tua azienda...",
+                "companySizeLabel": "Dimensione aziendale",
+                "companySizeOptions": {
+                    "solo": "Solo 1",
+                    "2-5": "2-5",
+                    "6-15": "6-15",
+                    "16-50": "16-50",
+                    "50+": "50+"
+                },
+                "stackLabel": "Da quali strumenti prevedi di migrare?",
+                "stackOptions": {
+                    "excel": "Excel / Word",
+                    "presto": "Presto / Arquímedes",
+                    "otherErp": "Altro ERP (Procore, Holded...)"
+                }
+            },
+            "common": {
+                "stepIndicator": "Passo",
+                "of": "di",
+                "next": "Avanti",
+                "errorCompleting": "Si prega di completare tutti i campi.",
+                "unknownError": "Errore sconosciuto"
+            }
+        },
+        "wizardChat": {
+            "header": {
+                "title": "Architetto IA",
+                "subtitle": "Assistente Intelligente",
+                "clearTooltip": "Cancella conversazione e ricomincia"
+            },
+            "emptyState": {
+                "title": "Come posso aiutarti oggi?",
+                "subtitle": "Posso aiutarti a stimare i costi, definire materiali o pianificare la tua ristrutturazione.",
+                "suggestions": [
+                    {
+                        "title": "Ristrutturazione Cucina",
+                        "text": "Voglio ristrutturare l'intera cucina, cambiando mobili."
+                    },
+                    {
+                        "title": "Bagno Completo",
+                        "text": "Cambio vasca con piatto doccia, piastrellatura e sanitari nuovi."
+                    },
+                    {
+                        "title": "Ristrutturazione Integrale",
+                        "text": "Preventivo per ristrutturare un appartamento di 90mq."
+                    },
+                    {
+                        "title": "Pavimenti e pittura",
+                        "text": "Devo cambiare il pavimento e dipingere l'appartamento."
+                    }
+                ]
+            },
+            "input": {
+                "placeholder": "Descrivi il tuo progetto...",
+                "analyzingDocs": "Analisi documenti... 🧠",
+                "transcribing": "Trascrizione audio...",
+                "recordingInfo": "Registrazione...",
+                "keyboardHint": "Premi Invio per inviare. Shift+Invio per nuova riga.",
+                "analyzingText": "In analisi..."
+            },
+            "panel": {
+                "title": "Dati Progetto",
+                "status": "In corso",
+                "completed": "Completato",
+                "deepGenTitle": "Generazione Profonda",
+                "deepGenDesc": "Suddivisione dettagliata (più lenta)."
+            },
+            "progress": {
+                "generatingMsg": "(Generazione preventivo...)",
+                "extracting": "Estrazione voci...",
+                "searching": "Ricerca corrispondenze...",
+                "calculating": "Calcolo totali...",
+                "generateBtn": "Genera Preventivo"
+            },
+            "pdfDownloadCard": {
+                "title": "Preventivo Creato",
+                "subtitle": "Preventivo generato e scaricato correttamente.",
+                "nextStep": "Vuoi automatizzare questo processo?",
+                "benefits": "Invita fornitori, firma documenti e usa prezzi reali.",
+                "button": "Pianifica il cantiere"
+            },
+            "errors": {
+                "resetConfirm": "Sei sicuro di cancellare la conversazione?",
+                "generateError": "Impossibile generare il preventivo. "
+            }
+        }
+    }
+}

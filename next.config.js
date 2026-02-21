@@ -40,7 +40,7 @@ const nextConfig = {
       },
     ],
   },
-  serverExternalPackages: ['pdf-parse'],
+  serverExternalPackages: ['pdf-parse', '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation', '@opentelemetry/sdk-node', 'framer-motion', 'motion'],
 };
 
 const createNextIntlPlugin = require('next-intl/plugin');

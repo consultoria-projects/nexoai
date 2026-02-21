@@ -124,14 +124,14 @@
             },
             "subtitle": {
                 "contact": "Ihre Daten sind sicher. Wir verwenden sie nur zur Verwaltung Ihres Projekts.",
-                "otp": "Wir haben einen Sicherheitscode an Ihre E-Mail gesendet."
+                "otp": "Wir haben einen sicheren Code an Ihre E-Mail gesendet."
             },
             "buttons": {
                 "cancel": "Abbrechen"
             },
             "form": {
                 "name": "Vollständiger Name",
-                "email": "E-Mail-Adresse",
+                "email": "E-Mail",
                 "phone": "Handynummer",
                 "country": "Land",
                 "submit": "Weiter",
@@ -140,7 +140,7 @@
                 "placeholders": {
                     "name": "Ihr vollständiger Name",
                     "email": "ihre@email.com",
-                    "phone": "123 456 789"
+                    "phone": "600 000 000"
                 }
             }
         }

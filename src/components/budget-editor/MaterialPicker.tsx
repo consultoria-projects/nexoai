@@ -86,7 +86,7 @@ export function MaterialPicker({ open, onOpenChange, onSelect, currentMaterialNa
                                         handleSearch(currentMaterialName);
                                     }}
                                 >
-                                    Buscar "{currentMaterialName}"
+                                    Buscar &quot;{currentMaterialName}&quot;
                                 </Button>
                             )}
                         </div>

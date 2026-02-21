@@ -1,0 +1,32 @@
+{
+    "title": "Configuración de Precios para Presupuestos Rápidos",
+    "description": "Ajusta los precios base por metro cuadrado (€/m²) que se utilizan para las estimaciones automáticas.",
+    "integral": {
+        "title": "Reforma Integral"
+    },
+    "bathrooms": {
+        "title": "Reforma de Baño"
+    },
+    "kitchen": {
+        "title": "Reforma de Cocina"
+    },
+    "levels": {
+        "basic": "Calidad Básica",
+        "medium": "Calidad Media",
+        "premium": "Calidad Premium"
+    },
+    "buttons": {
+        "save": "Guardar Cambios",
+        "loading": "Guardando..."
+    },
+    "toast": {
+        "success": {
+            "title": "Precios Actualizados",
+            "description": "La nueva configuración de precios se ha guardado correctamente."
+        },
+        "error": {
+            "title": "Error al Guardar",
+            "description": "No se pudo guardar la configuración de precios. Por favor, inténtalo de nuevo."
+        }
+    }
+}

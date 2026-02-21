@@ -1,0 +1,504 @@
+{
+    "title": "Solicita tu presupuesto",
+    "description": "Elige el nivel de detalle que quieres proporcionar y te daremos una estimación.",
+    "page": {
+        "title": "Presupuesto al instante",
+        "description": "Rellena nuestro formulario rápido y obtén una estimación de costes para tu proyecto en pocos minutos."
+    },
+    "selector": {
+        "title": "¿Cómo podemos ayudarte?",
+        "subtitle": "Elige la opción que mejor se adapte a tu proyecto.",
+        "options": {
+            "wizard": {
+                "title": "Presupuesto Inteligente",
+                "desc": "Analisis detallado 360º con IA",
+                "badge": "Recomendado"
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "desc": "Construcción desde cero"
+            },
+            "fast": {
+                "title": "Presupuesto Rápido",
+                "desc": "Estimación express para reformas"
+            }
+        }
+    },
+    "premiumSelector": {
+        "badge": "Empieza tu proyecto",
+        "title": "Cómo podemos <br /> <span class=\"text-[#e8c42f]\">ayudarte?</span>",
+        "subtitle": "Elige la opción que mejor encaje con tu proyecto.",
+        "features": [
+            "Consultoría gratuita",
+            "Sin compromiso",
+            "Respuesta en 24h"
+        ],
+        "options": {
+            "smart": {
+                "badge": "Recomendado",
+                "title": "Presupuesto Smart",
+                "desc": "Análisis 360º con IA."
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "desc": "Construcción desde cero."
+            },
+            "quick": {
+                "title": "Presupuesto Rápido",
+                "desc": "Estimación exprés."
+            }
+        }
+    },
+    "modal": {
+        "headers": {
+            "newBuild": {
+                "title": "Estudio de Obra Nueva",
+                "desc": "Déjanos analizar la viabilidad de tu proyecto."
+            },
+            "wizard": {
+                "title": "Asistente de Presupuestos",
+                "desc": "Detalla tu visión paso a paso."
+            },
+            "pool": {
+                "title": "Cotizador de Piscinas",
+                "desc": "Diseña tu oasis perfecto."
+            },
+            "fast": {
+                "title": "Calculadora Rápida",
+                "desc": "Obtén una estimación inmediata."
+            }
+        },
+        "cancel": "Cancelar"
+    },
+    "newBuild": {
+        "hasLand": {
+            "label": "¿Dispones ya de un terreno o solar?",
+            "yes": "Sí, tengo terreno en propiedad",
+            "no": "No, estoy buscando",
+            "searching": "Tengo un terreno visto/reservado"
+        },
+        "hasProject": {
+            "label": "¿Tienes ya proyecto de arquitecto?",
+            "yes": "Sí, tengo planos visados",
+            "no": "No, necesito arquitecto"
+        },
+        "location": {
+            "label": "¿En qué zona/municipio?",
+            "placeholder": "Ej: Andratx, Son Vida..."
+        },
+        "approxMeters": {
+            "label": "Metros cuadrados construibles aprox"
+        },
+        "details": {
+            "label": "Detalles adicionales (Opcional)",
+            "placeholder": "Estilo moderno, piscina..."
+        },
+        "submit": "Solicitar Estudio"
+    },
+    "multimedia": {
+        "title": "Archivos y Planos",
+        "description": "Sube planos o fotos del estado actual",
+        "upload": "Subir archivos",
+        "dragDrop": "Arrastra aquí para subir imágenes o PDFs"
+    },
+    "trigger": {
+        "title": "¿Pensando en renovar?",
+        "subtitle": "Obtén tu estimación gratuita en segundos.",
+        "badge": "Empieza tu proyecto",
+        "mobileSubtitle": "Click para comenzar",
+        "features": [
+            "Consultoría gratuita con IA",
+            "Sin compromiso",
+            "Respuesta inmediata"
+        ],
+        "modes": {
+            "general": "Solicitar Presupuesto",
+            "pool": "Cotizar Piscina",
+            "reform": "Precio Reforma",
+            "new_build": "Estudio Obra Nueva",
+            "kitchen": "Presupuesto Cocina",
+            "bathroom": "Presupuesto Baño",
+            "wizard": "Presupuesto 360º",
+            "chat": "Chat Arquitecto"
+        },
+        "cards": {
+            "chat": {
+                "title": "Chat Arquitecto",
+                "description": "Habla con nuestra IA experta para definir tu proyecto ideal.",
+                "badge": "NUEVO"
+            },
+            "wizard": {
+                "title": "Presupuesto Smart",
+                "description": "Análisis 360º de tu reforma con detalle profesional.",
+                "badge": "RECOMENDADO"
+            },
+            "newBuild": {
+                "title": "Obra Nueva",
+                "description": "Estudio de viabilidad y costes para construcción desde cero."
+            },
+            "reform": {
+                "title": "Presupuesto Rápido",
+                "description": "Estimación exprés para reformas sencillas."
+            }
+        },
+        "identity": {
+            "title": {
+                "contact": "Commencer le Projet",
+                "accessTo": "Accéder à",
+                "otp": "Vérification de Sécurité"
+            },
+            "subtitle": {
+                "contact": "Vos données sont en sécurité. Nous ne les utiliserons que pour gérer votre projet.",
+                "otp": "Nous avons envoyé un code sécurisé à votre email."
+            },
+            "buttons": {
+                "cancel": "Annuler"
+            },
+            "form": {
+                "name": "Nom Complet",
+                "email": "Courriel",
+                "phone": "Téléphone Portable",
+                "country": "Pays",
+                "submit": "Continuer",
+                "verifying": "Vérification...",
+                "back": "Retourner / Corriger",
+                "placeholders": {
+                    "name": "Votre nom complet",
+                    "email": "votre@email.com",
+                    "phone": "600 000 000"
+                }
+            }
+        }
+    },
+    "quickForm": {
+        "title": "Formulario de Presupuesto Rápido",
+        "description": "Rellena los siguientes campos para obtener una estimación aproximada.",
+        "renovationType": {
+            "label": "Tipo de Reforma",
+            "options": {
+                "integral": "Reforma Integral",
+                "bathrooms": "Reforma de Baño",
+                "kitchen": "Reforma de Cocina",
+                "pool": "Construcción de Piscina"
+            }
+        },
+        "squareMeters": {
+            "label": "Metros cuadrados del suelo (m²)"
+        },
+        "additionalDetails": {
+            "label": "Descripción Adicional (Opcional)",
+            "placeholder": "Detalles extra..."
+        }
+    },
+    "detailedForm": {
+        "title": "Presupuesto Detallado",
+        "description": "Proporciona todos los detalles para obtener un presupuesto preliminar más preciso."
+    },
+    "steps": {
+        "contact": "Información de Contacto",
+        "projectDefinition": "Definición del Proyecto",
+        "demolition": "Demoliciones y Trabajos Previos",
+        "bathroom": "Reforma de Baño(s)",
+        "kitchen": "Reforma de Cocina",
+        "workArea": "Acondicionamiento de Espacio de Trabajo",
+        "ceilings": "Falsos Techos y Aislamiento",
+        "electricity": "Instalación Eléctrica",
+        "carpentry": "Carpintería y Pintura",
+        "optionals": "Opcionales",
+        "summary": "Resumen y Envío"
+    },
+    "summary": {
+        "title": "Resumen de tu Solicitud",
+        "description": "Por favor, revisa que todos los datos sean correctos antes de enviar tu solicitud. Un especialista se pondrá en contacto contigo para afinar los detalles."
+    },
+    "confirmation": {
+        "title": "¡Solicitud Recibida!",
+        "description": "Gracias por completar tu solicitud. Nuestro equipo la revisará y se pondrá en contacto contigo en las próximas 24-48 horas.",
+        "button": "Volver a la página principal",
+        "noCostMessage": "Este es un precio orientativo y no contractual. Un especialista se pondrá en contacto contigo para proporcionarte un presupuesto detallado.",
+        "poolMessage": "Uno de nuestros expertos en piscinas se pondrá en contacto muy pronto para detallar tu proyecto.",
+        "restartForm": "Empezar de nuevo",
+        "reviewButton": "Ver opiniones de nuestros clientes"
+    },
+    "form": {
+        "buttons": {
+            "prev": "Atrás",
+            "next": "Siguiente",
+            "submit": "Calcular Precio Estimado",
+            "loading": "Enviando..."
+        },
+        "contact": {
+            "banner": {
+                "title": "¡Empecemos!",
+                "description": "Necesitamos tus datos para poder enviarte el presupuesto detallado al finalizar."
+            }
+        },
+        "name": {
+            "label": "Nombre Completo",
+            "placeholder": "Tu nombre y apellidos"
+        },
+        "email": {
+            "label": "Correo Electrónico",
+            "placeholder": "tu@email.com"
+        },
+        "phone": {
+            "label": "Teléfono de Contacto",
+            "placeholder": "600 123 456"
+        },
+        "address": {
+            "label": "Dirección de la Obra",
+            "placeholder": "Calle, número, ciudad"
+        },
+        "projectDefinition": {
+            "propertyType": {
+                "label": "Tipo de Inmueble",
+                "residential": "Vivienda (Piso/Casa)",
+                "commercial": "Local Comercial",
+                "office": "Oficina"
+            },
+            "projectScope": {
+                "label": "Alcance del Proyecto",
+                "integral": "Reforma Integral",
+                "integralDesc": "Reforma completa de toda la propiedad.",
+                "partial": "Reforma Parcial",
+                "partialDesc": "Solo ciertas estancias o partidas."
+            },
+            "partialScope": {
+                "label": "Áreas a reformar",
+                "description": "Selecciona las áreas que quieres incluir en la reforma parcial.",
+                "options": {
+                    "bathroom": "Reforma de Baño(s)",
+                    "kitchen": "Reforma de Cocina",
+                    "demolition": "Demoliciones",
+                    "ceilings": "Falsos Techos",
+                    "electricity": "Electricidad",
+                    "carpentry": "Carpintería y Pintura"
+                }
+            },
+            "totalAreaM2": {
+                "label": "Superficie Total del Inmueble (m²)"
+            },
+            "numberOfRooms": {
+                "label": "Número de Habitaciones"
+            },
+            "numberOfBathrooms": {
+                "label": "Número de Baños"
+            }
+        },
+        "workArea": {
+            "workstations": {
+                "label": "Número de Puestos de Trabajo/Escritorios"
+            },
+            "meetingRooms": {
+                "label": "Número de Salas de Reuniones"
+            }
+        },
+        "quality": {
+            "label": "Nivel de Calidad Deseado",
+            "placeholder": "Selecciona una calidad",
+            "options": {
+                "basic": "Básica",
+                "basicDesc": "Funcional y económica, ideal para alquiler.",
+                "medium": "Media",
+                "mediumDesc": "Equilibrio calidad/precio, materiales duraderos.",
+                "premium": "Premium",
+                "premiumDesc": "Acabados de lujo y diseño exclusivo."
+            }
+        },
+        "demolition": {
+            "elevator": "¿El edificio dispone de ascensor?",
+            "furniture": "¿Necesitas desmontaje y retirada de muebles existentes?",
+            "thickWall": {
+                "label": "Tipo de Tabiquería a Demoler",
+                "thin": "Tabique sencillo (Ladrillo hueco / Pladur simple)",
+                "thick": "Muro grueso o de carga (Ladrillo macizo / Bloque)"
+            },
+            "floors": "Demolición de Suelos (m²)",
+            "wallTiles": "Demolición de Alicatados (m²)",
+            "demolishPartitions": {
+                "label": "¿Necesita demolición de tabiques interiores?"
+            },
+            "demolishPartitionsM2": {
+                "label": "Metros cuadrados (m²) de tabique a demoler"
+            },
+            "removeDoors": {
+                "label": "¿Necesita desmontaje de puertas interiores existentes?"
+            },
+            "removeDoorsAmount": {
+                "label": "Cantidad (Ud.) de puertas a desmontar"
+            }
+        },
+        "bathroom": {
+            "bathroomWallTilesM2": {
+                "label": "¿Quiere cambiar los azulejos de las paredes? (Indique m²)"
+            },
+            "bathroomFloorM2": {
+                "label": "¿Quiere cambiar el suelo? (Indique m²)"
+            },
+            "installShowerTray": {
+                "label": "¿Necesita instalación de plato de ducha?"
+            },
+            "installShowerScreen": {
+                "label": "¿Necesita instalación de mampara de ducha?"
+            },
+            "bathroomPlumbing": {
+                "label": "¿Desea renovación completa de la fontanería del baño?"
+            }
+        },
+        "kitchen": {
+            "renovateKitchen": {
+                "label": "¿Quiere reformar la cocina?"
+            },
+            "kitchenDemolition": {
+                "label": "¿Necesita demolición de muebles o cocina de obra?"
+            },
+            "kitchenWallTilesM2": {
+                "label": "¿Quiere cambiar los alicatados de las paredes? (Indique m²)"
+            },
+            "kitchenFloorM2": {
+                "label": "¿Quiere cambiar el suelo? (Indique m²)"
+            },
+            "kitchenPlumbing": {
+                "label": "¿Desea renovación completa de la fontanería de la cocina?"
+            }
+        },
+        "ceilings": {
+            "installFalseCeiling": {
+                "label": "¿Desea instalar un falso techo en baño/cocina?"
+            },
+            "falseCeilingM2": {
+                "label": "Metros cuadrados (m²) de falso techo"
+            },
+            "soundproofRoom": {
+                "label": "¿Necesita insonorización de habitación (con lana de roca y doble placa)?"
+            },
+            "soundproofRoomM2": {
+                "label": "Metros cuadrados (m²) a insonorizar"
+            }
+        },
+        "electricity": {
+            "renovateElectricalPanel": {
+                "label": "¿Desea renovar el cuadro eléctrico general y la instalación actual?"
+            },
+            "perRoom": {
+                "kitchen": "Cocina",
+                "livingRoom": "Salón",
+                "bedroom": "Habitación",
+                "sockets": "Puntos de enchufe a añadir",
+                "lights": "Puntos de luz conmutados a añadir",
+                "tv": "¿Desea toma de TV?"
+            },
+            "scope": {
+                "label": "Alcance de la Renovación Eléctrica",
+                "total": "Renovación Integral",
+                "totalDesc": "Instalación nueva completa (cuadro, cableado y mecanismos). Ideal para pisos antiguos.",
+                "partial": "Solo Mecanismos",
+                "partialDesc": "Sustitución estética de enchufes e interruptores sin cambiar el cableado interno."
+            },
+            "ac": {
+                "label": "Climatización / Aire Acondicionado",
+                "installLabel": "¿Instalar Aire Acondicionado?",
+                "countLabel": "Número de equipos (Splits o Máquinas)",
+                "typeLabel": "Tipo de Instalación",
+                "split": "Splits de Pared (Mural)",
+                "splitDesc": "Unidades visibles en pared. Instalación más sencilla.",
+                "ducts": "Conductos (Centralizado)",
+                "ductsDesc": "Invisible por falso techo. Requiere obra y rejillas."
+            }
+        },
+        "carpentry": {
+            "renovateInteriorDoors": {
+                "label": "¿Quiere renovar las puertas de paso interiores?"
+            },
+            "interiorDoorsAmount": {
+                "label": "Cantidad (Ud.) de puertas de paso"
+            },
+            "installSlidingDoor": {
+                "label": "¿Necesita una puerta corredera?"
+            },
+            "slidingDoorAmount": {
+                "label": "Cantidad (Ud.) de puertas correderas"
+            },
+            "paintWalls": {
+                "label": "¿Desea pintar paredes y techos de color blanco?"
+            },
+            "paintWallsM2": {
+                "label": "Metros cuadrados (m²) de superficie a pintar"
+            },
+            "removeGotele": {
+                "label": "¿Necesita alisar paredes (eliminar gotelé)?"
+            },
+            "removeGoteleM2": {
+                "label": "Metros cuadrados (m²) de alisado"
+            }
+        },
+        "optionals": {
+            "installAirConditioning": {
+                "label": "¿Desea instalación de Aire Acondicionado por conductos?",
+                "description": "Estimación para toda la vivienda."
+            },
+            "renovateExteriorCarpentry": {
+                "label": "¿Desea renovación de carpintería de PVC con rotura térmica?",
+                "description": "Estimación para toda la vivienda."
+            }
+        },
+        "toast": {
+            "success": {
+                "title": "¡Solicitud Enviada!",
+                "description": "Hemos recibido tu solicitud. Nuestro equipo se pondrá en contacto contigo pronto."
+            },
+            "error": {
+                "title": "Error al enviar la solicitud",
+                "description": "No se pudo processar tu solicitud. Inténtalo de nuevo más tarde."
+            }
+        }
+    },
+    "reformInclusions": {
+        "title": "Lo que suele incluir una reforma de",
+        "kitchen": [
+            "Desmonte de muebles de cocina",
+            "Demolición, alicatados, electricidad, fontanería, suelos.",
+            "Preparaciones previas: regatas, electricidad y fontanería, enfoscado paredes.",
+            "Fontanería completa: cambio de instalación de agua fría y caliente y desagües.",
+            "Alicatado de paredes",
+            "Colocación de pavimentos",
+            "Electricidad nueva: enchufes e iluminación.",
+            "Falso techo en pladur especial humedad",
+            "Llaves de paso generales",
+            "Baldosas y azulejos",
+            "Iluminación LED",
+            "Enchufes e interruptores"
+        ],
+        "bathrooms": [
+            "Desmonte de accesorios: plato de ducha/bañera, lavabo y wc",
+            "Demolición, alicatados, electricidad, fontanería, suelos.",
+            "Preparaciones previas: regatas, electricidad y fontanería, enfoscado paredes.",
+            "Fontanería completa: cambio de instalación de agua fría y caliente y desagües.",
+            "Alicatado de paredes",
+            "Colocación de pavimentos",
+            "Electricidad nueva: enchufes e iluminación.",
+            "Falso techo en pladur especial humedad",
+            "Llaves de paso generales",
+            "Plato de ducha o bañera",
+            "WC",
+            "Grifería bañera/plato de ducha",
+            "Grifería lavabo",
+            "Lavabo",
+            "Baldosas y azulejos",
+            "Iluminación LED",
+            "Enchufe e interruptor"
+        ],
+        "integral": [
+            "Demolición de tabiques y elementos no estructurales",
+            "Renovación completa de instalación eléctrica",
+            "Renovación completa de fontanería y saneamiento",
+            "Nuevos alicatados y pavimentos en toda la vivienda",
+            "Carpintería interior nueva (puertas y armarios)",
+            "Pintura completa de paredes y techos",
+            "Renovación de cocina (mobiliario y electrodomésticos básicos)",
+            "Renovación de baños (sanitarios y grifería)",
+            "Instalación de falso techo en zonas húmedas",
+            "Gestión de residuos y limpieza final de obra"
+        ]
+    }
+}

@@ -227,7 +227,7 @@ export const ProvisionalBudgetView = ({ data, lineItems, totalEstimated, costBre
                             logoUrl={typeof window !== 'undefined' ? `${window.location.origin}/images/logo.png` : undefined}
                         />
                     }
-                    fileName={`Presupuesto-GRUPO RG-${today.replace(/\//g, '-')}.pdf`}
+                    fileName={`Presupuesto-Basis-${today.replace(/\//g, '-')}.pdf`}
                     className="inline-flex"
                 >
                     {({ blob, url, loading, error }) => (

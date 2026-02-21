@@ -72,7 +72,7 @@ export function RequirementCard({ requirements, className }: RequirementCardProp
                                     animate={{ opacity: 1, scale: 1 }}
                                     className="inline-flex items-center gap-1.5 rounded-full border border-border/50 dark:border-white/10 bg-background/50 dark:bg-white/5 px-3 py-1 text-xs text-foreground dark:text-white/80"
                                 >
-                                    <Check className="h-3 w-3 text-amber-500" />
+                                    <Check className="h-3 w-3 text-green-500" />
                                     {need.category}
                                 </motion.div>
                             ))}
@@ -83,8 +83,8 @@ export function RequirementCard({ requirements, className }: RequirementCardProp
 
             {/* Quality Badge (Optional) */}
             {requirements.specs?.qualityLevel && (
-                <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-center">
-                    <span className="text-xs text-amber-600 dark:text-amber-400 font-medium uppercase tracking-wide">
+                <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-3 text-center">
+                    <span className="text-xs text-green-600 dark:text-green-400 font-medium uppercase tracking-wide">
                         Calidad: {translateQuality(requirements.specs.qualityLevel)}
                     </span>
                 </div>
@@ -98,11 +98,11 @@ function MetricItem({ icon: Icon, label, value, filled }: any) {
         <div className={cn(
             "flex flex-col gap-1 rounded-lg border p-3 transition-colors",
             filled
-                ? "border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10"
+                ? "border-green-500/30 bg-green-500/5 dark:bg-green-500/10"
                 : "border-border/30 dark:border-white/5 bg-background/30 dark:bg-white/5"
         )}>
             <div className="flex items-center gap-2 text-muted-foreground dark:text-white/40">
-                <Icon className={cn("h-3.5 w-3.5", filled && "text-amber-500")} />
+                <Icon className={cn("h-3.5 w-3.5", filled && "text-green-500")} />
                 <span className="text-[10px] uppercase tracking-wide">{label}</span>
             </div>
             <span className={cn(

@@ -3,10 +3,12 @@
 import Image from 'next/image';
 import { BudgetWidget } from '@/components/budget-widget';
 import { Link } from '@/i18n/navigation';
+import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/use-auth';
 import { UserNav } from '@/components/auth/user-nav';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Menu } from 'lucide-react';
 import {
   Sheet,
@@ -34,9 +36,9 @@ export function Header({ t }: { t: any }) {
   }, []);
 
   const navLinks = [
-    { href: { pathname: '/', hash: 'services' }, label: t.header.nav.services },
-    { href: '/blog', label: t.header.nav.blog },
-    { href: '/contact', label: t.header.nav.contact },
+    { href: { pathname: '/', hash: 'wizard' }, label: "Asistente Costes" },
+    { href: '/', label: "Plataforma" },
+    { href: '/', label: "Casos de Uso" },
   ];
 
   const handleLinkClick = () => {
@@ -54,51 +56,12 @@ export function Header({ t }: { t: any }) {
     >
       <div className="w-[85vw] max-w-[1920px] mx-auto flex h-full items-center justify-between transition-all duration-300">
         <div className={cn("transition-transform duration-300 flex-shrink-0", isScrolled ? "scale-90" : "scale-100")}>
-          <Link href="/" className="block relative h-12 w-auto aspect-[3/1] md:h-16">
-            <Image
-              src="/images/logo.avif"
-              alt="Grupo RG Logo"
-              fill
-              className="object-contain"
-              priority
-            />
-          </Link>
+          <Logo className="h-8 flex items-center" width={110} height={32} />
         </div>
 
-        <div className="hidden md:block ml-10">
-          <MegaMenu t={t} />
-        </div>
         <div className="flex items-center gap-2">
+          {/*    <ThemeSwitcher /> */}
           <LanguageSwitcher />
-          {user ? (
-            <UserNav t={t.header.userNav} />
-          ) : (
-            <div className="hidden md:flex items-center gap-2">
-              <BudgetWidget t={t} />
-            </div>
-          )}
-          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-screen sm:max-w-[100vw] h-full">
-              <SheetHeader>
-                <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                <div className="py-4">
-                  <div className="w-[120px] h-[40px] bg-muted/30 rounded-md animate-pulse" />
-                </div>
-              </SheetHeader>
-              <MobileMenu
-                t={t}
-                navLinks={navLinks}
-                onLinkClick={handleLinkClick}
-                user={user}
-              />
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
     </header>

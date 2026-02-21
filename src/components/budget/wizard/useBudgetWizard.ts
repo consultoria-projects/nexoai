@@ -43,13 +43,7 @@ export const useBudgetWizard = () => {
                         }));
                         setMessages(history);
                     } else {
-                        // Set default welcome message if no history
-                        setMessages([{
-                            id: 'welcome',
-                            role: 'assistant',
-                            content: "Hola, soy tu arquitecto virtual. Cuéntame, ¿qué proyecto de reforma tienes en mente? Puedes enviarme audios, fotos o planos.",
-                            createdAt: new Date(),
-                        }]);
+                        // User requested to keep the empty state visible, therefore no initial AI message is pushed into the array.
                     }
                 }
             } catch (error) {
@@ -106,7 +100,7 @@ export const useBudgetWizard = () => {
     };
 
     const processAIResponse = async (text: string, attachments: string[] = [], isHidden: boolean = false) => {
-        if (!conversationId) return;
+        if (!conversationId || !leadId) return;
 
         try {
             const history = messages.map(m => ({
@@ -120,7 +114,7 @@ export const useBudgetWizard = () => {
             // Usually we send history + current prompt.
 
             const { processClientMessageAction } = await import('@/actions/budget/process-client-message.action');
-            const result = await processClientMessageAction(text, history, requirements);
+            const result = await processClientMessageAction(leadId, text, history, requirements);
 
             if (result.success && result.data) {
                 const aiMsg: Message = {
@@ -137,7 +131,11 @@ export const useBudgetWizard = () => {
                 const { sendMessageAction } = await import('@/actions/chat/send-message.action');
                 await sendMessageAction(conversationId, result.data.response, 'assistant', 'system');
 
-                if (result.data.isComplete) {
+                const data = result.data as any;
+
+                if (data.isLimitReached) {
+                    setState('idle'); // Or 'limit_reached' if we added that
+                } else if (data.isComplete) {
                     setState('review');
                 } else {
                     setState('idle');

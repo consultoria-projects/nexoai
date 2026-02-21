@@ -455,5 +455,55 @@
             "Instal·lació de fals sostre a les zones humides",
             "Gestió de residus i neteja final d'obra"
         ]
+    },
+    "demoViewer": {
+        "title": "Pressupost Generat",
+        "description": "Toca qualsevol quantitat o preu per editar-lo.",
+        "totals": {
+            "pem": "P.E.M (Material + Mà d'Obra):",
+            "tax": "IVA (21%):",
+            "total": "TOTAL Pressupost:"
+        },
+        "pdf": {
+            "title": "Personalitza el teu PDF",
+            "description": "Afegeix les teves dades. El preu total en el PDF reflectirà les edicions que facis a les partides.",
+            "companyName": "Nom de la teva Empresa *",
+            "cif": "CIF/NIF *",
+            "address": "Adreça Comercial *",
+            "clientName": "Client Final (Opcional)",
+            "logo": "Logotip d'Empresa (Opcional)",
+            "upload": "Puja un arxiu",
+            "uploadHint": "PNG, JPG fins a 2MB",
+            "ctaTitle": "Fes-ho teu i descarrega-ho!",
+            "ctaDesc": "Generarem un PDF llest per imprimir o enviar al teu client, amb els teus colors i modificacions.",
+            "button": "Crear Pressupost Final",
+            "generating": "Generant PDF..."
+        },
+        "table": {
+            "units": "Unts.",
+            "price": "Preu Unit."
+        }
+    },
+    "demoProgress": {
+        "generating": "Generant Pressupost",
+        "completed": "Completat!",
+        "wait": "Si us plau, espera...",
+        "extracted": "Partides extretes",
+        "matches": "Coincidències",
+        "success": "Pressupost generat!",
+        "steps": {
+            "extracting": "Extraient partides",
+            "searching": "Buscant en Price Book",
+            "calculating": "Calculant preus",
+            "complete": "Pressupost llest"
+        }
+    },
+    "demoCta": {
+        "title": "Missió Complida!",
+        "subtitle": "El teu pressupost personalitzat està llest a les teves descàrregues.",
+        "nextStep": "El següent pas",
+        "benefits": "Si aquest nivell d'automatització i professionalitat t'ha agradat, imagina tot el que Basis pot fer per a la teva empresa constructora. Crea pressupostos, certificacions i contractes en segons.",
+        "button": "Vull implementar això a la meva empresa",
+        "resetting": "Restejant la conversa..."
     }
 }

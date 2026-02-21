@@ -91,7 +91,7 @@ export function PriceBookDashboard() {
                         </div>
                         <div>
                             <div className="text-xl font-bold tracking-tight font-headline text-foreground">
-                                PriceCloud
+                                Basis
                             </div>
                             <p className="text-xs text-muted-foreground font-medium">Base de Datos</p>
                         </div>

@@ -2,7 +2,7 @@
     "hero": {
         "subtitle": "Over 30 years building in the Balearic Islands",
         "title": "We create spaces that last",
-        "description": "GRUPO RG is a construction company specialized in comprehensive renovations, new builds and high-end interior design in Mallorca and the Balearic Islands.",
+        "description": "Basis is a construction company specialized in comprehensive renovations, new builds and high-end interior design in Mallorca and the Balearic Islands.",
         "cta": "Request Quote",
         "ctaSecondary": "View projects",
         "stats": [
@@ -27,7 +27,7 @@
     },
     "philosophy": {
         "quote": "We don't build houses. We create the stage for your life.",
-        "author": "Grupo RG",
+        "author": "Basis",
         "description": "Every project is unique because every client is unique. We combine artisanal experience with technological innovation for exceptional results."
     },
     "expertise": {
@@ -214,7 +214,7 @@
         "items": [
             {
                 "question": "How long does a complete renovation take?",
-                "answer": "The time varies depending on the complexity of the project. A standard complete renovation usually takes between 3 and 6 months. At GRUPO RG we guarantee realistic deadlines and meet them thanks to our 30+ years of experience."
+                "answer": "The time varies depending on the complexity of the project. A standard complete renovation usually takes between 3 and 6 months. At Basis we guarantee realistic deadlines and meet them thanks to our 30+ years of experience."
             },
             {
                 "question": "Do you manage building permits?",
@@ -240,7 +240,7 @@
     "vision": {
         "label": "Our Philosophy",
         "title": "More than 30 years <br/> <span class='text-primary'>building trust</span>",
-        "description": "At GRUPO RG, every project is a personal commitment. We combine three decades of experience with the most advanced techniques to deliver results that exceed expectations.",
+        "description": "At Basis, every project is a personal commitment. We combine three decades of experience with the most advanced techniques to deliver results that exceed expectations.",
         "points": [
             "Own team of specialized professionals.",
             "Certified first-quality materials.",
@@ -260,5 +260,346 @@
         "sidebarStep2Title": "Customized Proposal",
         "sidebarStep2Desc": "Design and budget tailored to you.",
         "cta": "View more projects"
+    },
+    "basis": {
+        "hero": {
+            "eyebrow": "AI-First Custom Software",
+            "titlePart1": "Reduce your quoting hours to",
+            "titlePart2": "exactly 15 minutes.",
+            "description": "The AI-First generator that automates complex quotes, certifications, and contracts tailored to you. Stop losing profitability by managing projects blindly.",
+            "ctaPrimary": "Try Generator Free",
+            "ctaSecondary": "Book Technical Evaluation"
+        },
+        "wizard": {
+            "title": "The poison test.",
+            "description": "Describe your project in natural language. Our AI will cross-reference real market prices and structure your items in seconds.",
+            "examples": {
+                "kitchen": "Load Example: Kitchen",
+                "roof": "Load Example: Roof"
+            },
+            "placeholder": "Ex: Complete bathroom renovation of 6m2. Remove bathtub, resin shower tray, Roca toilets and matte white tile...",
+            "analyze": "Semantic analyzer activated",
+            "generateBtn": "Generate Quote",
+            "loadingTitle": "Extracting items...",
+            "loadingDesc": "Cross-referencing waste, yields and price bases.",
+            "proposalTitle": "Proposal Summary",
+            "proposalDesc": "Automatic AI estimate",
+            "estimatedBudget": "Estimated Budget",
+            "readyTitle": "Your technical breakdown is ready!",
+            "readyDesc": "We have drafted 14 complete detailed items. To which email should we send the professional PDF ready to show your client?",
+            "emailPlaceholder": "Your email...",
+            "sendBtn": "Send me PDF",
+            "successTitle": "PDF sent successfully.",
+            "successDesc": "This generator uses market averages. Can you imagine doing this with your real rates and your real margin?",
+            "upsellTitle": "With Custom Basis Core:",
+            "upsellFeatures": [
+                "Integration of your own Excels or PDF rates.",
+                "Real-time cost deviation dashboards.",
+                "Auto-generated invoices and certifications."
+            ],
+            "demoBtn": "Book Custom Demo"
+        },
+        "painPoints": {
+            "titlePart1": "Managing blindly costs you ",
+            "titleHighlight": "tens of thousands",
+            "titlePart3": " of euros a year.",
+            "description": "The most expensive bill is not basic material. It is the time lost in manual tasks and the lack of real-time financial visibility.",
+            "items": [
+                {
+                    "title": "Hidden Budget Deviations",
+                    "description": "You discover you have lost money on the project in the last certification, when the loss is already irremediable."
+                },
+                {
+                    "title": "Weekend Loss",
+                    "description": "Spending Sunday crossing Excels, warehouse invoices, and team timesheets."
+                },
+                {
+                    "title": "Communication Chaos",
+                    "description": "PDF files via WhatsApp, lost emails from subcontractors, and commercial calls without a quote."
+                },
+                {
+                    "title": "Risks in Certifications",
+                    "description": "Invoicing below real progress for fear of making a mistake, affecting your cash flow."
+                }
+            ]
+        },
+        "benefits": {
+            "title": "The end of paperwork.<br />Absolute control over your projects.",
+            "description": "Basis is the central engine that unifies sales, economic control, and execution tailored to your profitability.",
+            "items": [
+                {
+                    "title": "Your Custom Software. In 4 weeks.",
+                    "description": "We adapt Basis AI to your processes, integrating your own historical Excels and workflows.",
+                    "features": [
+                        "Core Development + Custom Layers",
+                        "No impossible learning curves for your team",
+                        "Connection with your usual banks and warehouses"
+                    ],
+                    "cta": "I want to evaluate my custom development"
+                },
+                {
+                    "title": "Close projects 10x faster securing your margin.",
+                    "description": "Our AI reads your PDF rates, understands the colloquial language of the sector, and drafts quotes in minutes.",
+                    "features": [
+                        "Instant semantic search of items",
+                        "Autocompletion of yields and hours",
+                        "Export to PDF with a single click"
+                    ],
+                    "cta": "Automate my quotes with AI"
+                },
+                {
+                    "title": "Govern your execution: Detect deviations on day 1.",
+                    "description": "The system crosses each delivery note and hour imputed against the original budget, subtracting the balance instantly.",
+                    "features": [
+                        "Traffic light alerts for real-time profitability",
+                        "Automatic generation of Origin Certifications",
+                        "Integrated subcontractor document control"
+                    ],
+                    "cta": "I want to see the project dashboard"
+                }
+            ]
+        },
+        "testimonials": {
+            "title": "Don't trust our algorithm.",
+            "description": "Ask those who have already recovered their commercial profit margin.",
+            "quote": "Before we spent the weekend doing certifications by eye. Now the manager uploads hours from the phone, and on Monday the invoice is generated without losing profitability.",
+            "authorName": "Javier Martínez",
+            "authorRole": "Managing Partner, VM Plus",
+            "stats": [
+                {
+                    "value": "98%",
+                    "label": "Quote Accuracy"
+                },
+                {
+                    "value": "-12h",
+                    "label": "Admin per week"
+                },
+                {
+                    "value": "+14%",
+                    "label": "Margin Control"
+                },
+                {
+                    "value": "0",
+                    "label": "Lost Excels"
+                }
+            ]
+        },
+        "cta": {
+            "title": "Find the money leak <br /> in your projects.",
+            "description": "Schedule a 15-minute Technical Evaluation. No sales PowerPoints. We upload a rate of yours to the platform and automate a real quote during the call.",
+            "btnPrimary": "Book Free Technical Evaluation",
+            "features": [
+                "No binding commitments",
+                "Developments for SMEs, not multinationals",
+                "100% practical demo"
+            ],
+            "note": "⏳ Note: We only work with the onboarding of **3 new construction companies per month** to ensure excellence."
+        },
+        "agenda": {
+            "badge": "Custom Demo",
+            "titleHighlight": "Free",
+            "title": "Book Your Consultation ",
+            "description": "30 minutes with a digital construction specialist. We will show you how Basis integrates into your real workflow.",
+            "calendar": {
+                "months": [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December"
+                ],
+                "days": [
+                    "Mon",
+                    "Tue",
+                    "Wed",
+                    "Thu",
+                    "Fri",
+                    "Sat",
+                    "Sun"
+                ],
+                "availableTime": "Available Times"
+            },
+            "form": {
+                "title": "Your Details",
+                "name": "Full Name",
+                "namePlaceholder": "John Doe",
+                "email": "Email",
+                "emailPlaceholder": "john@company.com",
+                "phone": "Phone",
+                "phoneOptional": "(optional)",
+                "phonePlaceholder": "+1 555 000 0000",
+                "submit": "Continue",
+                "loading": "Loading...",
+                "privacy": " No commitment. Cancel anytime.",
+                "summaryText": "30 min · Video call"
+            },
+            "verification": {
+                "title": "Verification",
+                "subtitle": "We sent a code to ",
+                "verifying": "Verifying..."
+            },
+            "success": {
+                "title": "Meeting Confirmed!",
+                "message": "We will send you a confirmation email with the video call link to "
+            },
+            "errors": {
+                "process": "Error processing request.",
+                "invalidCode": "Incorrect code.",
+                "confirmation": "Error confirming booking."
+            }
+        },
+        "floatingTrigger": {
+            "desktopTitle": "Talk to Basis AI?",
+            "desktopSubtitle": "Automate your quote in seconds.",
+            "mobileTitle": "Talk to Basis AI?",
+            "mobileSubtitle": "Quote your project in seconds."
+        },
+        "profiling": {
+            "step1": {
+                "title": "Which process takes up most of your time each week?",
+                "subtitle": "Help us personalize your experience by focusing on what matters.",
+                "options": {
+                    "budgeting": "Estimating and sourcing prices",
+                    "costControl": "Controlling deviations and margins",
+                    "certifications": "Reconciling hours and certifications"
+                }
+            },
+            "step2": {
+                "title1": "How many projects do you manage simultaneously?",
+                "options1": {
+                    "1-3": {
+                        "label": "1 – 3 projects",
+                        "desc": "Freelance / Micro"
+                    },
+                    "4-10": {
+                        "label": "4 – 10 projects",
+                        "desc": "SME"
+                    },
+                    "10+": {
+                        "label": "+10 projects",
+                        "desc": "Construction Co."
+                    }
+                },
+                "title2": "What is your role?",
+                "options2": {
+                    "owner": "Manager/Owner",
+                    "projectManager": "Site Manager",
+                    "admin": "Administration",
+                    "surveyor": "Quantity Surveyor"
+                }
+            },
+            "step3": {
+                "title1": "How much do you spend annually on surveyors or technical management?",
+                "options1": {
+                    "<10k": "Under 10k €",
+                    "10-30k": "10k to 30k €",
+                    "30-60k": "30k to 60k €",
+                    "60k+": "Over 60k €"
+                },
+                "title2": "How many hours a week do you spend on manual tasks (Excel, paper, WhatsApp)?",
+                "options2": {
+                    "<5h": "Under 5h",
+                    "5-15h": "5 - 15 hours",
+                    "15-30h": "15 - 30 hours",
+                    "30h+": "+30 hours"
+                }
+            },
+            "step4": {
+                "title": "Last step",
+                "subtitle": "Basic details about your company.",
+                "companyNameLabel": "What is your company called?",
+                "companyNamePlaceholder": "Enter your company name...",
+                "companySizeLabel": "Company size",
+                "companySizeOptions": {
+                    "solo": "Just 1",
+                    "2-5": "2-5",
+                    "6-15": "6-15",
+                    "16-50": "16-50",
+                    "50+": "50+"
+                },
+                "stackLabel": "From which tools do you plan to migrate?",
+                "stackOptions": {
+                    "excel": "Excel / Word",
+                    "presto": "Presto / Archimed",
+                    "otherErp": "Other ERP (Procore, Holded...)"
+                }
+            },
+            "common": {
+                "stepIndicator": "Step",
+                "of": "of",
+                "next": "Next",
+                "errorCompleting": "Please complete all fields.",
+                "unknownError": "Unknown error"
+            }
+        },
+        "wizardChat": {
+            "header": {
+                "title": "AI Architect",
+                "subtitle": "Smart Assistant",
+                "clearTooltip": "Clear conversation and start over"
+            },
+            "emptyState": {
+                "title": "How can I help you today?",
+                "subtitle": "I can help estimate costs, define materials or plan your full renovation.",
+                "suggestions": [
+                    {
+                        "title": "Kitchen Remodel",
+                        "text": "I want to renovate the whole kitchen, changing funiture and appliances."
+                    },
+                    {
+                        "title": "Full Bathroom",
+                        "text": "Change bathtub for shower tray, tiling and new toilets."
+                    },
+                    {
+                        "title": "Full Renovation",
+                        "text": "Budget to completely renovate a 90 sqm apartment."
+                    },
+                    {
+                        "title": "Floors and Paint",
+                        "text": "I need to change the floor to laminate and paint the whole apartment smooth."
+                    }
+                ]
+            },
+            "input": {
+                "placeholder": "Describe your project...",
+                "analyzingDocs": "Analyzing documents... this might take a few seconds 🧠",
+                "transcribing": "Transcribing audio...",
+                "recordingInfo": "Recording...",
+                "keyboardHint": "Press Enter to send. Shift + Enter for an ew line.",
+                "analyzingText": "Analyzing..."
+            },
+            "panel": {
+                "title": "Project Data",
+                "status": "In progress",
+                "completed": "Completed",
+                "deepGenTitle": "Deep Generation",
+                "deepGenDesc": "Breaks down by chapters and items (slower)."
+            },
+            "progress": {
+                "generatingMsg": "(Generating detailed budget...)",
+                "extracting": "Extracting items...",
+                "searching": "Searching for matches...",
+                "calculating": "Calculating totals...",
+                "generateBtn": "Generate Budget"
+            },
+            "pdfDownloadCard": {
+                "title": "Budget Created",
+                "subtitle": "Your budget has been properly generated and downloaded.",
+                "nextStep": "Do you want to automate this or have the integrated assistant?",
+                "benefits": "Our platform allows you to invite subcontractors, sign digitally and connect your site with real prices.",
+                "button": "Plan Your Site"
+            },
+            "errors": {
+                "resetConfirm": "Are you sure you want to clear the conversation? This cannot be undone.",
+                "generateError": "Could not generate budget. "
+            }
+        }
     }
 }

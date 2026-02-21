@@ -1,30 +1,54 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useTheme } from "next-themes"
-import { Moon, Sun, Palette } from "lucide-react"
+import * as React from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
+
+import { Button } from '@/components/ui/button';
 
 export function ThemeSwitcher() {
-  const { setTheme, theme } = useTheme()
-  const isDarkMode = theme === 'dark'
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  // Avoid hydration mismatch and sanitize legacy themes
+  React.useEffect(() => {
+    setMounted(true);
+    // Sanitize any legacy 'dark' or 'light' strings stuck in local storage
+    if (theme === 'dark') {
+      setTheme('dark-theme-gold');
+    } else if (theme === 'light') {
+      setTheme('theme-gold');
+    }
+  }, [theme, setTheme]);
 
   const toggleTheme = () => {
-    setTheme(isDarkMode ? 'light' : 'dark')
+    let current = theme || 'dark-theme-gold';
+    if (current === 'dark') current = 'dark-theme-gold';
+    if (current === 'light') current = 'theme-gold';
+
+    const isDark = current.includes('dark');
+
+    if (isDark) {
+      setTheme(current.replace('dark-', ''));
+    } else {
+      setTheme(`dark-${current}`);
+    }
+  };
+
+  if (!mounted) {
+    return <Button variant="ghost" size="icon" className="w-9 h-9 border border-border bg-background" disabled />;
   }
 
   return (
-    <Button variant="ghost" size="icon" onClick={toggleTheme}>
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={toggleTheme}
+      className="w-9 h-9 border border-border bg-background hover:bg-accent hover:text-accent-foreground transition-colors rounded-full shadow-sm"
+      aria-label="Toggle theme"
+    >
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
     </Button>
-  )
+  );
 }

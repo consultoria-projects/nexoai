@@ -15,26 +15,26 @@ export function Logo({
   height = 40,
   variant = 'default'
 }: LogoProps) {
+  if (variant === 'light') {
+    return (
+      <Link href="/" className={cn("block relative transition-opacity hover:opacity-80", className)}>
+        <Image src="/images/logo-blanco.png" alt="Basis" width={width} height={height} className="object-contain" priority />
+      </Link>
+    );
+  }
+
+  if (variant === 'dark') {
+    return (
+      <Link href="/" className={cn("block relative transition-opacity hover:opacity-80", className)}>
+        <Image src="/images/logo-negro.png" alt="Basis" width={width} height={height} className="object-contain" priority />
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      href="/"
-      className={cn(
-        "block relative transition-opacity hover:opacity-80",
-        className
-      )}
-    >
-      <Image
-        src="/images/logo.avif"
-        alt="Grupo RG - Construcción y Reformas"
-        width={width}
-        height={height}
-        className={cn(
-          "object-contain",
-          variant === 'light' && "brightness-0 invert",
-          variant === 'dark' && "brightness-0"
-        )}
-        priority
-      />
+    <Link href="/" className={cn("block relative transition-opacity hover:opacity-80", className)}>
+      <Image src="/images/logo-negro.png" alt="Basis" width={width} height={height} className="object-contain dark:hidden" priority />
+      <Image src="/images/logo-blanco.png" alt="Basis" width={width} height={height} className="object-contain hidden dark:block" priority />
     </Link>
   );
 }
@@ -50,10 +50,7 @@ export function LogoText({ className }: { className?: string }) {
       )}
     >
       <span className="font-display text-2xl tracking-tight text-foreground">
-        GRUPO RG
-      </span>
-      <span className="hidden sm:inline text-xs text-muted-foreground uppercase tracking-widest">
-        Construcción
+        Basis
       </span>
     </Link>
   );

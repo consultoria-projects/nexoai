@@ -23,6 +23,9 @@ import {
     HardHat,
     PanelLeftClose,
     PanelLeftOpen,
+    Users,
+    CalendarDays,
+    TrendingUp,
 } from 'lucide-react';
 import Image from 'next/image';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -55,6 +58,14 @@ export function ModernSidebar({ t, className }: ModernSidebarProps) {
                 { href: '/dashboard/wizard', label: 'AI Budget Wizard', icon: Sparkles },
                 { href: '/dashboard/measurements', label: 'Mediciones', icon: FileUp },
                 { href: '/dashboard/seo-generator', label: t.dashboard.nav.seoGenerator, icon: Search },
+            ]
+        },
+        {
+            label: 'CRM',
+            items: [
+                { href: '/dashboard/leads', label: 'Leads', icon: Users },
+                { href: '/dashboard/agenda', label: 'Agenda', icon: CalendarDays },
+                { href: '/dashboard/marketing', label: 'Marketing', icon: TrendingUp },
             ]
         },
         {
@@ -118,7 +129,7 @@ export function ModernSidebar({ t, className }: ModernSidebarProps) {
                         >
                             {/*   <Image
                                 src="/images/logo.avif"
-                                alt="GRUPO RG Logo"
+                                alt="Basis Logo"
                                 fill
                                 className="object-contain object-left"
                                 priority

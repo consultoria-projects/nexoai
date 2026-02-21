@@ -1,4 +1,4 @@
-﻿{
+{
     "hero": {
         "title": "Wir verwandeln Räume <br/> <span class='text-primary italic'>in Erlebnisse</span>",
         "subtitle": "Hochwertige Komplettrenovierungen auf Mallorca. Wo Qualität auf Exklusivität trifft.",
@@ -26,7 +26,7 @@
     },
     "philosophy": {
         "quote": "Wir bauen keine Häuser. Wir schaffen die Bühne für Ihr Leben.",
-        "author": "Grupo RG",
+        "author": "Basis",
         "description": "Jedes Projekt ist einzigartig, weil jeder Kunde einzigartig ist. Wir kombinieren handwerkliche Erfahrung mit technologischer Innovation für außergewöhnliche Ergebnisse."
     },
     "expertise": {
@@ -64,7 +64,7 @@
     "vision": {
         "label": "Unsere Philosophie",
         "title": "Die neue Ära des <br/> <span class='text-primary'>modernen Bauens</span>",
-        "description": "Bei Grupo RG definieren wir den Standard für Luxusrenovierungen neu. Wir lassen die traditionelle Unsicherheit hinter uns und setzen auf technologische Präzision und handwerkliche Exzellenz.",
+        "description": "Bei Basis definieren wir den Standard für Luxusrenovierungen neu. Wir lassen die traditionelle Unsicherheit hinter uns und setzen auf technologische Präzision und handwerkliche Exzellenz.",
         "points": [
             "Zertifizierte europäische Qualitätsstandards.",
             "3D-Visualisierungstechnologie vor Baubeginn.",
@@ -238,7 +238,7 @@
         "items": [
             {
                 "question": "Wie lange dauert eine Komplettrenovierung auf Mallorca?",
-                "answer": "Die Zeit variiert je nach Komplexität, aber eine Standard-Komplettrenovierung dauert in der Regel zwischen 3 und 5 Monaten. Bei Grupo RG garantieren wir vertraglich festgelegte Termine dank unserer Vorplanung mit 3D-Technologie, wodurch die üblichen Verzögerungen der Branche vermieden werden."
+                "answer": "Die Zeit variiert je nach Komplexität, aber eine Standard-Komplettrenovierung dauert in der Regel zwischen 3 und 5 Monaten. Bei Basis garantieren wir vertraglich festgelegte Termine dank unserer Vorplanung mit 3D-Technologie, wodurch die üblichen Verzögerungen der Branche vermieden werden."
             },
             {
                 "question": "Kümmern Sie sich um Baugenehmigungen?",
@@ -260,5 +260,346 @@
         "buttonPrimary": "Jetzt Kostenvoranschlag anfordern",
         "buttonSecondary": "Mit einem Agenten sprechen",
         "note": "Begrenzte Plätze pro Monat zur Qualitätssicherung"
+    },
+    "basis": {
+        "hero": {
+            "eyebrow": "AI-First Custom Software",
+            "titlePart1": "Reduzieren Sie Ihre Budgetierungsstunden auf",
+            "titlePart2": "exakt 15 Minuten.",
+            "description": "Der AI-First-Generator, der komplexe Angebote, Zertifizierungen und Verträge nach Ihren Wünschen automatisiert. Hören Sie auf, Rentabilität zu verlieren, indem Sie Projekte blind verwalten.",
+            "ctaPrimary": "Generator kostenlos testen",
+            "ctaSecondary": "Technische Bewertung planen"
+        },
+        "wizard": {
+            "title": "Der ultimative Test.",
+            "description": "Beschreiben Sie Ihr Projekt in natürlicher Sprache. Unsere KI gleicht echte Marktpreise ab und strukturiert Ihre Positionen in Sekundenschnelle.",
+            "examples": {
+                "kitchen": "Beispiel laden: Küche",
+                "roof": "Beispiel laden: Dach"
+            },
+            "placeholder": "Z.B.: Komplette Badsanierung 6m2. Badewanne entfernen, Harzduschwanne, Roca-Sanitäranlagen und mattweiße Kacheln...",
+            "analyze": "Semantischer Analysator aktiviert",
+            "generateBtn": "Budget generieren",
+            "loadingTitle": "Positionen werden extrahiert...",
+            "loadingDesc": "Abgleich von Verlusten, Erträgen und Preisdatenbanken.",
+            "proposalTitle": "Angebotsübersicht",
+            "proposalDesc": "Automatische KI-Schätzung",
+            "estimatedBudget": "Geschätztes Budget",
+            "readyTitle": "Ihre technische Aufschlüsselung ist fertig!",
+            "readyDesc": "Wir haben 14 vollständig detaillierte Positionen verfasst. An welche E-Mail-Adresse sollen wir das professionelle PDF senden, das bereit ist, Ihrem Kunden gezeigt zu werden?",
+            "emailPlaceholder": "Ihre E-Mail...",
+            "sendBtn": "PDF senden",
+            "successTitle": "PDF erfolgreich gesendet.",
+            "successDesc": "Dieser Generator verwendet Durchschnittswerte. Können Sie sich vorstellen, dies mit Ihren Tarifen und Ihrer tatsächlichen Marge zu tun?",
+            "upsellTitle": "Mit Basis Core nach Maß:",
+            "upsellFeatures": [
+                "Integration Ihrer eigenen Excels oder PDF-Tarife.",
+                "Echtzeit-Kostenabweichungs-Dashboards.",
+                "Automatisch generierte Rechnungen und Zertifizierungen."
+            ],
+            "demoBtn": "Maßgeschneiderte Demo planen"
+        },
+        "painPoints": {
+            "titlePart1": "Blindes Verwalten kostet Sie ",
+            "titleHighlight": "Zehntausende",
+            "titlePart3": " Euro pro Jahr.",
+            "description": "Die teuerste Rechnung ist nicht das Grundmaterial. Es ist die für manuelle Aufgaben verschwendete Zeit und die mangelnde Sichtbarkeit.",
+            "items": [
+                {
+                    "title": "Versteckte Budgetabweichungen",
+                    "description": "Sie stellen bei der letzten Zertifizierung fest, dass Sie beim Projekt Geld verloren haben, wenn der Verlust bereits unwiderruflich ist."
+                },
+                {
+                    "title": "Verlust des Wochenendes",
+                    "description": "Den Sonntag damit verbringen, Excels, Lagerrechnungen und Stundenzettel des Teams abzugleichen."
+                },
+                {
+                    "title": "Kommunikationschaos",
+                    "description": "PDF-Dateien über WhatsApp, verlorene E-Mails von Subunternehmern und unkoordinierte Verkaufsgespräche ohne Angebot."
+                },
+                {
+                    "title": "Risiken bei Zertifizierungen",
+                    "description": "Aus Angst vor Fehlern unter dem tatsächlichen Fortschritt abrechnen, was sich auf Ihren Cashflow auswirkt."
+                }
+            ]
+        },
+        "benefits": {
+            "title": "Das Ende des Papierkrams.<br />Die absolute Kontrolle über Ihre Werke.",
+            "description": "Basis ist der zentrale Motor, der Vertrieb, wirtschaftliche Kontrolle und maßgeschneiderte Ausführung Ihrer Rentabilität vereint.",
+            "items": [
+                {
+                    "title": "Ihre maßgeschneiderte Software. In 4 Wochen.",
+                    "description": "Wir passen die Basis-KI an Ihre Prozesse an und integrieren Ihre eigenen historischen Excels und Workflows.",
+                    "features": [
+                        "Core-Entwicklung + Benutzerdefinierte Layer",
+                        "Keine unmöglichen Lernkurven für Ihr Team",
+                        "Verbindung mit Ihren üblichen Banken und Lagern"
+                    ],
+                    "cta": "Ich möchte meine maßgeschneiderte Entwicklung bewerten"
+                },
+                {
+                    "title": "Schließen Sie Projekte 10x schneller ab und sichern Sie Ihre Marge.",
+                    "description": "Unsere KI liest Ihre PDF-Tarife, versteht die Umgangssprache der Branche und verfasst Budgets in wenigen Minuten.",
+                    "features": [
+                        "Sofortige semantische Suche nach Positionen",
+                        "Automatische Vervollständigung von Leistungen und Zeiten",
+                        "PDF-Export mit einem Klick"
+                    ],
+                    "cta": "Meine Budgets mit KI automatisieren"
+                },
+                {
+                    "title": "Regulieren Sie Ihre Ausführung: Abweichungen ab Tag 1 erkennen.",
+                    "description": "Das System gleicht jeden Lieferschein und jede zugerechnete Stunde mit dem ursprünglichen Budget ab und subtrahiert den Saldo sofort von seiner Position.",
+                    "features": [
+                        "Ampelwarnungen zur Rentabilität in Echtzeit",
+                        "Automatische Generierung von Ursprungszertifizierungen",
+                        "Integrierte Dokumentenkontrolle für Subunternehmer"
+                    ],
+                    "cta": "Ich möchte das Projekt-Dashboard sehen"
+                }
+            ]
+        },
+        "testimonials": {
+            "title": "Vertrauen Sie nicht blind unserem Algorithmus.",
+            "description": "Fragen Sie diejenigen, die ihre kommerzielle Gewinnspanne bereits wiedererlangt haben.",
+            "quote": "Früher haben wir das Wochenende damit verbracht, Zertifizierungen nach Augenmaß durchzuführen. Jetzt lädt der Manager die Stunden vom Handy hoch, und am Montag wird die Rechnung erstellt, ohne an Rentabilität zu verlieren.",
+            "authorName": "Javier Martínez",
+            "authorRole": "Managing Partner, VM Plus",
+            "stats": [
+                {
+                    "value": "98%",
+                    "label": "Genauigkeit bei Budgets"
+                },
+                {
+                    "value": "-12h",
+                    "label": "Verwaltung pro Woche"
+                },
+                {
+                    "value": "+14%",
+                    "label": "Margenkontrolle"
+                },
+                {
+                    "value": "0",
+                    "label": "Verlorene Excels"
+                }
+            ]
+        },
+        "cta": {
+            "title": "Finden Sie das Geldleck <br /> in Ihren Projekten.",
+            "description": "Planen Sie ein technisches 15-Minuten-Assessment. Keine Verkaufspräsentationen. Wir laden Ihren Tarif auf die Plattform hoch und automatisieren während des Anrufs ein reales Budget.",
+            "btnPrimary": "Kostenloses Assessment planen",
+            "features": [
+                "Keine bindenden Zusagen",
+                "Entwicklungen für KMU, nicht für Multinationale",
+                "100% praxisbezogene Demo"
+            ],
+            "note": "⏳ Hinweis: Wir arbeiten nur mit dem Onboarding von **3 neuen Bauunternehmen pro Monat**, um Exzellenz zu gewährleisten."
+        },
+        "agenda": {
+            "badge": "Benutzerdefinierte Demo",
+            "titleHighlight": "Kostenlose",
+            "title": "Buchen Sie Ihre ",
+            "description": "30 Minuten mit einem Spezialisten für digitales Bauen. Wir zeigen Ihnen, wie sich Basis in Ihren Arbeitsablauf integriert.",
+            "calendar": {
+                "months": [
+                    "Januar",
+                    "Februar",
+                    "März",
+                    "April",
+                    "Mai",
+                    "Juni",
+                    "Juli",
+                    "August",
+                    "September",
+                    "Oktober",
+                    "November",
+                    "Dezember"
+                ],
+                "days": [
+                    "Mo",
+                    "Di",
+                    "Mi",
+                    "Do",
+                    "Fr",
+                    "Sa",
+                    "So"
+                ],
+                "availableTime": "Verfügbare Zeiten"
+            },
+            "form": {
+                "title": "Ihre Daten",
+                "name": "Vollständiger Name",
+                "namePlaceholder": "Max Mustermann",
+                "email": "E-Mail",
+                "emailPlaceholder": "max@unternehmen.de",
+                "phone": "Telefon",
+                "phoneOptional": "(optional)",
+                "phonePlaceholder": "+49 151 00000000",
+                "submit": "Weiter",
+                "loading": "Laden...",
+                "privacy": " Ohne Verpflichtung. Jederzeit kündbar.",
+                "summaryText": "30 Min. · Videoanruf"
+            },
+            "verification": {
+                "title": "Überprüfung",
+                "subtitle": "Wir haben einen Code gesendet an ",
+                "verifying": "Überprüfung läuft..."
+            },
+            "success": {
+                "title": "Meeting bestätigt!",
+                "message": "Wir senden Ihnen eine Bestätigungs-E-Mail mit dem Link für den Videoanruf an "
+            },
+            "errors": {
+                "process": "Fehler bei der Verarbeitung der Anfrage.",
+                "invalidCode": "Falscher Code.",
+                "confirmation": "Fehler bei der Buchungsbestätigung."
+            }
+        },
+        "floatingTrigger": {
+            "desktopTitle": "Mit Basis AI sprechen?",
+            "desktopSubtitle": "Automatisieren Sie Ihr Angebot in Sekunden.",
+            "mobileTitle": "Mit Basis AI sprechen?",
+            "mobileSubtitle": "Erstellen Sie Ihr Angebot in Sekunden."
+        },
+        "profiling": {
+            "step1": {
+                "title": "Welcher Prozess nimmt wöchentlich die meiste Zeit in Anspruch?",
+                "subtitle": "Helfen Sie uns, Ihre Erfahrung zu personalisieren.",
+                "options": {
+                    "budgeting": "Kalkulation & Preisfindung",
+                    "costControl": "Abweichungs- & Margenkontrolle",
+                    "certifications": "Stundenerfassung & Leistungsnachweise"
+                }
+            },
+            "step2": {
+                "title1": "Wie viele Baustellen verwalten Sie gleichzeitig?",
+                "options1": {
+                    "1-3": {
+                        "label": "1 – 3",
+                        "desc": "Selbständig / Mikro"
+                    },
+                    "4-10": {
+                        "label": "4 – 10",
+                        "desc": "KMU"
+                    },
+                    "10+": {
+                        "label": "+10",
+                        "desc": "Bauunternehmen"
+                    }
+                },
+                "title2": "Was ist Ihre Rolle?",
+                "options2": {
+                    "owner": "Inhaber / Geschäftsführer",
+                    "projectManager": "Bauleiter",
+                    "admin": "Verwaltung",
+                    "surveyor": "Kalkulator / Bauzeichner"
+                }
+            },
+            "step3": {
+                "title1": "Wie viel geben Sie jährlich für Bauleiter oder technisches Management aus?",
+                "options1": {
+                    "<10k": "Unter 10k €",
+                    "10-30k": "10k bis 30k €",
+                    "30-60k": "30k bis 60k €",
+                    "60k+": "Über 60k €"
+                },
+                "title2": "Wie viele Stunden pro Woche verbringen Sie mit manuellen Aufgaben?",
+                "options2": {
+                    "<5h": "Unter 5h",
+                    "5-15h": "5 - 15 Stunden",
+                    "15-30h": "15 - 30 Stunden",
+                    "30h+": "+30 Stunden"
+                }
+            },
+            "step4": {
+                "title": "Letzter Schritt",
+                "subtitle": "Grunddaten Ihres Unternehmens.",
+                "companyNameLabel": "Wie heißt Ihr Unternehmen?",
+                "companyNamePlaceholder": "Geben Sie Ihren Unternehmensnamen ein...",
+                "companySizeLabel": "Unternehmensgröße",
+                "companySizeOptions": {
+                    "solo": "Nur 1",
+                    "2-5": "2-5",
+                    "6-15": "6-15",
+                    "16-50": "16-50",
+                    "50+": "50+"
+                },
+                "stackLabel": "Von welchen Tools planen Sie zu migrieren?",
+                "stackOptions": {
+                    "excel": "Excel / Word",
+                    "presto": "Presto / Archimed",
+                    "otherErp": "Anderes ERP"
+                }
+            },
+            "common": {
+                "stepIndicator": "Schritt",
+                "of": "von",
+                "next": "Weiter",
+                "errorCompleting": "Bitte alle Felder ausfüllen.",
+                "unknownError": "Unbekannter Fehler"
+            }
+        },
+        "wizardChat": {
+            "header": {
+                "title": "KI-Architekt",
+                "subtitle": "Zusammenfassung",
+                "clearTooltip": "Verlauf löschen"
+            },
+            "emptyState": {
+                "title": "Wie kann ich heute helfen?",
+                "subtitle": "Ich helfe bei Kosten, Materialien und Umbauplanung.",
+                "suggestions": [
+                    {
+                        "title": "Küchenrenovierung",
+                        "text": "Ich möchte die Küche umbauen, Möbel und Geräte tauschen."
+                    },
+                    {
+                        "title": "Komplettes Bad",
+                        "text": "Wanne durch Dusche ersetzen, neue Fliesen und Sanitäranlagen."
+                    },
+                    {
+                        "title": "Vollständige Renovierung",
+                        "text": "Kostenvoranschlag für 90m2 Wohnung."
+                    },
+                    {
+                        "title": "Böden und Farbe",
+                        "text": "Neuer Laminatboden und Wohnung streichen."
+                    }
+                ]
+            },
+            "input": {
+                "placeholder": "Projekt beschreiben...",
+                "analyzingDocs": "Dokumente analysieren... 🧠",
+                "transcribing": "Audio transkribieren...",
+                "recordingInfo": "Aufnahme...",
+                "keyboardHint": "Enter zum Senden. Shift+Enter für neue Zeile.",
+                "analyzingText": "Analysieren..."
+            },
+            "panel": {
+                "title": "Projektdaten",
+                "status": "Aktiv",
+                "completed": "Abgeschlossen",
+                "deepGenTitle": "Tiefe Generierung",
+                "deepGenDesc": "Detaillierte Aufschlüsselung (langsamer)."
+            },
+            "progress": {
+                "generatingMsg": "(Generiere Angebot...)",
+                "extracting": "Extrahiere...",
+                "searching": "Suche Treffer...",
+                "calculating": "Berechne...",
+                "generateBtn": "Angebot generieren"
+            },
+            "pdfDownloadCard": {
+                "title": "Angebot Erstellt",
+                "subtitle": "Angebot wurde generiert und heruntergeladen.",
+                "nextStep": "Möchten Sie das automatisieren?",
+                "benefits": "Plattform mit Dienstleistern und echten Preisen.",
+                "button": "Baustelle planen"
+            },
+            "errors": {
+                "resetConfirm": "Möchten Sie den Verlauf wirklich löschen?",
+                "generateError": "Angebot konnte nicht erstellt werden. "
+            }
+        }
     }
 }

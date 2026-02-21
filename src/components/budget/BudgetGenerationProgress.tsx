@@ -12,6 +12,7 @@ import {
     Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslations } from 'next-intl';
 
 export type GenerationStep =
     | 'idle'
@@ -47,6 +48,7 @@ function getStepIndex(step: GenerationStep): number {
 }
 
 export function BudgetGenerationProgress({ progress, className }: BudgetGenerationProgressProps) {
+    const t = useTranslations('budgetRequest.demoProgress');
     const { step, extractedItems, matchedItems, currentItem, error } = progress;
     const currentStepIndex = getStepIndex(step);
 
@@ -58,22 +60,22 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             className={cn(
-                "rounded-xl border border-amber-500/20 bg-gradient-to-br from-amber-500/5 to-orange-500/5 p-5",
-                "backdrop-blur-sm shadow-lg shadow-amber-500/10",
+                "rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-blue-500/5 p-5",
+                "backdrop-blur-sm shadow-lg shadow-primary/10",
                 className
             )}
         >
             {/* Header */}
             <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-tr from-amber-500 to-orange-600 shadow-lg shadow-orange-500/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-blue-600 shadow-lg shadow-primary/30">
                     <Sparkles className="h-5 w-5 text-white animate-pulse" />
                 </div>
                 <div>
                     <h4 className="text-sm font-semibold text-foreground dark:text-white">
-                        Generando Presupuesto
+                        {t('generating')}
                     </h4>
                     <p className="text-xs text-muted-foreground dark:text-white/50">
-                        {step === 'complete' ? '¡Completado!' : 'Por favor espera...'}
+                        {step === 'complete' ? t('completed') : t('wait')}
                     </p>
                 </div>
             </div>
@@ -94,7 +96,7 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                             transition={{ delay: idx * 0.1 }}
                             className={cn(
                                 "flex items-center gap-3 p-2.5 rounded-lg transition-all duration-300",
-                                isActive && "bg-amber-500/10 ring-1 ring-amber-500/30",
+                                isActive && "bg-primary/10 ring-1 ring-primary/30",
                                 isComplete && "opacity-100",
                                 isPending && "opacity-40"
                             )}
@@ -102,7 +104,7 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                             <div className={cn(
                                 "flex h-8 w-8 items-center justify-center rounded-full transition-all",
                                 isComplete && "bg-green-500/20 text-green-500",
-                                isActive && "bg-amber-500/20 text-amber-500",
+                                isActive && "bg-primary/20 text-primary",
                                 isPending && "bg-muted/30 text-muted-foreground"
                             )}>
                                 {isActive && step !== 'complete' ? (
@@ -115,11 +117,11 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                             </div>
                             <span className={cn(
                                 "text-sm font-medium",
-                                isActive && "text-amber-600 dark:text-amber-400",
+                                isActive && "text-primary dark:text-primary-foreground",
                                 isComplete && "text-green-600 dark:text-green-400",
                                 isPending && "text-muted-foreground"
                             )}>
-                                {s.label}
+                                {t(`steps.${s.id}`)}
                             </span>
                         </motion.div>
                     );
@@ -133,15 +135,15 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="border-t border-amber-500/10 pt-4 space-y-2"
+                        className="border-t border-primary/10 pt-4 space-y-2"
                     >
                         {extractedItems && (
                             <div className="flex items-center justify-between text-sm">
                                 <span className="flex items-center gap-2 text-muted-foreground dark:text-white/60">
                                     <Package className="h-4 w-4" />
-                                    Partidas extraídas
+                                    {t('extracted')}
                                 </span>
-                                <span className="font-mono font-semibold text-amber-600 dark:text-amber-400">
+                                <span className="font-mono font-semibold text-primary dark:text-primary-foreground">
                                     {extractedItems}
                                 </span>
                             </div>
@@ -150,7 +152,7 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                             <div className="flex items-center justify-between text-sm">
                                 <span className="flex items-center gap-2 text-muted-foreground dark:text-white/60">
                                     <Search className="h-4 w-4" />
-                                    Coincidencias
+                                    {t('matches')}
                                 </span>
                                 <span className="font-mono font-semibold text-green-600 dark:text-green-400">
                                     {matchedItems} / {extractedItems || '?'}
@@ -185,7 +187,7 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                 >
                     <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 text-green-600 dark:text-green-400">
                         <CheckCircle2 className="h-5 w-5" />
-                        <span className="text-sm font-medium">¡Presupuesto generado!</span>
+                        <span className="text-sm font-medium">{t('success')}</span>
                     </div>
                 </motion.div>
             )}

@@ -1,0 +1,507 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { DemoBudgetDocument } from '@/components/pdf/DemoBudgetDocument';
+import { cn } from '@/lib/utils';
+import { Budget } from '@/backend/budget/domain/budget';
+import { useTranslations } from 'next-intl';
+
+interface DemoBudgetViewerProps {
+    budgetData: Budget;
+    onDownloadPdf: (customData: CustomPdfData) => Promise<void>;
+    isGeneratingPdf: boolean;
+}
+
+export interface CustomPdfData {
+    companyName: string;
+    cif: string;
+    address: string;
+    clientName: string;
+    logoFile: File | null;
+}
+
+export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }: DemoBudgetViewerProps) {
+    const t = useTranslations('budgetRequest.demoViewer');
+
+    // Default open first chapter
+    const defaultExpanded: Record<string, boolean> = {};
+    if (budgetData.chapters.length > 0) {
+        defaultExpanded[budgetData.chapters[0].id] = true;
+    }
+
+    const [expandedChapters, setExpandedChapters] = useState<Record<string, boolean>>(defaultExpanded);
+    const [editableItems, setEditableItems] = useState<Record<string, { quantity: number; price: number }>>({});
+
+    // Customization Form State
+    const [companyName, setCompanyName] = useState('');
+    const [cif, setCif] = useState('');
+    const [address, setAddress] = useState('');
+    const [clientName, setClientName] = useState('');
+    const [logo, setLogo] = useState<File | null>(null);
+    const [isGeneratingLocal, setIsGeneratingLocal] = useState(false);
+
+    // Initialize editable items on mount
+    useEffect(() => {
+        const initial: Record<string, { quantity: number; price: number }> = {};
+        budgetData.chapters.forEach(chapter => {
+            chapter.items.forEach(item => {
+                initial[item.id] = { quantity: item.quantity, price: item.unitPrice };
+            });
+        });
+        setEditableItems(initial);
+    }, [budgetData]);
+
+    const toggleChapter = (id: string) => {
+        setExpandedChapters(prev => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    const handleItemChange = (itemId: string, field: 'quantity' | 'price', value: string) => {
+        const numValue = parseFloat(value) || 0;
+        setEditableItems(prev => ({
+            ...prev,
+            [itemId]: {
+                ...prev[itemId] || { quantity: 0, price: 0 },
+                [field]: value === '' ? 0 : numValue
+            }
+        }));
+    };
+
+    const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setLogo(e.target.files[0]);
+        }
+    };
+
+    const calculateTotals = () => {
+        let executionMaterial = 0;
+        budgetData.chapters.forEach(chapter => {
+            chapter.items.forEach(item => {
+                const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
+                executionMaterial += current.quantity * current.price;
+            });
+        });
+
+        const overheadExpenses = executionMaterial * 0.13;
+        const industrialBenefit = executionMaterial * 0.06;
+        const subtotal = executionMaterial + overheadExpenses + industrialBenefit;
+        const tax = subtotal * 0.21;
+        const total = subtotal + tax;
+
+        return { executionMaterial, subtotal, tax, total };
+    };
+
+    const totals = calculateTotals();
+
+    const handleDownloadClick = async () => {
+        setIsGeneratingLocal(true);
+        try {
+            const { pdf } = await import('@react-pdf/renderer');
+
+            const pdfItems = budgetData.chapters.flatMap(chapter =>
+                chapter.items.map(item => {
+                    const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
+                    return {
+                        chapter: chapter.name,
+                        originalTask: item.description,
+                        item: {
+                            code: '',
+                            description: item.description,
+                            unitPrice: current.price,
+                            quantity: current.quantity,
+                            unit: item.unit || 'ud',
+                            totalPrice: current.quantity * current.price,
+                        }
+                    };
+                })
+            );
+
+            let logoUrl = undefined;
+            if (logo) {
+                logoUrl = URL.createObjectURL(logo);
+            }
+
+            const doc = (
+                <DemoBudgetDocument
+                    budgetNumber={`DEMO-${Math.floor(Math.random() * 10000)}`}
+                    clientName={clientName || t('pdf.clientNamePlaceholder', { fallback: 'Cliente Demo' })}
+                    clientEmail={companyName || 'Empresa de Demostración'}
+                    clientAddress={address || ''}
+                    items={pdfItems}
+                    costBreakdown={{
+                        materialExecutionPrice: totals.executionMaterial,
+                        overheadExpenses: totals.executionMaterial * 0.13,
+                        tax: totals.tax,
+                        total: totals.total
+                    }}
+                    date={new Date().toLocaleDateString('es-ES')}
+                    logoUrl={logoUrl}
+                />
+            );
+
+            const asPdf = pdf(doc);
+            const blob = await asPdf.toBlob();
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Presupuesto-${companyName.replace(/\s+/g, '-') || 'Demo'}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            URL.revokeObjectURL(url);
+            if (logoUrl) URL.revokeObjectURL(logoUrl);
+
+            onDownloadPdf({
+                companyName,
+                cif,
+                address,
+                clientName,
+                logoFile: logo
+            });
+
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+        } finally {
+            setIsGeneratingLocal(false);
+        }
+    };
+
+    return (
+        <div className="w-full h-[85vh] md:h-[800px] flex flex-col lg:flex-row gap-6 p-2 md:p-6 overflow-hidden bg-transparent text-zinc-300 font-sans">
+            {/* Main Editor Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="flex-1 flex flex-col bg-[#050505] border border-white/5 shadow-2xl overflow-hidden rounded-2xl relative ring-1 ring-white/10"
+            >
+                {/* Header */}
+                <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01] backdrop-blur-xl flex justify-between items-center z-10 sticky top-0">
+                    <div>
+                        <h2 className="text-2xl font-semibold tracking-tight text-white mb-1 flex items-center gap-2">
+                            <Receipt className="w-5 h-5 text-zinc-400" />
+                            {t('title', { fallback: 'Borrador Interactivo' })}
+                        </h2>
+                        <p className="text-sm text-zinc-500 font-medium">
+                            {t('description', { fallback: 'Edita unidades y precios. Los totales se actualizan en tiempo real.' })}
+                        </p>
+                    </div>
+                    <div className="text-right hidden sm:block">
+                        <p className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-1">Total Proyecto</p>
+                        <p className="text-2xl font-mono text-white tracking-tight">
+                            €{totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Items List */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar scroll-smooth">
+                    <div className="p-4 md:p-8 space-y-4">
+                        {budgetData.chapters.map((chapter, index) => {
+                            const isExpanded = expandedChapters[chapter.id];
+
+                            // Calculate chapter total real-time
+                            let chapterTotal = 0;
+                            chapter.items.forEach(item => {
+                                const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
+                                chapterTotal += current.quantity * current.price;
+                            });
+
+                            return (
+                                <motion.div
+                                    key={chapter.id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                    className="border border-white/5 bg-[#0a0a0a] rounded-xl overflow-hidden shadow-sm transition-all focus-within:ring-1 focus-within:ring-white/10"
+                                >
+                                    <button
+                                        onClick={() => toggleChapter(chapter.id)}
+                                        className="w-full flex items-center justify-between p-5 md:px-6 hover:bg-white/[0.02] transition-colors focus:outline-none"
+                                    >
+                                        <div className="flex items-center gap-4 text-left">
+                                            <div className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center font-mono text-xs text-white/50">
+                                                {(index + 1).toString().padStart(2, '0')}
+                                            </div>
+                                            <h3 className="font-medium text-white/90 text-sm tracking-wide uppercase">
+                                                {chapter.name}
+                                            </h3>
+                                        </div>
+                                        <div className="flex items-center gap-6">
+                                            <div className="text-right">
+                                                <span className="font-mono text-sm text-white/80 transition-all">
+                                                    €{chapterTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                                                </span>
+                                            </div>
+                                            <motion.div
+                                                animate={{ rotate: isExpanded ? 180 : 0 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="text-zinc-600"
+                                            >
+                                                <ChevronDown className="w-5 h-5" />
+                                            </motion.div>
+                                        </div>
+                                    </button>
+
+                                    <AnimatePresence initial={false}>
+                                        {isExpanded && (
+                                            <motion.div
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                                            >
+                                                <div className="px-2 pb-2">
+                                                    <div className="bg-black/40 rounded-lg border border-white/5 p-1 divide-y divide-white/5">
+                                                        {chapter.items.map(item => {
+                                                            const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
+                                                            const itemTotal = current.quantity * current.price;
+
+                                                            return (
+                                                                <div key={item.id} className="group flex flex-col xl:flex-row xl:items-center justify-between p-3 gap-4 hover:bg-white/[0.02] transition-colors rounded-md">
+                                                                    <div className="flex-1 pr-4">
+                                                                        <p className="text-sm text-zinc-300 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all">
+                                                                            {item.description}
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div className="flex items-center gap-3 shrink-0 self-end xl:self-center">
+                                                                        {/* Quantity Input */}
+                                                                        <div className="relative flex flex-col gap-1 items-end">
+                                                                            <span className="text-[10px] text-zinc-600 uppercase font-semibold tracking-wider">{t('table.units', { fallback: 'Cant.' })}</span>
+                                                                            <div className="relative group/input">
+                                                                                <Input
+                                                                                    type="number"
+                                                                                    min="0"
+                                                                                    step="0.1"
+                                                                                    className="w-20 h-9 bg-[#111111] border-white/10 text-right pr-8 font-mono text-sm focus:ring-1 focus:ring-zinc-400 focus:border-zinc-400 transition-colors"
+                                                                                    value={current.quantity}
+                                                                                    onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
+                                                                                />
+                                                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500 font-mono pointer-events-none">
+                                                                                    {item.unit || 'u'}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <span className="text-zinc-700 font-light mt-4">×</span>
+
+                                                                        {/* Price Input */}
+                                                                        <div className="relative flex flex-col gap-1 items-end">
+                                                                            <span className="text-[10px] text-zinc-600 uppercase font-semibold tracking-wider">{t('table.price', { fallback: 'Precio' })}</span>
+                                                                            <div className="relative group/input">
+                                                                                <Input
+                                                                                    type="number"
+                                                                                    min="0"
+                                                                                    step="0.01"
+                                                                                    className="w-24 h-9 bg-[#111111] border-white/10 text-right pr-6 font-mono text-sm focus:ring-1 focus:ring-zinc-400 focus:border-zinc-400 transition-colors"
+                                                                                    value={current.price}
+                                                                                    onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
+                                                                                />
+                                                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500 font-mono pointer-events-none">
+                                                                                    €
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        {/* Subtotal */}
+                                                                        <div className="w-24 text-right flex flex-col gap-1 items-end ml-4">
+                                                                            <span className="text-[10px] text-zinc-600 uppercase font-semibold tracking-wider">Subtotal</span>
+                                                                            <span className="font-mono text-white/90 text-sm mt-[6px]">
+                                                                                €{itemTotal.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Sidebar Section */}
+            <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+                className="w-full lg:w-[400px] flex flex-col gap-4 shrink-0"
+            >
+                {/* Customization Card */}
+                <div className="bg-[#050505] border border-white/5 shadow-2xl overflow-hidden rounded-2xl ring-1 ring-white/10 p-6 flex-1 flex flex-col relative">
+                    <div className="mb-6 relative z-10">
+                        <h3 className="text-lg font-medium text-white flex items-center gap-2 mb-2">
+                            <Eye className="w-4 h-4 text-zinc-400" />
+                            {t('pdf.title', { fallback: 'Personalizar Documento' })}
+                        </h3>
+                        <p className="text-sm text-zinc-500 font-light leading-relaxed">
+                            {t('pdf.description', { fallback: 'Añade tus datos corporativos. Los cálculos actualizados se incluirán en el documento final.' })}
+                        </p>
+                    </div>
+
+                    <div className="space-y-5 flex-1 overflow-y-auto custom-scrollbar pr-2 relative z-10">
+                        {/* Summary Block */}
+                        <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02] space-y-3 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-800/10 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+                            <div className="flex justify-between items-end">
+                                <span className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{t('totals.pem', { fallback: 'P.E.M.' })}</span>
+                                <span className="font-mono text-sm text-zinc-400">€{totals.executionMaterial.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                            </div>
+                            <div className="flex justify-between items-end">
+                                <span className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{t('totals.tax', { fallback: 'IVA (21%)' })}</span>
+                                <span className="font-mono text-sm text-zinc-400">€{totals.tax.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                            </div>
+
+                            <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-4" />
+
+                            <div className="flex justify-between items-end">
+                                <span className="text-sm text-zinc-300 font-semibold tracking-wide uppercase">{t('totals.total', { fallback: 'Total' })}</span>
+                                <span className="font-mono text-xl text-white tracking-tight font-medium">
+                                    €{totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Form Fields */}
+                        <div className="space-y-4 pt-2">
+                            <div className="space-y-2">
+                                <Label htmlFor="companyName" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.companyName', { fallback: 'Empresa Emisora' })}</Label>
+                                <Input
+                                    id="companyName"
+                                    placeholder="Nombre corporativo"
+                                    value={companyName}
+                                    onChange={(e) => setCompanyName(e.target.value)}
+                                    className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="cif" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.cif', { fallback: 'CIF / NIF' })}</Label>
+                                    <Input
+                                        id="cif"
+                                        placeholder="Ej: B12345678"
+                                        value={cif}
+                                        onChange={(e) => setCif(e.target.value)}
+                                        className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="clientName" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold flex items-center gap-1">
+                                        <User className="w-3 h-3" />
+                                        {t('pdf.clientName', { fallback: 'Cliente' })}
+                                    </Label>
+                                    <Input
+                                        id="clientName"
+                                        placeholder="Para quién..."
+                                        value={clientName}
+                                        onChange={(e) => setClientName(e.target.value)}
+                                        className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="address" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.address', { fallback: 'Dirección Comercial' })}</Label>
+                                <Input
+                                    id="address"
+                                    placeholder="Calle Principal 123..."
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                    className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                />
+                            </div>
+
+                            <div className="space-y-2 pt-2">
+                                <Label className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.logo', { fallback: 'Logotipo (Opcional)' })}</Label>
+                                <div className="relative group">
+                                    <input
+                                        type="file"
+                                        id="logo-upload"
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                                        accept="image/*"
+                                        onChange={handleLogoChange}
+                                    />
+                                    <div className="border border-dashed border-white/10 rounded-xl bg-[#0a0a0a] hover:bg-white/[0.02] hover:border-white/20 transition-all p-4 flex items-center gap-4">
+                                        <div className="w-10 h-10 rounded-lg bg-white/5 border border-white/5 flex items-center justify-center shrink-0">
+                                            <UploadCloud className="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-zinc-300 truncate">
+                                                {logo ? logo.name : t('pdf.uploadHint', { fallback: 'Sube tu logo corporativo' })}
+                                            </p>
+                                            <p className="text-xs text-zinc-600">
+                                                {logo ? 'Haz clic para cambiar' : 'PNG, JPG hasta 2MB'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Action Area */}
+                    <div className="pt-6 mt-6 border-t border-white/10">
+                        <Button
+                            onClick={handleDownloadClick}
+                            disabled={!companyName || !cif || !address || isGeneratingLocal || isGeneratingPdf}
+                            className="w-full h-12 bg-white text-black hover:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-500 font-medium tracking-wide flex items-center gap-2 group transition-all rounded-lg"
+                        >
+                            {(isGeneratingLocal || isGeneratingPdf) ? (
+                                <>
+                                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                                        <Loader2 className="w-4 h-4" />
+                                    </motion.div>
+                                    {t('pdf.generating', { fallback: 'Generando Documento...' })}
+                                </>
+                            ) : (
+                                <>
+                                    <Download className="w-4 h-4 group-hover:-translate-y-[2px] transition-transform" />
+                                    {t('pdf.button', { fallback: 'Descargar Documento Listo' })}
+                                </>
+                            )}
+                        </Button>
+                        <p className="text-[10px] text-center text-zinc-600 mt-3 font-medium uppercase tracking-widest">
+                            Requiere completar los datos de empresa
+                        </p>
+                    </div>
+                </div>
+            </motion.div>
+
+            <style jsx global>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255,255,255,0.2);
+                }
+                input[type='number']::-webkit-inner-spin-button, 
+                input[type='number']::-webkit-outer-spin-button { 
+                    -webkit-appearance: none; 
+                    margin: 0; 
+                }
+            `}</style>
+        </div>
+    );
+}

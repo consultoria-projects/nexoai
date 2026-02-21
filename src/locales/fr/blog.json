@@ -1,0 +1,15 @@
+
+{
+    "title": "Nuestro Blog",
+    "subtitle": "Consejos, tendencias e inspiración para tus proyectos de construcción y reforma.",
+    "readMore": "Leer más",
+    "cta": {
+        "title": "¿Listo para Empezar tu Proyecto?",
+        "subtitle": "Contáctanos hoy mismo para obtener una consulta gratuita y sin compromiso. Nuestro equipo está listo para ayudarte a hacer realidad tu visión.",
+        "button": "Presupuesto al instante",
+        "postCta": {
+            "title": "Transforma tu Hogar con Nuestra Ayuda",
+            "subtitle": "Inspirado por este artículo? Convierte tus ideas en realidad. Obtén una estimación rápida y sin compromiso para tu próximo proyecto."
+        }
+    }
+}

@@ -1,4 +1,4 @@
-﻿{
+{
     "hero": {
         "title": "Transformem Espais <br/> <span class='text-primary italic'>en Experiències</span>",
         "subtitle": "Reformes integrals d'alta gamma a Mallorca. On la qualitat es troba amb l'exclusivitat.",
@@ -73,7 +73,7 @@
     "vision": {
         "label": "La Nostra Filosofia",
         "title": "La Nova Era de la <br/> <span class='text-primary'>Construcció Moderna</span>",
-        "description": "A Grupo RG, redefinim l'estàndard de les reformes de luxe. Deixem enrere la incertesa tradicional per abraçar la precisió tecnològica i l'excel·lència artesanal.",
+        "description": "A Basis, redefinim l'estàndard de les reformes de luxe. Deixem enrere la incertesa tradicional per abraçar la precisió tecnològica i l'excel·lència artesanal.",
         "points": [
             "Estàndards de qualitat europeus certificats.",
             "Tecnologia de visualització 3D abans de començar.",
@@ -203,7 +203,7 @@
         "items": [
             {
                 "question": "Quant triga una reforma integral a Mallorca?",
-                "answer": "El temps varia segons la complexitat, però una reforma integral estàndard sol oscil·lar entre 3 i 5 mesos. A Grupo RG, garantim terminis tancats per contracte gràcies a la nostra planificació prèvia amb tecnologia 3D, evitant els retards habituals del sector."
+                "answer": "El temps varia segons la complexitat, però una reforma integral estàndard sol oscil·lar entre 3 i 5 mesos. A Basis, garantim terminis tancats per contracte gràcies a la nostra planificació prèvia amb tecnologia 3D, evitant els retards habituals del sector."
             },
             {
                 "question": "Gestioneu les llicències d'obra?",
@@ -229,5 +229,346 @@
     "contact": {
         "title": "Tens un projecte en ment?",
         "cta": "Sol·licitar Pressupost Gratuït"
+    },
+    "basis": {
+        "hero": {
+            "eyebrow": "AI-First Custom Software",
+            "titlePart1": "Redueix les teves hores de pressupost a",
+            "titlePart2": "15 minuts exactes.",
+            "description": "El generador AI-First que automatitza cotitzacions complexes, certificacions i contractes a la teva mida. Deixa de perdre rendibilitat per gestionar obres a cegues.",
+            "ctaPrimary": "Provar Generador Gratis",
+            "ctaSecondary": "Agendar Avaluació Tècnica"
+        },
+        "wizard": {
+            "title": "La prova del verí.",
+            "description": "Descriu la teva obra en llenguatge natural. La nostra IA creuarà preus de mercat reals i estructurarà les teves partides en segons.",
+            "examples": {
+                "kitchen": "Carregar Exemple: Cuina",
+                "roof": "Carregar Exemple: Coberta"
+            },
+            "placeholder": "Ex: Reforma de bany complet de 6m2. Treure banyera, plat de dutxa de resina, sanitaris Roca i rajola blanca mat...",
+            "analyze": "Analitzador semàntic activat",
+            "generateBtn": "Generar Pressupost",
+            "loadingTitle": "Extraient partides...",
+            "loadingDesc": "Creuant minves, rendiments i bases de preus.",
+            "proposalTitle": "Resum de Proposta",
+            "proposalDesc": "Estimació automàtica d'IA",
+            "estimatedBudget": "Pressupost Estimat",
+            "readyTitle": "El teu desglossament tècnic està llest!",
+            "readyDesc": "Hem redactat 14 partides detallades completes. A quin correu t'enviem el PDF professional llest per ensenyar al teu client?",
+            "emailPlaceholder": "El teu email...",
+            "sendBtn": "Enviar-me PDF",
+            "successTitle": "PDF enviat amb èxit.",
+            "successDesc": "Aquest generador utilitza mitjanes. T'imagines fer això amb les teves tarifes i el teu marge real?",
+            "upsellTitle": "Amb Basis Core A Mida:",
+            "upsellFeatures": [
+                "Integració dels teus propis Excels o tarifes en PDF.",
+                "Panells de desviació de costos en temps real.",
+                "Factures i certificacions autogenerades."
+            ],
+            "demoBtn": "Agendar Demo A Mida"
+        },
+        "painPoints": {
+            "titlePart1": "Gestionar a cegues et costa ",
+            "titleHighlight": "desenes de milers",
+            "titlePart3": " d'euros a l'any.",
+            "description": "La factura més cara no és el material bàsic. És el temps perdut en tasques manuals i la manca de visibilitat.",
+            "items": [
+                {
+                    "title": "Desviaments de Pressupost Ocults",
+                    "description": "Descobreixes que has perdut diners a l'obra a l'última certificació, quan la pèrdua ja és irremeiable."
+                },
+                {
+                    "title": "Pèrdua del Cap de Setmana",
+                    "description": "Passar el diumenge creuant Excels, factures de magatzem i parts d'hores de l'equip."
+                },
+                {
+                    "title": "Caos en la Comunicació",
+                    "description": "Arxius PDF per WhatsApp, correus perduts de subcontractistes i trucades comercials sense pressupost."
+                },
+                {
+                    "title": "Riscos en Certificacions",
+                    "description": "Facturar per sota de l'avanç real per por d'equivocar-se, afectant el teu flux de caixa."
+                }
+            ]
+        },
+        "benefits": {
+            "title": "La fi de la paperassa.<br />El control absolut sobre les teves obres.",
+            "description": "Basis és el motor central que unifica vendes, control econòmic i execució a mida de la teva rendibilitat.",
+            "items": [
+                {
+                    "title": "El teu programari A Mida. En 4 setmanes.",
+                    "description": "Adaptem la IA de Basis als teus processos, integrant els teus propis Excels històrics i fluxos de treball.",
+                    "features": [
+                        "Desenvolupament Core + Capes Personalitzades",
+                        "Sense corbes d'aprenentatge impossibles per al teu equip",
+                        "Connexió amb els teus bancs i magatzems habituals"
+                    ],
+                    "cta": "Vull avaluar el meu desenvolupament a mida"
+                },
+                {
+                    "title": "Tanca obres 10x més ràpid assegurant el teu marge.",
+                    "description": "La nostra IA llegeix els teus PDFs de tarifes, entén el llenguatge col·loquial del sector i redacta pressupostos en minuts.",
+                    "features": [
+                        "Cerca semàntica instantània de partides",
+                        "Autocompletat de rendiments i hores",
+                        "Exportació a PDF amb un sol clic"
+                    ],
+                    "cta": "Automatitzar els meus pressupostos amb IA"
+                },
+                {
+                    "title": "Governa la teva execució: Detecta desviaments el dia 1.",
+                    "description": "El sistema creua cada albarà i hora imputada contra el pressupost original, restant saldo de la seva partida a l'instant.",
+                    "features": [
+                        "Alertes semafòriques de rendibilitat en temps real",
+                        "Generació automàtica de Certificacions a Origen",
+                        "Control documental de subcontractistes integrat"
+                    ],
+                    "cta": "Vull veure el panell de control d'obres"
+                }
+            ]
+        },
+        "testimonials": {
+            "title": "No et fiïs del nostre algoritme.",
+            "description": "Pregunta als que ja han recuperat el seu marge de benefici comercial.",
+            "quote": "Abans passàvem el cap de setmana fent certificacions a ull. Ara l'encarregat puja les hores des del mòbil i dilluns la factura està generada sense perdre rendibilitat.",
+            "authorName": "Javier Martínez",
+            "authorRole": "Soci Director, VM Plus",
+            "stats": [
+                {
+                    "value": "98%",
+                    "label": "Precisió en Pressupostos"
+                },
+                {
+                    "value": "-12h",
+                    "label": "Administració a la setmana"
+                },
+                {
+                    "value": "+14%",
+                    "label": "Control de Marge"
+                },
+                {
+                    "value": "0",
+                    "label": "Excels Perduts"
+                }
+            ]
+        },
+        "cta": {
+            "title": "Troba la fuita de diners <br /> a les teves obres.",
+            "description": "Agenda una Avaluació Tècnica de 15 minuts. Sense PowerPoints de venda. Pugem una tarifa teva a la plataforma i automatitzem un pressupost real durant la trucada.",
+            "btnPrimary": "Agendar Avaluació Tècnica Gratuïta",
+            "features": [
+                "Sense compromisos vinculants",
+                "Desenvolupaments per Pimes, no multinacionals",
+                "Demo 100% pràctica"
+            ],
+            "note": "⏳ Nota: Només treballem amb l'onboarding de **3 noves constructores al mes** per garantir l'excel·lència."
+        },
+        "agenda": {
+            "badge": "Demo Personalitzada",
+            "titleHighlight": "Gratuïta",
+            "title": "Reserva La Teva Consulta ",
+            "description": "30 minuts amb un especialista en construcció digital. Tensenyem com Basis sintegra en el teu flux de treball real.",
+            "calendar": {
+                "months": [
+                    "Gener",
+                    "Febrer",
+                    "Març",
+                    "Abril",
+                    "Maig",
+                    "Juny",
+                    "Juliol",
+                    "Agost",
+                    "Setembre",
+                    "Octubre",
+                    "Novembre",
+                    "Desembre"
+                ],
+                "days": [
+                    "Dl",
+                    "Dt",
+                    "Dc",
+                    "Dj",
+                    "Dv",
+                    "Ds",
+                    "Dg"
+                ],
+                "availableTime": "Horaris Disponibles"
+            },
+            "form": {
+                "title": "Les Teves Dades",
+                "name": "Nom Complet",
+                "namePlaceholder": "Joan Pérez",
+                "email": "Email",
+                "emailPlaceholder": "joan@empresa.cat",
+                "phone": "Telèfon",
+                "phoneOptional": "(opcional)",
+                "phonePlaceholder": "+34 600 000 000",
+                "submit": "Continuar",
+                "loading": "Carregant...",
+                "privacy": " Sense compromís. Cancel·lable en qualsevol moment.",
+                "summaryText": "30 min · Videotrucada"
+            },
+            "verification": {
+                "title": "Verificació",
+                "subtitle": "Hem enviat un codi a ",
+                "verifying": "Verificant..."
+            },
+            "success": {
+                "title": "Reunió Confirmada!",
+                "message": "Tenviarem un email de confirmació amb lenllaç de la videotrucada a "
+            },
+            "errors": {
+                "process": "Error en processar la petició.",
+                "invalidCode": "Codi incorrecte.",
+                "confirmation": "Error en confirmar la reserva."
+            }
+        },
+        "floatingTrigger": {
+            "desktopTitle": "Parlar amb Basis AI?",
+            "desktopSubtitle": "Automatitza el teu pressupost en segons.",
+            "mobileTitle": "Parlar amb Basis AI?",
+            "mobileSubtitle": "Cotitza la teva obra en segons."
+        },
+        "profiling": {
+            "step1": {
+                "title": "Quin procés et treu més temps a la setmana?",
+                "subtitle": "Ajuda'ns a personalitzar la teva experiència enfocant-nos en el que és important.",
+                "options": {
+                    "budgeting": "Pressupostar i buscar preus",
+                    "costControl": "Control de desviacions i marges",
+                    "certifications": "Quadrar hores i certificacions"
+                }
+            },
+            "step2": {
+                "title1": "Quantes obres gestioneu alhora?",
+                "options1": {
+                    "1-3": {
+                        "label": "1 – 3 obres",
+                        "desc": "Autònom / Micro"
+                    },
+                    "4-10": {
+                        "label": "4 – 10 obres",
+                        "desc": "Pime"
+                    },
+                    "10+": {
+                        "label": "+10 obres",
+                        "desc": "Constructora"
+                    }
+                },
+                "title2": "Quin és el teu rol?",
+                "options2": {
+                    "owner": "Gerent",
+                    "projectManager": "Dir. d'Obra",
+                    "admin": "Administració",
+                    "surveyor": "Aparellador"
+                }
+            },
+            "step3": {
+                "title1": "Quant gastes a l'any en aparelladors o gestió tècnica?",
+                "options1": {
+                    "<10k": "Menys de 10k €",
+                    "10-30k": "De 10k a 30k €",
+                    "30-60k": "De 30k a 60k €",
+                    "60k+": "Més de 60k €"
+                },
+                "title2": "Quantes hores setmanals dediques a feina manual (Excel, paper, WhatsApp)?",
+                "options2": {
+                    "<5h": "Menys de 5h",
+                    "5-15h": "5 - 15 hores",
+                    "15-30h": "15 - 30 hores",
+                    "30h+": "+30 hores"
+                }
+            },
+            "step4": {
+                "title": "Últim pas",
+                "subtitle": "Dades bàsiques de la teva empresa.",
+                "companyNameLabel": "Com es diu la teva empresa?",
+                "companyNamePlaceholder": "Escriu el nom de la teva empresa...",
+                "companySizeLabel": "Mida de l'empresa",
+                "companySizeOptions": {
+                    "solo": "Només 1",
+                    "2-5": "2-5",
+                    "6-15": "6-15",
+                    "16-50": "16-50",
+                    "50+": "50+"
+                },
+                "stackLabel": "Des de quines eines planeges migrar?",
+                "stackOptions": {
+                    "excel": "Excel / Word",
+                    "presto": "Presto / Arquímedes",
+                    "otherErp": "Un altre ERP (Procore, Holded...)"
+                }
+            },
+            "common": {
+                "stepIndicator": "Pas",
+                "of": "de",
+                "next": "Següent",
+                "errorCompleting": "Si us plau, completa tots els camps.",
+                "unknownError": "Error desconegut"
+            }
+        },
+        "wizardChat": {
+            "header": {
+                "title": "Arquitecte IA",
+                "subtitle": "Assistent Intel·ligent",
+                "clearTooltip": "Esborrar conversa i començar de nou"
+            },
+            "emptyState": {
+                "title": "En què et puc ajudar avui?",
+                "subtitle": "Et puc ajudar a estimar costos, definir materials o planificar.",
+                "suggestions": [
+                    {
+                        "title": "Reforma de cuina",
+                        "text": "Vull reformar la cuina completa, amb canvi de mobles."
+                    },
+                    {
+                        "title": "Bany complet",
+                        "text": "Canvi de banyera per plat de dutxa i alicatats."
+                    },
+                    {
+                        "title": "Reforma integral",
+                        "text": "Pressupost per reformar un pis complet de 90m2."
+                    },
+                    {
+                        "title": "Terres i pintura",
+                        "text": "Necessito canviar el terra a tarima i pintar tot."
+                    }
+                ]
+            },
+            "input": {
+                "placeholder": "Descriu el teu projecte...",
+                "analyzingDocs": "Analitzant documents... 🧠",
+                "transcribing": "Transcrivint àudio...",
+                "recordingInfo": "Gravant...",
+                "keyboardHint": "Prem Enter per enviar. Shift + Enter per línia nova.",
+                "analyzingText": "Analitzant..."
+            },
+            "panel": {
+                "title": "Dades del Projecte",
+                "status": "En curs",
+                "completed": "Completat",
+                "deepGenTitle": "Generació Profunda",
+                "deepGenDesc": "Desglossen per capítols (més lent)."
+            },
+            "progress": {
+                "generatingMsg": "(Generant pressupost detallat...)",
+                "extracting": "Extraient partides...",
+                "searching": "Buscant coincidències...",
+                "calculating": "Calculant totals...",
+                "generateBtn": "Generar Pressupost"
+            },
+            "pdfDownloadCard": {
+                "title": "Pressupost Creat",
+                "subtitle": "El pressupost s'ha descarregat correctament.",
+                "nextStep": "Vols automatitzar això o tenir l'assistent integrat?",
+                "benefits": "Potenciar el control.",
+                "button": "Planifica La Teva Obra"
+            },
+            "errors": {
+                "resetConfirm": "Segur que vols esborrar la conversa? És irreversible.",
+                "generateError": "No s'ha pogut generar el pressupost. "
+            }
+        }
     }
 }

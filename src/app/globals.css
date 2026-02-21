@@ -5,14 +5,15 @@
 @layer base {
 
   /* ========================================
-     GRUPO RG - THEME GOLD (Principal)
-     Primary: #e8c42f → HSL(49, 82%, 55%)
+     Basis - BASIS NEW PRIMARY THEME
+     Primary: #3597ff → HSL(211, 100%, 60%)
      ======================================== */
   :root,
-  .theme-gold {
-    /* Primary: Dorado vibrante */
-    --primary: 49 82% 55%;
-    --primary-foreground: 0 0% 10%;
+  .theme-gold,
+  .theme-main {
+    /* Primary: Vibrant Blue */
+    --primary: 211 100% 60%;
+    --primary-foreground: 0 0% 100%;
 
     /* Secondary: Charcoal elegante */
     --secondary: 0 0% 15%;
@@ -43,14 +44,14 @@
     /* Borders & Inputs */
     --border: 45 15% 88%;
     --input: 45 15% 88%;
-    --ring: 49 82% 55%;
+    --ring: 211 100% 60%;
     --radius: 0.5rem;
 
     /* Charts */
-    --chart-1: 49 82% 55%;
+    --chart-1: 211 100% 60%;
     --chart-2: 0 0% 25%;
-    --chart-3: 45 20% 70%;
-    --chart-4: 49 70% 45%;
+    --chart-3: 211 20% 70%;
+    --chart-4: 211 70% 45%;
     /* Sidebar Variables (Light) */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 40%;
@@ -62,50 +63,52 @@
     --sidebar-ring: 0 0% 80%;
   }
 
-  .dark-theme-gold {
-    --background: 0 0% 4%;
-    /* #0a0a0a - Deep Dark for Dashboard */
-    --foreground: 45 20% 96%;
+  .dark-theme-gold,
+  .dark-theme-main {
+    --background: 0 0% 0%;
+    /* Strict Black for ConsultorIA feel */
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 7%;
-    --card-foreground: 45 20% 96%;
-    --popover: 0 0% 7%;
-    --popover-foreground: 45 20% 96%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 49 82% 55%;
-    --primary-foreground: 0 0% 6%;
+    --primary: 213 100% 55%;
+    /* Neon Blue */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 45 20% 96%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 60%;
 
     --accent: 0 0% 12%;
-    --accent-foreground: 49 82% 55%;
+    --accent-foreground: 211 100% 60%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 12%;
     --input: 0 0% 12%;
-    --ring: 49 82% 55%;
+    --ring: 211 100% 60%;
 
-    --chart-1: 49 82% 55%;
+    --chart-1: 211 100% 60%;
     --chart-2: 0 0% 60%;
-    --chart-3: 45 20% 50%;
-    --chart-4: 49 70% 65%;
+    --chart-3: 211 20% 50%;
+    --chart-4: 211 70% 65%;
     --chart-5: 0 0% 40%;
 
     /* Sidebar Variables (Dark) */
     --sidebar-background: 0 0% 4%;
     --sidebar-foreground: 0 0% 60%;
-    --sidebar-primary: 49 82% 55%;
-    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-primary: 211 100% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 49 82% 55%;
+    --sidebar-accent-foreground: 211 100% 60%;
     --sidebar-border: 0 0% 10%;
-    --sidebar-ring: 49 82% 55%;
+    --sidebar-ring: 211 100% 60%;
   }
 }
 
@@ -144,6 +147,10 @@
   /* Glass effect for premium cards */
   .glass {
     @apply bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10;
+  }
+
+  .text-glow-primary {
+    text-shadow: 0 0 20px hsl(var(--primary) / 0.6), 0 0 40px hsl(var(--primary) / 0.3);
   }
 
   .glass-subtle {

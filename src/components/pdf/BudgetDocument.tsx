@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10,
         marginTop: 20,
-        color: '#B45309', // GRUPO RG Orange/Amber
+        color: '#B45309', // Basis Orange/Amber
         borderBottom: 1,
         borderBottomColor: '#FDE68A',
         paddingBottom: 4,
@@ -80,10 +80,8 @@ const styles = StyleSheet.create({
     },
     tableRow: {
         flexDirection: 'row',
-        alignItems: 'stretch', // Ensure all cells stretch to the height of the tallest cell
         borderBottomWidth: 1,
         borderBottomColor: '#E2E8F0',
-        minHeight: 24,
     },
     // Column Widths: 10% + 45% + 15% + 12% + 18% = 100%
     colRef: {
@@ -98,7 +96,8 @@ const styles = StyleSheet.create({
         borderRightWidth: 1,
         borderColor: '#E2E8F0',
         padding: 5,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'column'
     },
     colUnit: {
         width: '15%',
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
         borderColor: '#E2E8F0',
         padding: 5,
         justifyContent: 'center',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
     },
     colQty: {
         width: '12%',
@@ -114,13 +113,13 @@ const styles = StyleSheet.create({
         borderColor: '#E2E8F0',
         padding: 5,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     colTotal: {
         width: '18%',
         padding: 5,
         justifyContent: 'center',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
     },
     tableHeader: {
         backgroundColor: '#F8FAFC',
@@ -180,8 +179,8 @@ const styles = StyleSheet.create({
         fontSize: 7,
     },
     badge: {
-        backgroundColor: '#FEF3C7',
-        color: '#92400E',
+        backgroundColor: '#F1F5F9',
+        color: '#0F172A',
         paddingVertical: 2,
         paddingHorizontal: 6,
         borderRadius: 4,
@@ -201,17 +200,25 @@ interface BudgetDocumentProps {
     logoUrl?: string;
 }
 
-const Footer = ({ pageNumber }: { pageNumber: number }) => (
-    <View style={styles.footerContainer} fixed>
-        <View style={styles.footerLine} />
-        <Text style={styles.footerText}>
-            GRUPO RG CONSTRUCCION Y REFORMAS SL - CIF: B75257238 - C/ Ramón de Montcada 37, 07183 Calviá {"\n"}
-            www.Grupo RG.com - Tlf: 697 26 22 21 - Página {pageNumber}
-        </Text>
-    </View>
-);
+const Footer = ({ pageNumber, companyName, cif, address }: { pageNumber: number, companyName?: string, cif?: string, address?: string }) => {
+    const defaultCompany = 'Basis';
+    const defaultCif = '';
+    const defaultAddress = '';
 
-const Header = ({ budgetNumber, date, logoUrl }: { budgetNumber: string, date: string, logoUrl?: string }) => (
+    return (
+        <View style={styles.footerContainer} fixed>
+            <View style={styles.footerLine} />
+            <Text style={styles.footerText}>
+                {companyName || defaultCompany}
+                {cif || defaultCif ? ` - CIF: ${cif || defaultCif}` : ''}
+                {address || defaultAddress ? ` - ${address || defaultAddress}` : ''} {"\n"}
+                Página {pageNumber}
+            </Text>
+        </View>
+    );
+};
+
+const Header = ({ budgetNumber, date, logoUrl, companyName }: { budgetNumber: string, date: string, logoUrl?: string, companyName?: string }) => (
     <View style={styles.header}>
         <View style={styles.logoSection}>
             {logoUrl ? (
@@ -220,15 +227,15 @@ const Header = ({ budgetNumber, date, logoUrl }: { budgetNumber: string, date: s
                     style={styles.companyLogo}
                 />
             ) : (
-                <View style={[styles.companyLogo, { backgroundColor: '#F1F5F9', justifyContent: 'center', alignItems: 'center' }]}>
-                    <Text style={{ fontSize: 8, color: '#94A3B8' }}>GRUPO RG</Text>
-                </View>
+                <Image
+                    src="/images/logo-negro.png"
+                    style={{ height: 32, marginBottom: 10, objectFit: 'contain' }}
+                />
             )}
         </View>
         <View style={styles.metaSection}>
             <Text style={styles.bold}>PRESUPUESTO Nº {budgetNumber}</Text>
             <Text>Fecha: {date}</Text>
-            <Text>Expedido por: Georgi Yordanaov Dochev</Text>
         </View>
     </View>
 );
@@ -258,13 +265,13 @@ export const BudgetDocument = ({
         <Document>
             {/* --- PAGE 1: INTRO & COVER --- */}
             <Page size="A4" style={styles.page}>
-                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} />
+                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={clientEmail} />
 
                 <View style={{ marginTop: 20, marginBottom: 30 }}>
                     <Text style={styles.title}>Propuesta Técnica y Económica</Text>
                     <View style={{ flexDirection: 'row', gap: 10, marginTop: 5 }}>
                         <Text style={styles.badge}>Reforma Personalizada</Text>
-                        <Text style={styles.badge}>GRUPO RG Estándar de Calidad</Text>
+                        <Text style={styles.badge}>Basis Estándar de Calidad</Text>
                     </View>
                 </View>
 
@@ -301,12 +308,12 @@ export const BudgetDocument = ({
                     En la práctica, la falta de organización suele provocar retrasos y sobrecostes. Nuestro trabajo consiste en asumir ese riesgo por usted y ofrecerle un proceso tranquilo, claro y previsible.
                 </Text>
 
-                <Footer pageNumber={1} />
+                <Footer pageNumber={1} companyName={clientEmail} cif={clientEmail ? "Generado desde Basis" : undefined} address={clientEmail ? "Presupuesto de demostración" : undefined} />
             </Page>
 
             {/* --- PAGE 2: METHODOLOGY & FAQ --- */}
             <Page size="A4" style={styles.page}>
-                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} />
+                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={clientEmail} />
 
                 <Text style={styles.sectionTitle}>4. Qué hacemos y qué beneficios obtiene usted</Text>
 
@@ -359,12 +366,12 @@ export const BudgetDocument = ({
                     </Text>
                 </View>
 
-                <Footer pageNumber={2} />
+                <Footer pageNumber={2} companyName={clientEmail} cif={clientEmail ? "Generado desde Basis" : undefined} address={clientEmail ? "Presupuesto de demostración" : undefined} />
             </Page>
 
             {/* --- PAGE 3: DETAILED BUDGET --- */}
             <Page size="A4" style={styles.page}>
-                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} />
+                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={clientEmail} />
 
                 <Text style={styles.sectionTitle}>Desglose Detallado de Partidas</Text>
 
@@ -422,8 +429,7 @@ export const BudgetDocument = ({
                         * Este documento es una estimación técnica preliminar. Un experto contactará con usted para realizar una visita técnica y refinar los detalles finales del presupuesto.
                     </Text>
                 </View>
-
-                <Footer pageNumber={3} />
+                <Footer pageNumber={3} companyName={clientEmail} cif={clientEmail ? "Generado desde Basis" : undefined} address={clientEmail ? "Presupuesto de demostración" : undefined} />
             </Page>
         </Document>
     );

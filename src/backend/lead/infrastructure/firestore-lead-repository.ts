@@ -1,5 +1,5 @@
 import { LeadRepository } from '../domain/lead-repository';
-import { Lead, PersonalInfo, LeadPreferences, LeadVerification } from '../domain/lead';
+import { Lead, PersonalInfo, LeadPreferences, LeadVerification, ClientProfile } from '../domain/lead';
 import { getFirestore } from 'firebase-admin/firestore';
 import { initFirebaseAdminApp } from '@/backend/shared/infrastructure/firebase/admin-app';
 
@@ -26,8 +26,20 @@ export class FirestoreLeadRepository implements LeadRepository {
                 verifiedAt: data.verification?.verifiedAt?.toDate(),
                 attempts: data.verification?.attempts || 0
             } as LeadVerification,
+            data.profile ? {
+                biggestPain: data.profile.biggestPain,
+                simultaneousProjects: data.profile.simultaneousProjects,
+                currentStack: data.profile.currentStack,
+                companyName: data.profile.companyName,
+                companySize: data.profile.companySize,
+                annualSurveyorSpend: data.profile.annualSurveyorSpend,
+                weeklyManualHours: data.profile.weeklyManualHours,
+                role: data.profile.role,
+                completedAt: data.profile.completedAt?.toDate()
+            } as ClientProfile : null,
             data.createdAt?.toDate() || new Date(),
-            data.updatedAt?.toDate() || new Date()
+            data.updatedAt?.toDate() || new Date(),
+            data.demoBudgetsGenerated || 0
         );
     }
 
@@ -42,6 +54,18 @@ export class FirestoreLeadRepository implements LeadRepository {
                 verifiedAt: lead.verification.verifiedAt || null,
                 attempts: lead.verification.attempts
             },
+            profile: lead.profile ? {
+                biggestPain: lead.profile.biggestPain,
+                simultaneousProjects: lead.profile.simultaneousProjects,
+                currentStack: lead.profile.currentStack,
+                companyName: lead.profile.companyName,
+                companySize: lead.profile.companySize,
+                annualSurveyorSpend: lead.profile.annualSurveyorSpend,
+                weeklyManualHours: lead.profile.weeklyManualHours,
+                role: lead.profile.role,
+                completedAt: lead.profile.completedAt || null
+            } : null,
+            demoBudgetsGenerated: lead.demoBudgetsGenerated,
             createdAt: lead.createdAt,
             updatedAt: lead.updatedAt
         };
@@ -65,5 +89,46 @@ export class FirestoreLeadRepository implements LeadRepository {
 
         if (snapshot.empty) return null;
         return this.toDomain(snapshot.docs[0]);
+    }
+
+    async findAll(limit: number, offset: number): Promise<Lead[]> {
+        let query = this.db.collection('leads')
+            .orderBy('createdAt', 'desc')
+            .limit(limit);
+
+        if (offset > 0) {
+            const offsetSnap = await this.db.collection('leads')
+                .orderBy('createdAt', 'desc')
+                .limit(offset)
+                .get();
+
+            if (!offsetSnap.empty) {
+                const lastDoc = offsetSnap.docs[offsetSnap.docs.length - 1];
+                query = query.startAfter(lastDoc);
+            }
+        }
+
+        const snapshot = await query.get();
+        return snapshot.docs.map(doc => this.toDomain(doc));
+    }
+
+    async countByStatus(): Promise<{ verified: number; unverified: number; profiled: number }> {
+        const allDocs = await this.db.collection('leads').get();
+        let verified = 0;
+        let unverified = 0;
+        let profiled = 0;
+
+        for (const doc of allDocs.docs) {
+            const data = doc.data();
+            if (data.profile?.completedAt) {
+                profiled++;
+            } else if (data.verification?.isVerified) {
+                verified++;
+            } else {
+                unverified++;
+            }
+        }
+
+        return { verified, unverified, profiled };
     }
 }

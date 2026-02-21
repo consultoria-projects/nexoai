@@ -63,7 +63,7 @@ export function constructMetadata({ title, description, image, path, locale, par
             title,
             description,
             url: alternates.canonical,
-            siteName: 'Grupo RG',
+            siteName: 'Basis',
             images: [
                 {
                     url: socialImage,

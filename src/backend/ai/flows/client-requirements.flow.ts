@@ -58,7 +58,7 @@ export const clientRequirementsFlow = ai.defineFlow(
 
         // 1. Analysis Step: Extract requirements and determine next steps
         const analysisPrompt = `
-      You are "Conserje", an expert Quantity Surveyor (Aparejador) and Architect for PriceCloud.
+      You are "Conserje", an expert Quantity Surveyor (Aparejador) and Architect for Basis.
       Your goal is to gather PRECISE technical requirements for a renovation budget.
       
       Current Requirements State: ${JSON.stringify(currentRequirements, null, 2)}

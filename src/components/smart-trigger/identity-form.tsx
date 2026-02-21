@@ -161,15 +161,15 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
     const displayIntent = getCardTitle(intent);
 
     return (
-        <div className="w-full max-w-md mx-auto relative">
-            <div className="bg-white dark:bg-slate-950 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-slate-800">
+        <div className="w-full max-w-md mx-auto relative flex flex-col justify-center">
+            <div className="bg-background rounded-3xl shadow-2xl overflow-hidden border border-border/40 relative">
                 {/* Header Pattern/Icon */}
-                <div className="bg-gradient-to-r from-slate-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 p-6 pb-8 border-b border-gray-100/50 dark:border-slate-800 relative">
+                <div className="p-6 pb-8 border-b border-border/40 relative bg-muted/10">
                     {onBack && step === 'contact' && (
                         <Button
                             variant="ghost"
                             size="sm"
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 z-10"
+                            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground z-10"
                             onClick={onBack}
                         >
                             {t.buttons?.cancel || "Cancelar"}
@@ -177,19 +177,19 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                     )}
 
                     <div className="flex flex-col items-center text-center">
-                        <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded-full shadow-sm flex items-center justify-center mb-4 text-emerald-600 dark:text-emerald-500 ring-1 ring-gray-100 dark:ring-slate-800">
+                        <div className="w-12 h-12 bg-background rounded-full shadow-sm flex items-center justify-center mb-4 text-primary ring-1 ring-border/50 text-glow-primary">
                             <ShieldCheck className="w-6 h-6" />
                         </div>
-                        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                        <h2 className="text-2xl font-display font-bold text-foreground">
                             {step === 'contact' ? `${t.title.accessTo || 'Acceder a'} ${displayIntent}` : t.title.otp}
                         </h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-[280px] mx-auto leading-relaxed">
+                        <p className="text-sm text-muted-foreground mt-2 max-w-[280px] mx-auto leading-relaxed">
                             {step === 'contact' ? t.subtitle.contact : t.subtitle.otp}
                         </p>
                     </div>
                 </div>
 
-                <div className="p-6 pt-6 bg-white dark:bg-slate-950">
+                <div className="p-6 pt-6 bg-background">
                     <AnimatePresence mode="wait">
                         {step === 'contact' ? (
                             <motion.div
@@ -206,14 +206,14 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             name="name"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{t.form.name}</FormLabel>
+                                                    <FormLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t.form.name}</FormLabel>
                                                     <FormControl>
                                                         <div className="relative">
-                                                            <User className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                                            <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
                                                             <Input
                                                                 placeholder={t.form.placeholders?.name || "Tu nombre completo"}
                                                                 {...field}
-                                                                className="pl-9 bg-gray-50/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all h-10 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                                                                className="pl-9 bg-muted/20 border-border/40 focus:bg-muted/40 transition-all h-11 text-foreground placeholder:text-muted-foreground/50 rounded-xl"
                                                             />
                                                         </div>
                                                     </FormControl>
@@ -227,14 +227,14 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             name="email"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{t.form.email}</FormLabel>
+                                                    <FormLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t.form.email}</FormLabel>
                                                     <FormControl>
                                                         <div className="relative">
-                                                            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                                            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground/70" />
                                                             <Input
                                                                 placeholder={t.form.placeholders?.email || "tu@email.com"}
                                                                 {...field}
-                                                                className="pl-9 bg-gray-50/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all h-10 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                                                                className="pl-9 bg-muted/20 border-border/40 focus:bg-muted/40 transition-all h-11 text-foreground placeholder:text-muted-foreground/50 rounded-xl"
                                                             />
                                                         </div>
                                                     </FormControl>
@@ -249,16 +249,16 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                                 name="countryCode"
                                                 render={({ field }) => (
                                                     <FormItem className="col-span-1">
-                                                        <FormLabel className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider truncate">{t.form.country || "País"}</FormLabel>
+                                                        <FormLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider truncate">{t.form.country || "País"}</FormLabel>
                                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                             <FormControl>
-                                                                <SelectTrigger className="bg-gray-50/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 px-2 h-10 text-gray-900 dark:text-gray-100">
+                                                                <SelectTrigger className="bg-muted/20 border-border/40 px-2 h-11 text-foreground rounded-xl">
                                                                     <SelectValue placeholder="+34" />
                                                                 </SelectTrigger>
                                                             </FormControl>
-                                                            <SelectContent className="dark:bg-slate-950 dark:border-slate-800">
+                                                            <SelectContent className="bg-background border-border/40">
                                                                 {countryCodes.map((c) => (
-                                                                    <SelectItem key={c.code} value={c.code} className="dark:text-gray-200 dark:focus:bg-slate-900">
+                                                                    <SelectItem key={c.code} value={c.code} className="text-foreground focus:bg-muted">
                                                                         <span className="flex items-center gap-2">
                                                                             <span>{c.flag}</span>
                                                                             <span className="text-xs text-muted-foreground">{c.code}</span>
@@ -276,14 +276,14 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                                 name="phone"
                                                 render={({ field }) => (
                                                     <FormItem className="col-span-3">
-                                                        <FormLabel className="text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider">{t.form.phone}</FormLabel>
+                                                        <FormLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{t.form.phone}</FormLabel>
                                                         <FormControl>
                                                             <div className="relative">
-                                                                <Phone className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
+                                                                <Phone className="absolute left-3 top-3.5 h-4 w-4 text-muted-foreground/70" />
                                                                 <Input
                                                                     placeholder={t.form.placeholders?.phone || "600 000 000"}
                                                                     {...field}
-                                                                    className="pl-9 bg-gray-50/50 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 focus:bg-white dark:focus:bg-slate-900 transition-all h-10 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+                                                                    className="pl-9 bg-muted/20 border-border/40 focus:bg-muted/40 transition-all h-11 text-foreground placeholder:text-muted-foreground/50 rounded-xl"
                                                                 />
                                                             </div>
                                                         </FormControl>
@@ -295,7 +295,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
 
                                         <Button
                                             type="submit"
-                                            className="w-full mt-4 bg-gray-900 dark:bg-emerald-600 hover:bg-black dark:hover:bg-emerald-700 text-white shadow-lg shadow-gray-200 dark:shadow-none transition-all h-11 text-base font-medium rounded-xl"
+                                            className="w-full mt-4 bg-primary hover:bg-primary/80 text-primary-foreground shadow-lg transition-all h-11 text-base font-medium rounded-xl text-glow-primary"
                                             disabled={isLoading}
                                         >
                                             {isLoading ? <Loader2 className="animate-spin mr-2 h-4 w-4" /> : null}
@@ -318,7 +318,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             <InputOTPSlot
                                                 key={i}
                                                 index={i}
-                                                className="h-12 w-10 border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-lg rounded-md dark:text-white"
+                                                className="h-14 w-12 border-border/50 bg-muted/20 text-xl rounded-xl text-foreground font-display"
                                             />
                                         ))}
                                     </InputOTPGroup>
@@ -328,17 +328,17 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             <InputOTPSlot
                                                 key={i}
                                                 index={i}
-                                                className="h-12 w-10 border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-lg rounded-md dark:text-white"
+                                                className="h-14 w-12 border-border/50 bg-muted/20 text-xl rounded-xl text-foreground font-display"
                                             />
                                         ))}
                                     </InputOTPGroup>
                                 </InputOTP>
 
                                 <div className="text-center text-sm min-h-[20px]">
-                                    {isLoading && <span className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400"><Loader2 className="animate-spin w-4 h-4" /> {t.form.verifying}</span>}
+                                    {isLoading && <span className="flex items-center justify-center gap-2 text-muted-foreground"><Loader2 className="animate-spin w-4 h-4 text-primary" /> {t.form.verifying}</span>}
                                 </div>
 
-                                <Button variant="ghost" size="sm" onClick={() => setStep('contact')} className="text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-slate-900">
+                                <Button variant="ghost" size="sm" onClick={() => setStep('contact')} className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl">
                                     {t.form.back}
                                 </Button>
                             </motion.div>
@@ -349,8 +349,8 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
 
             {/* Trust badge */}
             <div className="mt-6 text-center">
-                <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center justify-center gap-1">
-                    <ShieldCheck className="w-3 h-3" /> Privacidad garantizada. No compartimos tus datos.
+                <p className="text-xs text-muted-foreground/50 flex items-center justify-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5" /> Privacidad garantizada. No compartimos tus datos.
                 </p>
             </div>
         </div>

@@ -1,0 +1,10 @@
+{
+    "title": "Crea una cuenta",
+    "description": "Únete para solicitar presupuestos y gestionar tus proyectos.",
+    "emailLabel": "Correo Electrónico",
+    "passwordLabel": "Contraseña",
+    "confirmPasswordLabel": "Confirmar Contrasraseña",
+    "button": "Crear Cuenta",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "loginLink": "Inicia Sesión"
+}

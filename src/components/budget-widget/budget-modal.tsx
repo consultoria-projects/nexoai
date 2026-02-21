@@ -27,6 +27,7 @@ import { BudgetRequestWizard } from '@/components/budget-request-wizard';
 import { services } from '@/lib/services';
 import { SmartTriggerContainer } from '@/components/smart-trigger/smart-trigger-container';
 import { BudgetWizardChat } from '@/components/budget/wizard/BudgetWizardChat';
+import { AgendaBooking } from '@/components/budget-widget/agenda-booking';
 
 // Temporary mock for t translations
 const mockT = {
@@ -296,6 +297,9 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
         if (activeMode === 'chat') {
             return <BudgetWizardChat />;
         }
+        if (activeMode === 'agenda') {
+            return <AgendaBooking />;
+        }
         // Fallback for Quick Budget or others
         return <QuickBudgetForm t={t} onBack={() => openWidget('general')} />;
     };
@@ -309,23 +313,26 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
             <Dialog open={isOpen} onOpenChange={closeWidget}>
                 <DialogContent className={cn(
                     "transition-all duration-300",
-                    activeMode === 'chat' ? "overflow-hidden" : "overflow-y-auto",
+                    activeMode === 'chat' || activeMode === 'general' ? "overflow-hidden" : "overflow-y-auto",
                     activeMode === 'general'
-                        ? "sm:max-w-[850px] p-0 bg-[#FBFBFB] border-none shadow-2xl rounded-3xl"
+                        ? "w-screen h-[100dvh] sm:max-w-none m-0 p-0 rounded-none bg-background border-none shadow-none"
                         : activeMode === 'chat'
-                            ? "w-[95vw] h-[90vh] sm:max-w-none p-0 bg-transparent border-none shadow-none" // Full screen for chat
+                            ? "w-screen h-[100dvh] sm:max-w-none m-0 p-0 rounded-none bg-background border-none shadow-none"
                             : "sm:max-w-4xl max-h-[90vh] bg-background border-border"
                 )}>
                     <DialogHeader className={cn((activeMode === 'general' || activeMode === 'chat') && "sr-only")}>
                         <DialogTitle className="font-headline text-3xl">
-                            {activeMode === 'general' || activeMode === 'chat' ? "Asistente Dochevi" : header.title}
+                            {activeMode === 'general' || activeMode === 'chat' ? "Asistente Basis" : header.title}
                         </DialogTitle>
                         <DialogDescription className="text-lg">
                             {activeMode === 'general' || activeMode === 'chat' ? "Solicitud de presupuesto y asistencia" : header.desc}
                         </DialogDescription>
                     </DialogHeader>
 
-                    <div className={cn(activeMode === 'general' ? "" : "pt-6 px-2", activeMode === 'chat' ? "h-[90vh]" : "h-full")}>
+                    <div className={cn(
+                        activeMode === 'general' ? "h-[100dvh] w-full p-0 flex items-center justify-center" : "pt-6 px-2",
+                        activeMode === 'chat' ? "h-[100dvh] w-full p-0 flex items-center justify-center" : "h-full"
+                    )}>
                         {renderContent()}
                     </div>
                 </DialogContent>
@@ -336,17 +343,17 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
     // ... mobile drawer implementation ...
     return (
         <Drawer open={isOpen} onOpenChange={closeWidget}>
-            <DrawerContent className="max-h-[95vh] flex flex-col bg-[#FBFBFB]">
+            <DrawerContent className={cn("flex flex-col bg-background", (activeMode === 'chat' || activeMode === 'general') ? "h-[100dvh] max-h-none rounded-none" : "max-h-[95vh]")}>
                 <DrawerHeader className={cn("text-left shrink-0", (activeMode === 'general' || activeMode === 'chat') && "sr-only")}>
                     <DrawerTitle className="font-headline text-2xl">
-                        {activeMode === 'general' || activeMode === 'chat' ? "Asistente Dochevi" : header.title}
+                        {activeMode === 'general' || activeMode === 'chat' ? "Asistente Basis" : header.title}
                     </DrawerTitle>
                     <DrawerDescription>
                         {activeMode === 'general' || activeMode === 'chat' ? "Solicitud de presupuesto y asistencia" : header.desc}
                     </DrawerDescription>
                 </DrawerHeader>
 
-                <div className={cn("overflow-y-auto flex-1", activeMode === 'general' ? "p-0" : "p-4")}>
+                <div className={cn("overflow-y-auto flex-1 w-full", activeMode === 'general' || activeMode === 'chat' ? "p-0" : "p-4")}>
                     {renderContent()}
                 </div>
 

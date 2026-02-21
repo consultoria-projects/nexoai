@@ -18,6 +18,8 @@ const languageMap: { [key: string]: string } = {
   en: "English",
   de: "Deutsch",
   nl: "Nederlands",
+  it: "Italiano",
+  fr: "Français",
 }
 
 export function LanguageSwitcher() {

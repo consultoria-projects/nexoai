@@ -497,8 +497,57 @@
             "Pintura completa de paredes y techos",
             "Renovación de cocina (mobiliario y electrodomésticos básicos)",
             "Renovación de baños (sanitarios y grifería)",
-            "Instalación de falso techo en zonas húmedas",
-            "Gestión de residuos y limpieza final de obra"
+            "Instalación de falso techo en zonas húmedas"
         ]
+    },
+    "demoViewer": {
+        "title": "Presupuesto Generado",
+        "description": "Toca cualquier cantidad o precio para editarlo.",
+        "totals": {
+            "pem": "P.E.M (Material + Mano de Obra):",
+            "tax": "IVA (21%):",
+            "total": "TOTAL Presupuesto:"
+        },
+        "pdf": {
+            "title": "Personaliza tu PDF",
+            "description": "Añade tus datos. El precio total en el PDF reflejará las ediciones que hagas en las partidas.",
+            "companyName": "Nombre de tu Empresa *",
+            "cif": "CIF/NIF *",
+            "address": "Dirección Comercial *",
+            "clientName": "Cliente Final (Opcional)",
+            "logo": "Logotipo de Empresa (Opcional)",
+            "upload": "Sube un archivo",
+            "uploadHint": "PNG, JPG hasta 2MB",
+            "ctaTitle": "¡Hazlo tuyo y descárgalo!",
+            "ctaDesc": "Generaremos un PDF listo para imprimir o enviar a tu cliente, con tus colores y modificaciones.",
+            "button": "Crear Presupuesto Final",
+            "generating": "Generando PDF..."
+        },
+        "table": {
+            "units": "Unds.",
+            "price": "Precio Unit."
+        }
+    },
+    "demoProgress": {
+        "generating": "Generando Presupuesto",
+        "completed": "¡Completado!",
+        "wait": "Por favor espera...",
+        "extracted": "Partidas extraídas",
+        "matches": "Coincidencias",
+        "success": "¡Presupuesto generado!",
+        "steps": {
+            "extracting": "Extrayendo partidas",
+            "searching": "Buscando en Price Book",
+            "calculating": "Calculando precios",
+            "complete": "Presupuesto listo"
+        }
+    },
+    "demoCta": {
+        "title": "¡Misión Cumplida!",
+        "subtitle": "Tu presupuesto personalizado está listo en tus descargas.",
+        "nextStep": "El siguiente paso",
+        "benefits": "Si este nivel de automatización y profesionalismo te ha gustado, imagina todo lo que Basis puede hacer por tu empresa constructora. Crea presupuestos, certificaciones y contratos en segundos.",
+        "button": "Quiero implementar esto en mi empresa",
+        "resetting": "Reseteando conversación..."
     }
 }

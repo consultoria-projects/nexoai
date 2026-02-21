@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
-export type BudgetMode = 'general' | 'pool' | 'reform' | 'new-build' | 'kitchen' | 'bathroom' | 'wizard' | 'chat';
+export type BudgetMode = 'general' | 'pool' | 'reform' | 'new-build' | 'kitchen' | 'bathroom' | 'wizard' | 'chat' | 'agenda';
 
 type WidgetContextType = {
     isOpen: boolean;

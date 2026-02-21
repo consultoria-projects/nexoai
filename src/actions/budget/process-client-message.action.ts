@@ -1,18 +1,47 @@
 'use server';
 
-import { clientRequirementsFlow } from '@/backend/ai/flows/client-requirements.flow';
+import { publicDemoRequirementsFlow } from '@/backend/ai/agents/public-demo.agent';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
+import { FirestoreLeadRepository } from '@/backend/lead/infrastructure/firestore-lead-repository';
 
 export async function processClientMessageAction(
+    leadId: string,
     message: string,
     history: any[],
     currentRequirements: Partial<BudgetRequirement>
 ) {
     try {
-        const result = await clientRequirementsFlow({
+        const leadRepo = new FirestoreLeadRepository();
+        const lead = await leadRepo.findById(leadId);
+
+        if (!lead) {
+            return { success: false, error: "Lead not found" };
+        }
+
+        // ===============================================
+        // RATE LIMITING SECURITY
+        // ===============================================
+        if (lead.demoBudgetsGenerated >= 1) {
+            return {
+                success: true,
+                data: {
+                    response: `Hola ${lead.personalInfo.name.split(' ')[0]}, veo que ya has generado un presupuesto de demostración anteriormente. Para mantener el servicio ágil para todos los usuarios, la demo gratuita está limitada a 1 presupuesto por empresa. ¡Hablemos de tus necesidades reales en nuestra reunión!`,
+                    updatedRequirements: currentRequirements,
+                    isComplete: false,
+                    isLimitReached: true
+                }
+            };
+        }
+
+        const result = await publicDemoRequirementsFlow({
             userMessage: message,
-            history,
-            currentRequirements,
+            history: history,
+            currentRequirements: currentRequirements,
+            leadContext: {
+                personalInfo: lead.personalInfo,
+                profile: lead.profile || undefined,
+                preferences: lead.preferences
+            }
         });
 
         return { success: true, data: result };

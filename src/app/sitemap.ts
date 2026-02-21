@@ -5,7 +5,7 @@ import { blogPosts } from '@/lib/blog-posts';
 import { locations } from '@/lib/locations';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://Grupo RG.es';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://Basis.es';
     const entries: MetadataRoute.Sitemap = [];
 
     // Helper to get localized path

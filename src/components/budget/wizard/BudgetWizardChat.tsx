@@ -14,11 +14,14 @@ import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { BudgetGenerationProgress, GenerationStep } from '@/components/budget/BudgetGenerationProgress';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
+import { useTranslations } from 'next-intl';
 
 import { Trash2 } from 'lucide-react';
 import { BudgetStreamListener } from './BudgetStreamListener';
 import { Toaster as SileoToaster } from 'sileo';
 import 'sileo/styles.css';
+import { DemoBudgetViewer, CustomPdfData } from './DemoBudgetViewer';
+import { Budget } from '@/backend/budget/domain/budget';
 
 // Update to accept 'state' to override score if AI thinks it's done
 function calculateProgress(req: Partial<BudgetRequirement>, state?: string) {
@@ -49,10 +52,12 @@ function calculateProgress(req: Partial<BudgetRequirement>, state?: string) {
 }
 
 export function BudgetWizardChat() {
+    const t = useTranslations('home');
+    const w = t.raw('basis.wizardChat');
     const { messages, input, setInput, sendMessage, state, requirements } = useBudgetWizard();
     const { leadId } = useWidgetContext();
     const { isRecording, startRecording, stopRecording, recordingTime } = useAudioRecorder();
-    const [budgetResult, setBudgetResult] = React.useState<{ id: string; total: number; itemCount: number } | null>(null);
+    const [budgetResult, setBudgetResult] = React.useState<{ id: string; total: number; itemCount: number, fullBudget?: Budget } | null>(null);
     const router = useRouter();
     const [generationProgress, setGenerationProgress] = React.useState<{
         step: GenerationStep;
@@ -61,6 +66,10 @@ export function BudgetWizardChat() {
         currentItem?: string;
         error?: string;
     }>({ step: 'idle' });
+
+    const [showFinalCta, setShowFinalCta] = React.useState(false);
+
+    // Replay logic
     const [deepGeneration, setDeepGeneration] = React.useState(false); // NEW
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -77,7 +86,7 @@ export function BudgetWizardChat() {
 
         // Show loading state
         const previousPlaceholder = input;
-        setInput("Analizando documentos... esto puede tardar unos segundos 🧠");
+        setInput(w.input.analyzingDocs);
 
         const formData = new FormData();
         Array.from(files).forEach(file => {
@@ -117,7 +126,7 @@ export function BudgetWizardChat() {
                 formData.append('audio', blob, 'recording.webm');
 
                 // Optimistic UI update or loading state could go here
-                setInput("Transcribiendo audio...");
+                setInput(w.input.transcribing);
 
                 try {
                     const { processAudioAction } = await import('@/actions/audio/process-audio.action');
@@ -126,7 +135,7 @@ export function BudgetWizardChat() {
                     if (result.success && result.transcription) {
                         // Append transcription to current input or replace it? 
                         // Let's replace for now, or append if input existed.
-                        setInput(prev => prev === "Transcribiendo audio..." ? result.transcription : `${prev} ${result.transcription}`);
+                        setInput(prev => prev === w.input.transcribing ? result.transcription : `${prev} ${result.transcription}`);
                     } else {
                         console.error(result.error);
                         setInput(""); // Clear loading text on error
@@ -143,7 +152,7 @@ export function BudgetWizardChat() {
     };
     const handleReset = async () => {
         if (!leadId) return;
-        if (!confirm("¿Estás seguro de que quieres borrar la conversación? Esto no se puede deshacer.")) return;
+        if (!confirm(w.errors.resetConfirm)) return;
 
         setInput("Reseteando conversación...");
         try {
@@ -165,50 +174,56 @@ export function BudgetWizardChat() {
         }
     }, [messages]);
 
-    if (budgetResult) {
+    const handleDownloadPdf = async (customData: CustomPdfData) => {
+        // PDF has been downloaded by the viewer. Transition to Final CTA.
+        setShowFinalCta(true);
+    };
+
+    if (showFinalCta) {
         return (
-            <div className="w-full max-w-lg mx-auto p-8 animate-in fade-in duration-500">
-                <div className="text-center space-y-6">
-                    <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                        <CheckCircle2 className="h-10 w-10 text-white" />
-                    </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-foreground">¡Presupuesto Generado!</h2>
-                        <p className="text-muted-foreground mt-2">
-                            {budgetResult.itemCount} partidas • Total: €{budgetResult.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
-                        </p>
-                        <div className="flex items-center justify-center gap-2 mb-4">
-                            <Badge variant="outline" className="text-[10px] text-muted-foreground">
-                                {requirements.specs?.propertyType ? requirements.specs.propertyType : 'Nuevo Proyecto'}
-                            </Badge>
-                            {requirements.specs?.totalArea && (
-                                <Badge variant="secondary" className="text-[10px]">
-                                    {requirements.specs.totalArea} m²
-                                </Badge>
-                            )}
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                        <Button
-                            size="lg"
-                            className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg"
-                            onClick={() => router.push(`/dashboard/admin/budgets/${budgetResult.id}/edit`)}
-                        >
-                            <ExternalLink className="mr-2 h-4 w-4" />
-                            Ir al Presupuesto
-                        </Button>
-                        <Button
-                            variant="outline"
-                            onClick={() => {
-                                setBudgetResult(null);
-                                setGenerationProgress({ step: 'idle' });
-                                window.location.reload();
-                            }}
-                        >
-                            Crear otro presupuesto
-                        </Button>
-                    </div>
+            <div className="w-full max-w-lg mx-auto p-8 animate-in fade-in zoom-in duration-500 flex flex-col items-center text-center space-y-6 h-[100dvh] justify-center">
+                <div className="mx-auto h-24 w-24 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-2xl shadow-green-500/30">
+                    <CheckCircle2 className="h-12 w-12 text-white" />
                 </div>
+                <div>
+                    <h2 className="text-3xl font-extrabold text-foreground mb-3">{w.pdfDownloadCard.title}</h2>
+                    <p className="text-lg text-muted-foreground">{w.pdfDownloadCard.subtitle}</p>
+                </div>
+
+                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 relative overflow-hidden text-left w-full mt-4">
+                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                        <Sparkles className="w-24 h-24 text-primary" />
+                    </div>
+                    <h3 className="font-bold text-lg text-foreground mb-2 relative z-10">{w.pdfDownloadCard.nextStep}</h3>
+                    <p className="text-sm text-muted-foreground relative z-10 mb-5">
+                        {w.pdfDownloadCard.benefits}
+                    </p>
+
+                    <Button
+                        size="lg"
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg font-semibold relative z-10"
+                        onClick={() => router.push('/dashboard/projects')}
+                    >
+                        {w.pdfDownloadCard.button}
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    if (budgetResult && requirements.specs) {
+        // Reconstruct a fake 'Budget' object for the viewer based on the action result
+        // The action currently returns a minimal object, we might need to adjust `generateDemoBudgetAction` to return the full budget to make this robust. 
+        // For now, let's assume we update the action to return the full budget data, or fetch it here.
+
+        return (
+            <div className="w-full h-[100dvh] pt-4 md:pt-8 bg-zinc-50 dark:bg-zinc-950/50 overflow-x-hidden">
+                <DemoBudgetViewer
+                    budgetData={budgetResult.fullBudget as any} // We need to update the action to return this
+                    onDownloadPdf={handleDownloadPdf}
+                    isGeneratingPdf={false}
+                />
+                <SileoToaster position="bottom-right" />
             </div>
         );
     }
@@ -260,12 +275,12 @@ export function BudgetWizardChat() {
                 {/* Header */}
                 <header className="absolute top-0 left-0 right-0 z-10 flex h-16 md:h-20 items-center justify-between px-4 md:px-8 bg-gradient-to-b from-background via-background/95 to-transparent backdrop-blur-sm">
                     <div className="flex items-center gap-3 md:gap-4">
-                        <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-400 to-orange-600 shadow-lg shadow-orange-500/20 ring-1 ring-white/20">
+                        <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-blue-600 shadow-lg shadow-primary/20 ring-1 ring-white/20">
                             <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-white" />
                         </div>
                         <div>
-                            <h3 className="font-display text-base md:text-lg font-bold text-foreground tracking-tight">Arquitecto IA</h3>
-                            <p className="text-[10px] md:text-xs font-medium text-muted-foreground tracking-wide uppercase">Asistente Inteligente</p>
+                            <h3 className="font-display text-base md:text-lg font-bold text-foreground tracking-tight">{w.header.title}</h3>
+                            <p className="text-[10px] md:text-xs font-medium text-muted-foreground tracking-wide uppercase">{w.header.subtitle}</p>
                         </div>
                     </div>
 
@@ -274,7 +289,7 @@ export function BudgetWizardChat() {
                         size="icon"
                         onClick={handleReset}
                         className="text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        title="Borrar conversación y empezar de nuevo"
+                        title={w.header.clearTooltip}
                     >
                         <Trash2 className="h-5 w-5" />
                     </Button>
@@ -290,13 +305,26 @@ export function BudgetWizardChat() {
                                     animate={{ opacity: 1, y: 0 }}
                                     className="flex flex-col items-center justify-center min-h-[400px] text-center space-y-4"
                                 >
-                                    <div className="p-4 rounded-full bg-amber-50 dark:bg-amber-900/10 mb-2">
-                                        <Bot className="w-12 h-12 text-amber-500/50" />
+                                    <div className="p-4 rounded-full bg-primary/10 dark:bg-primary/5 mb-2">
+                                        <Bot className="w-12 h-12 text-primary" />
                                     </div>
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">¿En qué puedo ayudarte hoy?</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{w.emptyState.title}</h2>
                                     <p className="max-w-md text-gray-500 dark:text-gray-400">
-                                        Puedo ayudarte a estimar costos, definir materiales o planificar tu reforma integral.
+                                        {w.emptyState.subtitle}
                                     </p>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-8 w-full max-w-2xl px-4">
+                                        {w.emptyState.suggestions.map((suggestion: any, i: number) => (
+                                            <button
+                                                key={i}
+                                                onClick={() => sendMessage(suggestion.text)}
+                                                className="flex flex-col text-left p-4 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+                                            >
+                                                <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-primary transition-colors">{suggestion.title}</span>
+                                                <span className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mt-1">{suggestion.text}</span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </motion.div>
                             ) : (
                                 messages.map((msg, index) => (
@@ -312,11 +340,11 @@ export function BudgetWizardChat() {
                                 className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 ml-4"
                             >
                                 <div className="flex space-x-1">
-                                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-bounce"></div>
+                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
                                 </div>
-                                <span>Analizando...</span>
+                                <span>{w.input.analyzingText}</span>
                             </motion.div>
                         )}
                         <div ref={scrollRef} />
@@ -326,7 +354,7 @@ export function BudgetWizardChat() {
                 {/* Floating Input Area */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-background via-background/90 to-transparent pointer-events-none flex justify-center z-20">
                     <div className="pointer-events-auto w-full max-w-4xl relative">
-                        <div className="relative flex items-end gap-2 rounded-[2rem] border border-input bg-background/80 md:bg-white/80 md:dark:bg-zinc-900/80 p-1.5 md:p-2 shadow-2xl shadow-black/5 backdrop-blur-xl ring-1 ring-black/5 dark:ring-white/5 focus-within:ring-2 focus-within:ring-amber-500/20 transition-all duration-300">
+                        <div className="relative flex items-end gap-2 rounded-[2rem] border border-input bg-background/80 md:bg-white/80 md:dark:bg-zinc-900/80 p-1.5 md:p-2 shadow-2xl shadow-black/5 backdrop-blur-xl ring-1 ring-black/5 dark:ring-white/5 focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300">
                             <input
                                 type="file"
                                 multiple
@@ -348,7 +376,7 @@ export function BudgetWizardChat() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={handleKeyDown}
-                                placeholder="Describe tu proyecto..."
+                                placeholder={w.input.placeholder}
                                 className="min-h-[44px] max-h-32 w-full resize-none border-0 bg-transparent py-3 text-base placeholder:text-gray-400 dark:placeholder:text-gray-600 focus-visible:ring-0 text-gray-900 dark:text-gray-100 scrollbar-hide font-medium"
                                 rows={1}
                             />
@@ -357,7 +385,7 @@ export function BudgetWizardChat() {
                                 <Button
                                     onClick={() => sendMessage(input)}
                                     size="icon"
-                                    className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-full bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center"
+                                    className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center"
                                 >
                                     <Send className="h-4 w-4 md:h-5 md:w-5" />
                                 </Button>
@@ -378,7 +406,7 @@ export function BudgetWizardChat() {
                             )}
                         </div>
                         <p className="mt-3 text-center text-xs font-medium text-gray-400 dark:text-gray-600">
-                            {isRecording ? `Grabando... ${formatTime(recordingTime)}` : "Presiona Enter para enviar. Shift + Enter para línea nueva."}
+                            {isRecording ? `${w.input.recordingInfo} ${formatTime(recordingTime)}` : w.input.keyboardHint}
                         </p>
                     </div>
                 </div>
@@ -387,9 +415,9 @@ export function BudgetWizardChat() {
             {/* Right Panel: Context & Requirements (Visible on Desktop) */}
             <div className="hidden border-l border-gray-100 dark:border-white/5 md:flex md:w-1/3 flex-col bg-gray-50/50 dark:bg-zinc-900/50 backdrop-blur-sm h-full min-h-0">
                 <div className="h-20 border-b border-gray-100 dark:border-white/5 px-6 flex items-center justify-between shrink-0">
-                    <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider uppercase">Datos del Proyecto</h4>
-                    <span className="px-2 py-1 bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-500 text-[10px] font-bold rounded-md uppercase">
-                        En curso
+                    <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider uppercase">{w.panel.title}</h4>
+                    <span className="px-2 py-1 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground text-[10px] font-bold rounded-md uppercase">
+                        {w.panel.status}
                     </span>
                 </div>
 
@@ -403,12 +431,12 @@ export function BudgetWizardChat() {
                 <div className="shrink-0 p-6 bg-white dark:bg-zinc-900 border-t border-gray-100 dark:border-white/5">
                     <div className="space-y-3 mb-4">
                         <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400">
-                            <span>Completado</span>
+                            <span>{w.panel.completed}</span>
                             <span className="text-gray-900 dark:text-white">{calculateProgress(requirements, state)}%</span>
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
                             <div
-                                className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500"
+                                className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full transition-all duration-500"
                                 style={{ width: `${calculateProgress(requirements, state)}%` }}
                             />
                         </div>
@@ -426,21 +454,21 @@ export function BudgetWizardChat() {
 
                     {/* Deep Generation Toggle - Always visible for beta testing */}
                     {generationProgress.step === 'idle' && (
-                        <div className="mb-4 flex items-center justify-between p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20">
+                        <div className="mb-4 flex items-center justify-between p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/20">
                             <div className="flex flex-col">
-                                <span className="text-xs font-bold text-amber-800 dark:text-amber-500 flex items-center gap-1">
+                                <span className="text-xs font-bold text-primary dark:text-primary-foreground flex items-center gap-1">
                                     <Sparkles className="w-3 h-3" />
-                                    Generación Profunda
-                                    <Badge variant="outline" className="text-[9px] h-4 px-1 bg-white ml-2 text-amber-600 border-amber-200">Beta</Badge>
+                                    {w.panel.deepGenTitle}
+                                    <Badge variant="outline" className="text-[9px] h-4 px-1 bg-white ml-2 text-primary border-primary/30">Beta</Badge>
                                 </span>
-                                <span className="text-[10px] text-amber-700/70 dark:text-amber-500/70 leading-tight">
-                                    Desglosan por capítulos y partidas (más lento).
+                                <span className="text-[10px] text-primary/70 dark:text-primary-foreground/70 leading-tight">
+                                    {w.panel.deepGenDesc}
                                 </span>
                             </div>
                             <div
                                 className={cn(
                                     "w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out",
-                                    deepGeneration ? "bg-amber-500" : "bg-gray-200 dark:bg-white/10"
+                                    deepGeneration ? "bg-primary" : "bg-gray-200 dark:bg-white/10"
                                 )}
                                 onClick={() => setDeepGeneration(!deepGeneration)}
                             >
@@ -476,7 +504,7 @@ export function BudgetWizardChat() {
                                         }
 
                                         setGenerationProgress({ step: 'extracting' });
-                                        sendMessage("(Generando presupuesto detallado...)");
+                                        sendMessage(w.progress.generatingMsg);
 
                                         try {
                                             await new Promise(r => setTimeout(r, 1500));
@@ -490,54 +518,57 @@ export function BudgetWizardChat() {
                                             setGenerationProgress({
                                                 step: 'searching',
                                                 extractedItems: detectedCount,
-                                                currentItem: 'Buscando coincidencias...'
+                                                currentItem: w.progress.searching
                                             });
 
-                                            const { generateBudgetFromSpecsAction } = await import('@/actions/budget/generate-budget-from-specs.action');
+                                            const { generateDemoBudgetAction } = await import('@/actions/budget/generate-demo-budget.action');
 
                                             setTimeout(() => {
                                                 setGenerationProgress(prev => ({
                                                     ...prev,
                                                     step: 'calculating',
-                                                    currentItem: 'Calculando totales...'
+                                                    currentItem: w.progress.calculating
                                                 }));
                                             }, 3000);
 
-                                            // Cast specs to ProjectSpecs - in a real app we would validate with Zod here
-                                            // Trigger Deep Generation if enabled
-                                            const result = await generateBudgetFromSpecsAction(leadId, requirements.specs as any, deepGeneration);
+                                            const result = await generateDemoBudgetAction(leadId, requirements);
 
                                             if (result.success && result.budgetResult) {
                                                 const budgetId = result.budgetId || result.budgetResult.id;
-                                                const itemCount = result.budgetResult.lineItems?.length || 0;
+                                                const itemCount = result.budgetResult.chapters?.reduce((acc: number, c: any) => acc + c.items.length, 0) || 0;
                                                 const total = result.budgetResult.costBreakdown?.total || result.budgetResult.totalEstimated || 0;
 
                                                 setGenerationProgress({
                                                     step: 'complete',
                                                     extractedItems: itemCount,
-                                                    matchedItems: result.budgetResult.lineItems?.filter((i: any) => !i.isEstimate).length || 0
+                                                    matchedItems: itemCount
                                                 });
 
                                                 await new Promise(r => setTimeout(r, 1500));
-                                                setBudgetResult({ id: budgetId, total, itemCount });
+                                                setBudgetResult({
+                                                    id: budgetId,
+                                                    total,
+                                                    itemCount,
+                                                    fullBudget: result.budgetResult // Passing the full object down to the viewer
+                                                } as any);
                                             } else {
                                                 setGenerationProgress({
                                                     step: 'error',
-                                                    error: 'No se pudo generar el presupuesto'
+                                                    error: result.error || w.errors.generateError
                                                 });
                                             }
                                         } catch (e) {
                                             console.error(e);
                                             setGenerationProgress({
                                                 step: 'error',
-                                                error: 'Error al procesar el presupuesto'
+                                                error: w.errors.generateError
                                             });
                                         }
                                     }}
                                     className="w-full bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-bold h-12 rounded-xl shadow-xl shadow-gray-200/50 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <Sparkles className="mr-2 h-4 w-4 animate-pulse" />
-                                    Generar Presupuesto
+                                    {w.progress.generateBtn}
                                 </Button>
                             </motion.div>
                         )}
@@ -568,7 +599,7 @@ function ChatBubble({ message }: { message: Message }) {
                     "relative max-w-[85%] rounded-2xl px-5 py-3.5 text-sm leading-relaxed shadow-sm overflow-hidden",
                     "break-words whitespace-pre-wrap",
                     isUser
-                        ? "bg-amber-500 text-white rounded-br-none shadow-amber-500/10"
+                        ? "bg-primary text-primary-foreground rounded-br-none shadow-primary/10"
                         : "bg-white dark:bg-white/10 text-slate-800 dark:text-white/90 rounded-bl-none border border-slate-100 dark:border-white/5 shadow-sm dark:backdrop-blur-md"
                 )}
             >

@@ -1,4 +1,4 @@
-﻿{
+{
     "hero": {
         "title": "Wij transformeren ruimtes <br/> <span class='text-primary italic'>in ervaringen</span>",
         "subtitle": "Hoogwaardige totaalrenovaties op Mallorca. Waar kwaliteit en exclusiviteit samenkomen.",
@@ -26,7 +26,7 @@
     },
     "philosophy": {
         "quote": "Wij bouwen geen huizen. Wij creëren het podium voor uw leven.",
-        "author": "Grupo RG",
+        "author": "Basis",
         "description": "Elk project is uniek omdat elke klant uniek is. Wij combineren ambachtelijke ervaring met technologische innovatie voor uitzonderlijke resultaten."
     },
     "expertise": {
@@ -64,7 +64,7 @@
     "vision": {
         "label": "Onze Filosofie",
         "title": "Het nieuwe tijdperk van <br/> <span class='text-primary'>moderne bouw</span>",
-        "description": "Bij Grupo RG herdefiniëren we de standaard voor luxe renovaties. We laten traditionele onzekerheid achter ons en omarmen technologische precisie en ambachtelijke excellentie.",
+        "description": "Bij Basis herdefiniëren we de standaard voor luxe renovaties. We laten traditionele onzekerheid achter ons en omarmen technologische precisie en ambachtelijke excellentie.",
         "points": [
             "Gecertificeerde Europese kwaliteitsnormen.",
             "3D-visualisatietechnologie vóór de start.",
@@ -238,7 +238,7 @@
         "items": [
             {
                 "question": "Hoe lang duurt een totaalrenovatie op Mallorca?",
-                "answer": "De tijd varieert afhankelijk van de complexiteit, maar een standaard totaalrenovatie duurt meestal tussen 3 en 5 maanden. Bij Grupo RG garanderen we contractueel vastgelegde termijnen dankzij onze planning met 3D-technologie, waardoor gebruikelijke vertragingen in de sector worden voorkomen."
+                "answer": "De tijd varieert afhankelijk van de complexiteit, maar een standaard totaalrenovatie duurt meestal tussen 3 en 5 maanden. Bij Basis garanderen we contractueel vastgelegde termijnen dankzij onze planning met 3D-technologie, waardoor gebruikelijke vertragingen in de sector worden voorkomen."
             },
             {
                 "question": "Regelen jullie de bouwvergunningen?",
@@ -246,7 +246,7 @@
             },
             {
                 "question": "Kan ik het ontwerp zien voordat er wordt gestart?",
-                "answer": "Absoluut. Het is een fundamenteel onderdeel van onze Express Methode. We ontwikkelen fotorealistische renders en gedetailleerde plannen voordat de eerste steen wordt gelegd, om ervoor te zorgen dat het eindresultaat precies overeenkomt met uw visie."
+                "answer": "Absolutament. Het is een fundamenteel onderdeel van onze Express Methode. We ontwikkelen fotorealistische renders en gedetailleerde plannen voordat de eerste steen wordt gelegd, om ervoor te zorgen dat het eindresultaat precies overeenkomt met uw visie."
             },
             {
                 "question": "Werken jullie met een vast budget?",
@@ -260,5 +260,346 @@
         "buttonPrimary": "Vraag nu offerte aan",
         "buttonSecondary": "Spreek met een adviseur",
         "note": "Beperkte plaatsen per maand om kwaliteit te waarborgen"
+    },
+    "basis": {
+        "hero": {
+            "eyebrow": "AI-First Custom Software",
+            "titlePart1": "Verlaag uw budgeturen tot",
+            "titlePart2": "exact 15 minuten.",
+            "description": "De AI-First generator die complexe offertes, certificeringen en contracten op maat automatiseert. Verlies niet langer rendement door projecten blindelings te beheren.",
+            "ctaPrimary": "Probeer gratis generator",
+            "ctaSecondary": "Technische evaluatie inplannen"
+        },
+        "wizard": {
+            "title": "De ultieme test.",
+            "description": "Beschrijf uw project in natuurlijke taal. Onze AI kruist echte marktprijzen en structureert uw posten in seconden.",
+            "examples": {
+                "kitchen": "Voorbeeld laden: Keuken",
+                "roof": "Voorbeeld laden: Dak"
+            },
+            "placeholder": "Bijv: Complete renovatie van badkamer 6m2. Bad verwijderen, douchebak van hars, Roca sanitair en mat witte tegels...",
+            "analyze": "Semantische analysator geactiveerd",
+            "generateBtn": "Budget genereren",
+            "loadingTitle": "Posten extraheren...",
+            "loadingDesc": "Kruisen van verliezen, rendementen en prijslijsten.",
+            "proposalTitle": "Voorstel Overzicht",
+            "proposalDesc": "Automatische AI schatting",
+            "estimatedBudget": "Geschat Budget",
+            "readyTitle": "Uw technische specificatie is klaar!",
+            "readyDesc": "We hebben 14 complete gedetailleerde posten opgesteld. Naar welk e-mailadres sturen we de professionele PDF klaar om aan uw klant te tonen?",
+            "emailPlaceholder": "Uw e-mailadres...",
+            "sendBtn": "Stuur mij de PDF",
+            "successTitle": "PDF succesvol verzonden.",
+            "successDesc": "Deze generator gebruikt gemiddelden. Kunt u zich voorstellen dit te doen met uw eigen tarieven en uw echte marge?",
+            "upsellTitle": "Met Basis Core Op Maat:",
+            "upsellFeatures": [
+                "Integratie van uw eigen Excel of PDF tarieven.",
+                "Real-time kostenafwijkingsdashboards.",
+                "Automatisch gegenereerde facturen en certificeringen."
+            ],
+            "demoBtn": "Plan Demo Op Maat"
+        },
+        "painPoints": {
+            "titlePart1": "Blindelings beheren kost u ",
+            "titleHighlight": "tienduizenden",
+            "titlePart3": " euro per jaar.",
+            "description": "De duurste factuur is niet het basismateriaal. Het is de tijd verspild aan handmatige taken en het gebrek aan zichtbaarheid.",
+            "items": [
+                {
+                    "title": "Verborgen Budgetafwijkingen",
+                    "description": "Ontdekken dat u geld heeft verloren op het project bij de laatste certificering, wanneer het verlies al onherstelbaar is."
+                },
+                {
+                    "title": "Verlies van het Weekend",
+                    "description": "De zondag doorbrengen met het kruisen van Excels, magazijnfacturen en urenstaten van het team."
+                },
+                {
+                    "title": "Chaos in Communicatie",
+                    "description": "PDF-bestanden via WhatsApp, verloren e-mails van onderaannemers en ongeplande verkoopgesprekken."
+                },
+                {
+                    "title": "Risico's bij Certificeringen",
+                    "description": "Onder de werkelijke voortgang factureren uit angst voor fouten, wat uw cashflow beïnvloedt."
+                }
+            ]
+        },
+        "benefits": {
+            "title": "Het einde van papierwerk.<br />Absolute controle over uw projecten.",
+            "description": "Basis is de centrale motor die verkoop, financiële controle en op-maat-uitvoering van uw winstgevendheid unificeert.",
+            "items": [
+                {
+                    "title": "Uw software op maat. In 4 weken.",
+                    "description": "We passen de Basis-AI aan uw processen aan, inclusief uw eigen historische Excel en workflows.",
+                    "features": [
+                        "Core-ontwikkeling + Aangepaste lagen",
+                        "Geen onmogelijke leercurves voor uw team",
+                        "Verbindung met uw gebruikelijke banken en magazijnen"
+                    ],
+                    "cta": "Ik wil mijn maatwerkontwikkeling evalueren"
+                },
+                {
+                    "title": "Sluit projecten 10x sneller en stel uw marge veilig.",
+                    "description": "Onze AI leest uw PDF-tarievenlijsten, begrijpt de spreektalige sector en schrijft binnen enkele minuten begrotingen.",
+                    "features": [
+                        "Directe semantische zoekopdracht voor posten",
+                        "Automatisch aanvullen van prestatietijden",
+                        "PDF exporteren met één klik"
+                    ],
+                    "cta": "Mijn begrotingen automatiseren met IA"
+                },
+                {
+                    "title": "Beheers uw uitvoering: Ontdek afwijkingen vanaf dag 1.",
+                    "description": "Het systeem kruist elke vrachtbrief en toegerekende uren met het oorspronkelijke budget en trekt direct saldo af van de post.",
+                    "features": [
+                        "Verkeerslichtwaarschuwingen voor winstgevendheid in real-time",
+                        "Automatisch doorsturen van Certificeringen bij Herkomst",
+                        "Geïntegreerde documentcontrole voor onderaannemers"
+                    ],
+                    "cta": "Ik wil het dashboard van de projecten bekijken"
+                }
+            ]
+        },
+        "testimonials": {
+            "title": "Vertrouw ons algoritme niet blindelings.",
+            "description": "Vraag degenen die hun commerciële winstmarge al hebben teruggewonnen.",
+            "quote": "Vroeger brachten we het weekend door met handmatige certificeringen de doen. Nu uploadt de manager uren via de telefoon en de rekening wordt op de maandag automatisch gecontroleerd met behoud van winstgevendheid.",
+            "authorName": "Javier Martínez",
+            "authorRole": "Managing Partner, VM Plus",
+            "stats": [
+                {
+                    "value": "98%",
+                    "label": "Gegarandeerde voorspellingen"
+                },
+                {
+                    "value": "-12u",
+                    "label": "Verlies per week"
+                },
+                {
+                    "value": "+14%",
+                    "label": "Regelmatige inzet"
+                },
+                {
+                    "value": "0",
+                    "label": "Mogelijke fouten door werk in Excels"
+                }
+            ]
+        },
+        "cta": {
+            "title": "Vind de geldflow <br /> in uw projecten.",
+            "description": "Plan een technische evaluatie van 15 minuten. Geen verkooppresentaties. Wij voegen uw tarievenlijst toe aan het platform en genereren een real-time projectbegroting gedurende ons bellen.",
+            "btnPrimary": "Gratis technische evaluatie plannen",
+            "features": [
+                "Geen bindende overeenkomsten",
+                "Voor mkb-bedrijven, niet voor multinationals",
+                "100% praktische demo"
+            ],
+            "note": "⏳ Opmerking: we werken alleen met de onboarding van **3 nieuwe bouwbedrijven per maand** om de beste service te dekken."
+        },
+        "agenda": {
+            "badge": "Aangepaste Demo",
+            "titleHighlight": "Gratis",
+            "title": "Boek Uw ",
+            "description": "30 minuten met een specialist in digitaal bouwen. Wij laten u zien hoe Basis integreert in uw echte workflow.",
+            "calendar": {
+                "months": [
+                    "Januari",
+                    "Februari",
+                    "Maart",
+                    "April",
+                    "Mei",
+                    "Juni",
+                    "Juli",
+                    "Augustus",
+                    "September",
+                    "Oktober",
+                    "November",
+                    "December"
+                ],
+                "days": [
+                    "Ma",
+                    "Di",
+                    "Wo",
+                    "Do",
+                    "Vr",
+                    "Za",
+                    "Zo"
+                ],
+                "availableTime": "Beschikbare Tijden"
+            },
+            "form": {
+                "title": "Uw Gegevens",
+                "name": "Volledige Naam",
+                "namePlaceholder": "Jan Jansen",
+                "email": "E-mail",
+                "emailPlaceholder": "jan@bedrijf.nl",
+                "phone": "Telefoon",
+                "phoneOptional": "(optioneel)",
+                "phonePlaceholder": "+31 6 00000000",
+                "submit": "Doorgaan",
+                "loading": "Laden...",
+                "privacy": " Zonder verplichting. Annuleer wanneer u wilt.",
+                "summaryText": "30 min · Videogesprek"
+            },
+            "verification": {
+                "title": "Verificatie",
+                "subtitle": "We hebben een code gestuurd naar ",
+                "verifying": "Verifiëren..."
+            },
+            "success": {
+                "title": "Vergadering Bevestigd!",
+                "message": "We sturen u een bevestigingsmail met de link voor het videogesprek naar "
+            },
+            "errors": {
+                "process": "Fout bij verwerken verzoek.",
+                "invalidCode": "Onjuiste code.",
+                "confirmation": "Fout bij bevestigen boeking."
+            }
+        },
+        "floatingTrigger": {
+            "desktopTitle": "Spreken met Basis AI?",
+            "desktopSubtitle": "Automatiseer uw offerte in seconden.",
+            "mobileTitle": "Spreken met Basis AI?",
+            "mobileSubtitle": "Offerteer uw project in seconden."
+        },
+        "profiling": {
+            "step1": {
+                "title": "Welk proces kost je wekelijks de meeste tijd?",
+                "subtitle": "Help ons je ervaring te personaliseren.",
+                "options": {
+                    "budgeting": "Begroten en prijzen zoeken",
+                    "costControl": "Beheer van afwijkingen en marges",
+                    "certifications": "Uren en termijnstaten kloppend maken"
+                }
+            },
+            "step2": {
+                "title1": "Hoeveel projecten beheer je tegelijkertijd?",
+                "options1": {
+                    "1-3": {
+                        "label": "1 – 3 projecten",
+                        "desc": "ZZP'er / Micro"
+                    },
+                    "4-10": {
+                        "label": "4 – 10 projecten",
+                        "desc": "MKB"
+                    },
+                    "10+": {
+                        "label": "+10 projecten",
+                        "desc": "Aannemersbedrijf"
+                    }
+                },
+                "title2": "Wat is je rol?",
+                "options2": {
+                    "owner": "Directeur/Eigenaar",
+                    "projectManager": "Uitvoerder",
+                    "admin": "Administratie",
+                    "surveyor": "Calculator / Werkvoorbereider"
+                }
+            },
+            "step3": {
+                "title1": "Hoeveel besteed je jaarlijks aan calculators of technisch beheer?",
+                "options1": {
+                    "<10k": "Minder dan 10k €",
+                    "10-30k": "Van 10k tot 30k €",
+                    "30-60k": "Van 30k tot 60k €",
+                    "60k+": "Meer dan 60k €"
+                },
+                "title2": "Hoeveel uur per week besteed je aan handmatig werk?",
+                "options2": {
+                    "<5h": "Minder dan 5u",
+                    "5-15h": "5 - 15 uur",
+                    "15-30h": "15 - 30 uur",
+                    "30h+": "+30 uur"
+                }
+            },
+            "step4": {
+                "title": "Laatste stap",
+                "subtitle": "Basisgegevens van je bedrijf.",
+                "companyNameLabel": "Hoe heet je bedrijf?",
+                "companyNamePlaceholder": "Typ je bedrijfsnaam...",
+                "companySizeLabel": "Bedrijfsgrootte",
+                "companySizeOptions": {
+                    "solo": "Alleen 1",
+                    "2-5": "2-5",
+                    "6-15": "6-15",
+                    "16-50": "16-50",
+                    "50+": "50+"
+                },
+                "stackLabel": "Vanaf welke tools ben je van plan over te stappen?",
+                "stackOptions": {
+                    "excel": "Excel / Word",
+                    "presto": "Presto / Archimed",
+                    "otherErp": "Ander ERP"
+                }
+            },
+            "common": {
+                "stepIndicator": "Stap",
+                "of": "van",
+                "next": "Volgende",
+                "errorCompleting": "Vul a.u.b. alle velden in.",
+                "unknownError": "Onbekende fout"
+            }
+        },
+        "wizardChat": {
+            "header": {
+                "title": "AI Architect",
+                "subtitle": "Slimme Assistent",
+                "clearTooltip": "Gesprek wissen"
+            },
+            "emptyState": {
+                "title": "Hoe kan ik vandaag helpen?",
+                "subtitle": "Ik kan helpen met kostenraming, materialen of planning.",
+                "suggestions": [
+                    {
+                        "title": "Keuken renovatie",
+                        "text": "Ik wil de hele keuken renoveren, kasten en apparaten."
+                    },
+                    {
+                        "title": "Coplete badkamer",
+                        "text": "Bad eruit, douche erin, nieuw tegelwerk."
+                    },
+                    {
+                        "title": "Volledige renovatie",
+                        "text": "Offerte voor het renoveren van 90m2 appartement."
+                    },
+                    {
+                        "title": "Vloeren en verf",
+                        "text": "Nieuwe laminaatvloer en stucen."
+                    }
+                ]
+            },
+            "input": {
+                "placeholder": "Beschrijf je project...",
+                "analyzingDocs": "Documenten analyseren... 🧠",
+                "transcribing": "Audio transcriberen...",
+                "recordingInfo": "Opnemen...",
+                "keyboardHint": "Druk Enter om te sturen. Shift+Enter voor nieuwe regel.",
+                "analyzingText": "Analyseren..."
+            },
+            "panel": {
+                "title": "Projectdata",
+                "status": "In uitvoering",
+                "completed": "Klaar",
+                "deepGenTitle": "Diepe Generatie",
+                "deepGenDesc": "Gedetailleerde opsplitsing (langzamer)."
+            },
+            "progress": {
+                "generatingMsg": "(Gedetailleerde offerte genereren...)",
+                "extracting": "Extraheren...",
+                "searching": "Zoeken...",
+                "calculating": "Berekenen...",
+                "generateBtn": "Offerte Genereren"
+            },
+            "pdfDownloadCard": {
+                "title": "Offerte Aangemaakt",
+                "subtitle": "Je offerte is gedownload.",
+                "nextStep": "Wil je dit automatiseren?",
+                "benefits": "Sluit direct aan op echte marktprijzen.",
+                "button": "Plan je project"
+            },
+            "errors": {
+                "resetConfirm": "Weet je zeker dat je het gesprek wilt wissen?",
+                "generateError": "Fout bij genereren offerte. "
+            }
+        }
     }
 }

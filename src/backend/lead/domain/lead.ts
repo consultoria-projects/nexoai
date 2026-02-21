@@ -3,7 +3,28 @@ export interface PersonalInfo {
     name: string;
     email: string;
     phone: string;
-    address?: string; // Added for Budget Client Snapshot
+    address?: string;
+}
+
+// ── Client Profile (Typeform-style profiling) ──
+
+export type BiggestPain = 'budgeting' | 'cost-control' | 'certifications';
+export type ProjectScale = '1-3' | '4-10' | '10+';
+export type CurrentStack = 'excel' | 'presto' | 'other-erp';
+export type AnnualSurveyorSpend = '<10k' | '10-30k' | '30-60k' | '60k+';
+export type WeeklyManualHours = '<5h' | '5-15h' | '15-30h' | '30h+';
+export type ClientRole = 'owner' | 'project-manager' | 'admin' | 'surveyor';
+
+export interface ClientProfile {
+    biggestPain: BiggestPain[];
+    simultaneousProjects: ProjectScale;
+    currentStack: CurrentStack[];
+    companyName: string;
+    companySize: 'solo' | '2-5' | '6-15' | '16-50' | '50+';
+    annualSurveyorSpend: AnnualSurveyorSpend;
+    weeklyManualHours: WeeklyManualHours;
+    role: ClientRole;
+    completedAt?: Date;
 }
 
 export interface LeadPreferences {
@@ -29,8 +50,10 @@ export class Lead {
         public readonly personalInfo: PersonalInfo,
         public readonly preferences: LeadPreferences,
         public verification: LeadVerification,
+        public profile: ClientProfile | null,
         public readonly createdAt: Date,
-        public updatedAt: Date
+        public updatedAt: Date,
+        public demoBudgetsGenerated: number = 0
     ) { }
 
     static create(id: string, info: PersonalInfo, preferences: LeadPreferences): Lead {
@@ -39,9 +62,28 @@ export class Lead {
             info,
             preferences,
             { isVerified: false, attempts: 0 },
+            null,
             new Date(),
-            new Date()
+            new Date(),
+            0
         );
+    }
+
+    completeProfile(data: Omit<ClientProfile, 'completedAt'>): void {
+        this.profile = {
+            ...data,
+            completedAt: new Date()
+        };
+        this.updatedAt = new Date();
+    }
+
+    incrementDemoBudgets(): void {
+        this.demoBudgetsGenerated += 1;
+        this.updatedAt = new Date();
+    }
+
+    get isProfiled(): boolean {
+        return this.profile?.completedAt != null;
     }
 
     // Domain Logic: Request OTP
