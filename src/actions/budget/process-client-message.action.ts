@@ -1,6 +1,6 @@
 'use server';
 
-import { publicDemoRequirementsFlow } from '@/backend/ai/agents/public-demo.agent';
+import { publicDemoRequirementsFlow } from '@/backend/ai/public-demo/agents/public-demo.agent';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { FirestoreLeadRepository } from '@/backend/lead/infrastructure/firestore-lead-repository';
 

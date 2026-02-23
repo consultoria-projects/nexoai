@@ -532,7 +532,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Arquímedes",
                     "otherErp": "Altro ERP (Procore, Holded...)"
-                }
+                },
+                "webLabel": "Sito Web (Opzionale)",
+                "webPlaceholder": "Es: www.lamiazienda.it",
+                "noWebLabel": "Non ho ancora un sito web"
             },
             "common": {
                 "stepIndicator": "Passo",

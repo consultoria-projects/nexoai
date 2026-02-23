@@ -389,7 +389,7 @@
         },
         "cta": {
             "title": "Trouvez la fuite d'argent <br /> dans vos chantiers.",
-            "description": "Réservez une évaluation technique de 15 minutes avec vos tarifs réels.",
+            "description": "Réservez une évaluation technique de 30 minutes avec vos tarifs réels.",
             "btnPrimary": "Réserver Évaluation Gratuite",
             "features": [
                 "Sans engagement",
@@ -532,7 +532,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Arquímedes",
                     "otherErp": "Autre ERP (Procore, Holded...)"
-                }
+                },
+                "webLabel": "Site Web (Optionnel)",
+                "webPlaceholder": "Ex: www.monentreprise.com",
+                "noWebLabel": "Je n'ai pas encore de site web"
             },
             "common": {
                 "stepIndicator": "Étape",

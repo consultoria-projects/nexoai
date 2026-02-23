@@ -386,7 +386,7 @@
         },
         "cta": {
             "title": "Finden Sie das Geldleck <br /> in Ihren Projekten.",
-            "description": "Planen Sie ein technisches 15-Minuten-Assessment. Keine Verkaufspräsentationen. Wir laden Ihren Tarif auf die Plattform hoch und automatisieren während des Anrufs ein reales Budget.",
+            "description": "Planen Sie ein technisches 30-Minuten-Assessment. Keine Verkaufspräsentationen. Wir laden Ihren Tarif auf die Plattform hoch und automatisieren während des Anrufs ein reales Budget.",
             "btnPrimary": "Kostenloses Assessment planen",
             "features": [
                 "Keine bindenden Zusagen",
@@ -529,7 +529,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Archimed",
                     "otherErp": "Anderes ERP"
-                }
+                },
+                "webLabel": "Webseite (Optional)",
+                "webPlaceholder": "z. B. www.meinunternehmen.de",
+                "noWebLabel": "Ich habe noch keine Webseite"
             },
             "common": {
                 "stepIndicator": "Schritt",

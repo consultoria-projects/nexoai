@@ -475,5 +475,82 @@
             "Einbau einer Zwischendecke in Feuchträumen",
             "Abfallmanagement und Endreinigung der Baustelle"
         ]
+    },
+    "successPage": {
+        "title": "Angebot Erstellt!",
+        "description": "Wir haben ein detailliertes Dokument mit Ihrer Projektschätzung vorbereitet. Könnten Sie uns helfen, Ihre Erwartungen besser zu verstehen, bevor Sie es herunterladen?",
+        "surveyTitle": "Entwicklungsbudget",
+        "surveyQuestion": "Basis KI wird hunderte Stunden Verwaltungs- und Vermessungspersonal pro Monat einsparen. Strategisch gesehen, in welchem Investitionsrahmen bewegen Sie sich für Ihr neues maßgeschneidertes ERP?",
+        "pricingOptions": {
+            "tier0": "Unter 7.000 €",
+            "tier0Desc": "Für einfache Automatisierungen oder sehr grundlegende Module.",
+            "tier1": "Zwischen 7.000 € und 15.000 €",
+            "tier1Desc": "Für MVPs oder einfache Abteilungslösungen.",
+            "tier2": "Zwischen 15.000 € und 40.000 €",
+            "tier2Desc": "Für Management- und Automatisierungsplattformen (wie Basis).",
+            "tier3": "Zwischen 40.000 € und 120.000 €",
+            "tier3Desc": "Für komplexe Systeme mit mehreren Integrationen.",
+            "tier4": "Über 120.000 €",
+            "tier4Desc": "Für maßgeschneiderte ERPs oder multinationale Plattformen.",
+            "custom": "Individuelles Budget",
+            "customDesc": "Geben Sie einen genauen Betrag oder Bereich an."
+        },
+        "customBudgetTitle": "Zahl im Kopf",
+        "customBudgetQuestion": "Geben Sie das geschätzte Budget an, das Sie für dieses Projekt in Betracht ziehen.",
+        "customBudgetPlaceholder": "z.B., 25.000 €",
+        "customBudgetBack": "Zurück",
+        "customBudgetSubmit": "Bestätigen",
+        "surveyThanks": "Vielen Dank für das Teilen dieser wertvollen Informationen!",
+        "frictionLabel": "Gibt es etwas, das Sie am Implementierungsprozess beunruhigt?",
+        "frictionPlaceholder": "Z.B. Entwicklungszeit, Datenmigration, Lernkurve...",
+        "frictionSubmit": "Antwort senden",
+        "roiPrefix": "Unsere Kunden sparen im Durchschnitt",
+        "roiStrikethrough": "15 Std.",
+        "roiSuffix": "25 Std. pro Woche",
+        "fomoStep": "Strategisches Meeting",
+        "fomoTitle": "Lassen Sie uns Ihren Fall unverbindlich analysieren",
+        "fomoBadge": "Kostenlose Beratung"
+    },
+    "agenda": {
+        "title": "Wählen Sie Ihre Zeit",
+        "subtitle": "Technische Evaluierungssitzung mit unseren Ingenieuren.",
+        "months": [
+            "Januar",
+            "Februar",
+            "März",
+            "April",
+            "Mai",
+            "Juni",
+            "Juli",
+            "August",
+            "September",
+            "Oktober",
+            "November",
+            "Dezember"
+        ],
+        "days": [
+            "Mon",
+            "Die",
+            "Mit",
+            "Don",
+            "Fre",
+            "Sam",
+            "Son"
+        ],
+        "availableTime": "Verfügbare Zeiten",
+        "emptyState": "Wählen Sie einen Tag im Kalender, um die Stunden zu sehen.",
+        "confirming": "Wird bestätigt...",
+        "confirm": "Buchung Bestätigen",
+        "success": {
+            "title": "Sitzung Bestätigt!",
+            "datePrefix": "Wir sehen uns am",
+            "of": "von",
+            "timePrefix": "um",
+            "description": "Wir haben eine Kalendereinladung mit dem Videoanruf-Link gesendet."
+        },
+        "errors": {
+            "missingData": "Fehlende Daten für die Buchung.",
+            "unknown": "Unbekannter Fehler"
+        }
     }
 }

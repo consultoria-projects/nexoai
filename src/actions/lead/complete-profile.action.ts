@@ -21,6 +21,7 @@ export interface ProfileData {
     annualSurveyorSpend: AnnualSurveyorSpend;
     weeklyManualHours: WeeklyManualHours;
     role: ClientRole;
+    web?: string;
 }
 
 /**
@@ -40,6 +41,10 @@ export async function completeProfileAction(
         }
 
         lead.completeProfile(data);
+        // If website is provided, persist it on personalInfo
+        if (data.web) {
+            lead.personalInfo.web = data.web;
+        }
         await leadRepo.save(lead);
 
         return { success: true };

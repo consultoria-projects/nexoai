@@ -57,9 +57,11 @@ export function ProfilingWizard({ leadId, onComplete, intendedAction }: Profilin
         annualSurveyorSpend: undefined,
         weeklyManualHours: undefined,
         companyName: '',
+        web: '',
         companySize: undefined,
         currentStack: []
     });
+    const [noWeb, setNoWeb] = useState(false);
 
     const nextStep = () => {
         setDirection(1);
@@ -351,6 +353,30 @@ export function ProfilingWizard({ leadId, onComplete, intendedAction }: Profilin
                                         placeholder={p.step4.companyNamePlaceholder}
                                         className="w-full px-4 py-3 bg-secondary/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50"
                                     />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold">{p.step4.webLabel || 'Página Web (Opcional)'}</label>
+                                    <input
+                                        type="url"
+                                        value={data.web || ''}
+                                        onChange={(e) => handleSelect('web', e.target.value)}
+                                        disabled={noWeb}
+                                        placeholder={p.step4.webPlaceholder || 'Ej: www.tuempresa.com'}
+                                        className={`w-full px-4 py-3 bg-secondary/30 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/50 transition-opacity ${noWeb ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    />
+                                    <label className="flex items-center gap-2 cursor-pointer text-sm text-muted-foreground select-none mt-1">
+                                        <input
+                                            type="checkbox"
+                                            checked={noWeb}
+                                            onChange={(e) => {
+                                                setNoWeb(e.target.checked);
+                                                if (e.target.checked) handleSelect('web', '');
+                                            }}
+                                            className="h-4 w-4 rounded border-border text-primary focus:ring-primary/20"
+                                        />
+                                        {p.step4.noWebLabel || 'No tengo web por ahora'}
+                                    </label>
                                 </div>
 
                                 <div className="space-y-4">

@@ -475,5 +475,82 @@
             "Installatie van verlaagd plafond in natte ruimtes",
             "Afvalbeheer en eindschoonmaak van de bouwplaats"
         ]
+    },
+    "successPage": {
+        "title": "Schatting Gegenereerd!",
+        "description": "We hebben een gedetailleerd document voorbereid met de schatting van uw project. Kunt u ons helpen uw verwachtingen beter te begrijpen voordat u het downloadt?",
+        "surveyTitle": "Ontwikkelingsbudget",
+        "surveyQuestion": "Basis AI zal honderden uren administratief en taxatiepersoneel per maand vervangen. Strategisch gezien, welk investeringsbereik heeft u in gedachten voor uw nieuwe maatwerk ERP?",
+        "pricingOptions": {
+            "tier0": "Minder dan €7.000",
+            "tier0Desc": "Voor eenvoudige automatiseringen of zeer basismodules.",
+            "tier1": "Tussen €7.000 en €15.000",
+            "tier1Desc": "Voor MVP's of eenvoudige afdelingsoplossingen.",
+            "tier2": "Tussen €15.000 en €40.000",
+            "tier2Desc": "Voor beheer- en automatiseringsplatforms (zoals Basis).",
+            "tier3": "Tussen €40.000 en €120.000",
+            "tier3Desc": "Voor complexe systemen met meerdere integraties.",
+            "tier4": "Meer dan €120.000",
+            "tier4Desc": "Voor maatwerk ERP's of multinationale platforms.",
+            "custom": "Aangepast Budget",
+            "customDesc": "Voer een exact bedrag of bereik in."
+        },
+        "customBudgetTitle": "Bedrag in gedachten",
+        "customBudgetQuestion": "Geef het geschatte budget aan dat u voor dit project overweegt.",
+        "customBudgetPlaceholder": "Bijv. €25.000",
+        "customBudgetBack": "Terug",
+        "customBudgetSubmit": "Bevestigen",
+        "surveyThanks": "Bedankt voor het delen van deze waardevolle informatie!",
+        "frictionLabel": "Maakt u zich ergens zorgen over in het implementatieproces?",
+        "frictionPlaceholder": "Bijv. Ontwikkeltijd, datamigratie, leercurve...",
+        "frictionSubmit": "Antwoord verzenden",
+        "roiPrefix": "Onze klanten besparen gemiddeld",
+        "roiStrikethrough": "15 uur",
+        "roiSuffix": "25 uur per week",
+        "fomoStep": "Strategische Bijeenkomst",
+        "fomoTitle": "Laten we uw zaak vrijblijvend analyseren",
+        "fomoBadge": "Gratis Consult"
+    },
+    "agenda": {
+        "title": "Kies uw tijd",
+        "subtitle": "Technische evaluatiesessie met onze ingenieurs.",
+        "months": [
+            "Januari",
+            "Februari",
+            "Maart",
+            "April",
+            "Mei",
+            "Juni",
+            "Juli",
+            "Augustus",
+            "September",
+            "Oktober",
+            "November",
+            "December"
+        ],
+        "days": [
+            "Maa",
+            "Din",
+            "Woe",
+            "Don",
+            "Vri",
+            "Zat",
+            "Zon"
+        ],
+        "availableTime": "Beschikbare Tijden",
+        "emptyState": "Selecteer een dag op de kalender om de tijden te zien.",
+        "confirming": "Bevestigen...",
+        "confirm": "Boeking Bevestigen",
+        "success": {
+            "title": "Sessie Bevestigd!",
+            "datePrefix": "Tot ziens op",
+            "of": "van",
+            "timePrefix": "om",
+            "description": "We hebben een kalenderuitnodiging gestuurd met de link voor het videogesprek."
+        },
+        "errors": {
+            "missingData": "Ontbrekende gegevens voor boeking.",
+            "unknown": "Onbekende fout"
+        }
     }
 }

@@ -475,5 +475,82 @@
             "Installation of false ceiling in wet areas",
             "Waste management and final cleaning of the site"
         ]
+    },
+    "successPage": {
+        "title": "Estimate Generated!",
+        "description": "We have prepared a detailed document with your project estimate. Could you help us understand your expectations before downloading it?",
+        "surveyTitle": "Development Budget",
+        "surveyQuestion": "Basis AI will replace hundreds of hours of administrative and surveyor staff per month. Strategically, what investment range do you have in mind for your new custom ERP?",
+        "pricingOptions": {
+            "tier0": "Under €7,000",
+            "tier0Desc": "For simple automations or very basic modules.",
+            "tier1": "Between €7,000 and €15,000",
+            "tier1Desc": "For MVPs or simple departmental solutions.",
+            "tier2": "Between €15,000 and €40,000",
+            "tier2Desc": "For management and automation platforms (like Basis).",
+            "tier3": "Between €40,000 and €120,000",
+            "tier3Desc": "For complex systems with multiple integrations.",
+            "tier4": "Over €120,000",
+            "tier4Desc": "For custom ERPs or multinational platforms.",
+            "custom": "Custom Budget",
+            "customDesc": "Enter an exact amount or range."
+        },
+        "customBudgetTitle": "Figure in mind",
+        "customBudgetQuestion": "Indicate the estimated budget you are considering for this project.",
+        "customBudgetPlaceholder": "e.g., €25,000",
+        "customBudgetBack": "Back",
+        "customBudgetSubmit": "Confirm",
+        "surveyThanks": "Thank you for sharing this valuable information!",
+        "frictionLabel": "Is there anything concerning you about the implementation process?",
+        "frictionPlaceholder": "e.g., Development time, data migration, learning curve...",
+        "frictionSubmit": "Submit response",
+        "roiPrefix": "Our clients save an average of",
+        "roiStrikethrough": "15h",
+        "roiSuffix": "25h a week",
+        "fomoStep": "Strategic Meeting",
+        "fomoTitle": "Let's analyze your case with no obligation",
+        "fomoBadge": "Free Consultation"
+    },
+    "agenda": {
+        "title": "Choose your time",
+        "subtitle": "Technical evaluation session with our engineers.",
+        "months": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ],
+        "days": [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun"
+        ],
+        "availableTime": "Available Times",
+        "emptyState": "Select a day on the calendar to see available times.",
+        "confirming": "Confirming...",
+        "confirm": "Confirm Booking",
+        "success": {
+            "title": "Session Confirmed!",
+            "datePrefix": "See you on",
+            "of": "of",
+            "timePrefix": "at",
+            "description": "We have sent a calendar invitation with the video call link."
+        },
+        "errors": {
+            "missingData": "Missing data for booking.",
+            "unknown": "Unknown error"
+        }
     }
 }

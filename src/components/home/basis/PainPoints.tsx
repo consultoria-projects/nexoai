@@ -32,7 +32,7 @@ export function PainPoints() {
 
     return (
         <section className="py-24 bg-background relative overflow-hidden">
-            <div className="w-full px-2 md:w-[80vw] md:px-4 max-w-none mx-auto">
+            <div className="w-full px-4 md:w-[80vw] md:px-0 mx-auto">
                 <div className="max-w-3xl mx-auto text-center mb-16">
                     <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
                         {t('titlePart1')}
@@ -45,7 +45,7 @@ export function PainPoints() {
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-8 w-full">
                     {painPoints.map((point, index) => (
                         <motion.div
                             key={index}

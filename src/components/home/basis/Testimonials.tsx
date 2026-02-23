@@ -11,7 +11,7 @@ export function Testimonials() {
 
     return (
         <section className="py-24 bg-background">
-            <div className="w-full px-2 md:w-[80vw] md:px-4 max-w-none mx-auto max-w-4xl text-center">
+            <div className="w-full px-4 md:w-[80vw] md:px-0 mx-auto text-center">
                 <h2 className="text-3xl md:text-5xl font-display font-bold mb-4">{t('title')}</h2>
                 <p className="text-xl text-muted-foreground mb-16">{t('description')}</p>
 

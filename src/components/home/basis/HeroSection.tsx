@@ -60,7 +60,7 @@ export function HeroSection() {
                 <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02] dark:opacity-[0.05]" />
             </div>
 
-            <div className="w-full px-2 md:w-[80vw] md:px-6 max-w-none relative z-10 mx-auto mt-20">
+            <div className="w-full px-4 md:w-[80vw] md:px-0 mx-auto relative z-10 mt-20">
                 <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
 
                     {/* Eyebrow Label */}
@@ -79,7 +79,7 @@ export function HeroSection() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-5xl md:text-7xl font-display font-bold tracking-tight text-foreground mb-6"
+                        className="text-3xl sm:text-4xl md:text-7xl font-display font-bold tracking-tight text-foreground mb-6"
                     >
                         {t('titlePart1')} <span className="text-primary relative whitespace-nowrap">
                             {t('titlePart2')}
@@ -172,13 +172,26 @@ export function HeroSection() {
                                     exit={{ opacity: 0, scale: 1.3, transition: { duration: 0.4 } }}
                                     className="absolute inset-0 z-20 flex items-center justify-center bg-black/20 backdrop-blur-[2px] rounded-2xl transition-colors group-hover:bg-black/30"
                                 >
-                                    <motion.div
+                                    <motion.button
+                                        type="button"
+                                        aria-label="Play video"
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.95 }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (videoRef.current) {
+                                                videoRef.current.src = DEMO_VIDEO_URL;
+                                                videoRef.current.muted = false;
+                                                videoRef.current.loop = false;
+                                                videoRef.current.play().catch(() => { });
+                                                setIsPlaying(true);
+                                                setIsPaused(false);
+                                            }
+                                        }}
                                         className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/90 dark:bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-2xl shadow-black/30 group-hover:shadow-primary/30 transition-shadow"
                                     >
                                         <Play className="w-8 h-8 md:w-10 md:h-10 text-primary fill-primary ml-1" />
-                                    </motion.div>
+                                    </motion.button>
                                     <motion.div
                                         className="absolute w-20 h-20 md:w-24 md:h-24 rounded-full border-2 border-white/40"
                                         animate={{ scale: [1, 1.4], opacity: [0.6, 0] }}

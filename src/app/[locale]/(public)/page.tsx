@@ -9,7 +9,6 @@ import { PainPoints } from '@/components/home/basis/PainPoints';
 import { Benefits } from '@/components/home/basis/Benefits';
 import { Testimonials } from '@/components/home/basis/Testimonials';
 import { AgendaSection } from '@/components/home/basis/AgendaSection';
-import { CallToAction } from '@/components/home/basis/CallToAction';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -33,7 +32,6 @@ export default async function Home() {
         <Benefits />
         <Testimonials />
         <AgendaSection />
-        <CallToAction />
       </main>
     </>
   );

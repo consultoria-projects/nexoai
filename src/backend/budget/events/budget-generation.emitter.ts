@@ -29,12 +29,15 @@ export async function emitGenerationEvent(leadId: string, type: GenerationEvent[
   try {
     // Fire and forget, or await? Given serverless, best to await if critical.
     // Use a subcollection 'generation_events' to avoid cluttering main doc
+    // Strip undefined values for Firestore compatibility
+    const cleanEvent = JSON.parse(JSON.stringify(event));
+
     await adminFirestore
       .collection('leads')
       .doc(leadId)
       .collection('generation_events')
       .add({
-        ...event,
+        ...cleanEvent,
         createdAt: new Date() // Server timestamp
       });
   } catch (error) {

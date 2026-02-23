@@ -342,7 +342,7 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
 
     // ... mobile drawer implementation ...
     return (
-        <Drawer open={isOpen} onOpenChange={closeWidget}>
+        <Drawer open={isOpen} onOpenChange={closeWidget} dismissible={false}>
             <DrawerContent className={cn("flex flex-col bg-background", (activeMode === 'chat' || activeMode === 'general') ? "h-[100dvh] max-h-none rounded-none" : "max-h-[95vh]")}>
                 <DrawerHeader className={cn("text-left shrink-0", (activeMode === 'general' || activeMode === 'chat') && "sr-only")}>
                     <DrawerTitle className="font-headline text-2xl">

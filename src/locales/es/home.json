@@ -389,7 +389,7 @@
         },
         "cta": {
             "title": "Encuentra la fuga de dinero <br /> en tus obras.",
-            "description": "Agenda una Evaluación Técnica de 15 minutos. Sin PowerPoints de venta. Subimos una tarifa tuya a la plataforma y automatizamos un presupuesto real durante la llamada.",
+            "description": "Agenda una Evaluación Técnica de 30 minutos. Sin PowerPoints de venta. Subimos una tarifa tuya a la plataforma y automatizamos un presupuesto real durante la llamada.",
             "btnPrimary": "Agendar Evaluación Técnica Gratuita",
             "features": [
                 "Sin compromisos vinculantes",
@@ -532,7 +532,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Arquímedes",
                     "otherErp": "Otro ERP (Procore, Holded...)"
-                }
+                },
+                "webLabel": "Pagina Web (Opcional)",
+                "webPlaceholder": "Ej: www.tuempresa.com",
+                "noWebLabel": "No tengo web por ahora"
             },
             "common": {
                 "stepIndicator": "Paso",

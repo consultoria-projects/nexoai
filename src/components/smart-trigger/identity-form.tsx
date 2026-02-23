@@ -161,7 +161,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
     const displayIntent = getCardTitle(intent);
 
     return (
-        <div className="w-full max-w-md mx-auto relative flex flex-col justify-center">
+        <div className="w-full max-w-md mx-auto relative flex flex-col justify-center" >
             <div className="bg-background rounded-3xl shadow-2xl overflow-hidden border border-border/40 relative">
                 {/* Header Pattern/Icon */}
                 <div className="p-6 pb-8 border-b border-border/40 relative bg-muted/10">
@@ -348,11 +348,11 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
             </div>
 
             {/* Trust badge */}
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center" >
                 <p className="text-xs text-muted-foreground/50 flex items-center justify-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5" /> Privacidad garantizada. No compartimos tus datos.
                 </p>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }

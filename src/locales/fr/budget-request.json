@@ -500,5 +500,82 @@
             "Instalación de falso techo en zonas húmedas",
             "Gestión de residuos y limpieza final de obra"
         ]
+    },
+    "successPage": {
+        "title": "Devis Généré !",
+        "description": "Nous avons préparé un document détaillé avec l'estimation de votre projet. Pouvez-vous nous aider à comprendre vos attentes avant de le télécharger ?",
+        "surveyTitle": "Budget de Développement",
+        "surveyQuestion": "L'IA de Basis remplacera des centaines d'heures de personnel administratif et de métreurs par mois. Stratégiquement, quelle fourchette d'investissement envisagez-vous pour votre nouvel ERP sur mesure ?",
+        "pricingOptions": {
+            "tier0": "Moins de 7 000 €",
+            "tier0Desc": "Pour des automatisations simples ou des modules très basiques.",
+            "tier1": "Entre 7 000 € et 15 000 €",
+            "tier1Desc": "Pour les MVP ou les solutions départementales simples.",
+            "tier2": "Entre 15 000 € et 40 000 €",
+            "tier2Desc": "Pour les plateformes de gestion et d'automatisation (comme Basis).",
+            "tier3": "Entre 40 000 € et 120 000 €",
+            "tier3Desc": "Pour les systèmes complexes avec de multiples intégrations.",
+            "tier4": "Plus de 120 000 €",
+            "tier4Desc": "Pour les ERP sur mesure ou les plateformes multinationales.",
+            "custom": "Budget Personnalisé",
+            "customDesc": "Entrez un montant exact ou une fourchette."
+        },
+        "customBudgetTitle": "Chiffre en tête",
+        "customBudgetQuestion": "Indiquez le budget estimé que vous envisagez pour ce projet.",
+        "customBudgetPlaceholder": "Ex : 25 000 €",
+        "customBudgetBack": "Retour",
+        "customBudgetSubmit": "Confirmer",
+        "surveyThanks": "Merci de partager ces informations précieuses !",
+        "frictionLabel": "Y a-t-il quelque chose qui vous inquiète dans le processus de mise en œuvre ?",
+        "frictionPlaceholder": "Ex : Le temps de développement, la migration des données, la courbe d'apprentissage...",
+        "frictionSubmit": "Envoyer la réponse",
+        "roiPrefix": "Nos clients économisent en moyenne",
+        "roiStrikethrough": "15h",
+        "roiSuffix": "25h par semaine",
+        "fomoStep": "Réunion Stratégique",
+        "fomoTitle": "Analysons votre cas sans engagement",
+        "fomoBadge": "Consultation Gratuite"
+    },
+    "agenda": {
+        "title": "Choisissez votre horaire",
+        "subtitle": "Session d'évaluation technique avec nos ingénieurs.",
+        "months": [
+            "Janvier",
+            "Février",
+            "Mars",
+            "Avril",
+            "Mai",
+            "Juin",
+            "Juillet",
+            "Août",
+            "Septembre",
+            "Octobre",
+            "Novembre",
+            "Décembre"
+        ],
+        "days": [
+            "Lun",
+            "Mar",
+            "Mer",
+            "Jeu",
+            "Ven",
+            "Sam",
+            "Dim"
+        ],
+        "availableTime": "Horaires Disponibles",
+        "emptyState": "Sélectionnez un jour sur le calendrier pour voir les heures.",
+        "confirming": "Confirmation...",
+        "confirm": "Confirmer la Réservation",
+        "success": {
+            "title": "Session Confirmée !",
+            "datePrefix": "Rendez-vous le",
+            "of": "de",
+            "timePrefix": "à",
+            "description": "Nous vous avons envoyé une invitation au calendrier avec le lien de l'appel vidéo."
+        },
+        "errors": {
+            "missingData": "Données manquantes pour la réservation.",
+            "unknown": "Erreur inconnue"
+        }
     }
 }

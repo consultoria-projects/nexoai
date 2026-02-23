@@ -25,7 +25,7 @@ export async function GET() {
                     <!-- Header -->
                     <tr>
                         <td align="center" style="padding: 40px 40px 20px; text-align: center;">
-                            <img src="https://nexoai.vercel.app/images/logo-negro.png" alt="Basis Core" width="120" style="display: block; margin: 0 auto; height: auto;" />
+                            <img src="https://basis.consultoria.systems/images/logo-negro.png" alt="Basis Core" width="120" style="display: block; margin: 0 auto; height: auto;" />
                         </td>
                     </tr>
                     

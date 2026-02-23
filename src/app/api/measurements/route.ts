@@ -5,7 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { measurementPricingFlow } from '@/backend/ai/flows/measurements/measurement-pricing.flow';
+import { measurementPricingFlow } from '@/backend/ai/private-core/flows/measurements/measurement-pricing.flow';
 
 export async function POST(request: NextRequest) {
     try {

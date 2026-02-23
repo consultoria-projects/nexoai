@@ -1,6 +1,7 @@
 'use server';
 
-import { generateBudgetFlow } from '@/backend/ai/flows/budget/generate-budget.flow';
+import { generateBudgetFlow } from '@/backend/ai/private-core/flows/budget/generate-budget.flow';
+import { runWithContext } from '@/backend/ai/shared/context/genkit.context';
 import { BudgetRepositoryFirestore } from '@/backend/budget/infrastructure/budget-repository-firestore';
 import { FirestoreLeadRepository } from '@/backend/lead/infrastructure/firestore-lead-repository';
 import { Budget } from '@/backend/budget/domain/budget';
@@ -49,7 +50,9 @@ export async function generateDemoBudgetAction(leadId: string, requirements: Par
         console.log("[Demo] AI Narrative built:", narrative);
 
         // 3. Call AI Flow
-        const budgetResult = await generateBudgetFlow({ userRequest: narrative });
+        const budgetResult = await runWithContext({ userId: leadId, role: 'user' }, async () => {
+            return await generateBudgetFlow({ userRequest: narrative });
+        });
 
         // 4. Persist Budget
         const budgetId = uuidv4();

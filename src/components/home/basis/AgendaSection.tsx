@@ -61,6 +61,7 @@ export function AgendaSection() {
     };
 
     const agendaData = t.raw('agenda') || fallbackAgenda;
+    const ctaData = t.raw('cta');
 
     const calendarDays = generateCalendarDays(today.getFullYear(), today.getMonth());
     const monthNames = agendaData.calendar?.months || fallbackAgenda.calendar.months;
@@ -130,32 +131,32 @@ export function AgendaSection() {
     };
 
     return (
-        <section id="agenda-section" className="py-24 relative overflow-hidden bg-background">
-            {/* Background decorations */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px]" />
-                <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px]" />
-                <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.02] dark:opacity-[0.04]" />
-            </div>
+        <section id="agenda-section" className="py-24 relative overflow-hidden bg-primary/5">
+            {/* Background decorations CTA merged */}
+            <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.05]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none z-0" />
 
-            <div className="w-full px-2 md:w-[80vw] md:px-4 max-w-none mx-auto relative z-10">
+            <div className="w-full px-4 md:w-[80vw] md:px-0 mx-auto relative z-10">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }}
                     variants={stagger}
-                    className="text-center mb-16"
+                    className="text-center mb-16 max-w-3xl mx-auto"
                 >
-                    <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 text-primary mb-6">
-                        <Calendar className="w-4 h-4" />
-                        <span className="text-sm font-semibold uppercase tracking-wide">{agendaData.badge}</span>
-                    </motion.div>
-                    <motion.h2 variants={fadeUp} className="text-4xl md:text-5xl font-display font-bold mb-4">
-                        {agendaData.title} <span className="text-primary">{agendaData.titleHighlight}</span>
-                    </motion.h2>
-                    <motion.p variants={fadeUp} className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                        {agendaData.description}
+                    <motion.h2 variants={fadeUp} className="text-4xl md:text-6xl font-display font-bold mb-6" dangerouslySetInnerHTML={{ __html: ctaData?.title || agendaData.title }} />
+                    <motion.p variants={fadeUp} className="text-xl text-muted-foreground mb-10 leading-relaxed">
+                        {ctaData?.description || agendaData.description}
                     </motion.p>
+
+                    {/* Trust badges from CTA */}
+                    {ctaData?.features && (
+                        <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground mb-8">
+                            {ctaData.features.map((feature: string, idx: number) => (
+                                <span key={idx} className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-primary" /> {feature}</span>
+                            ))}
+                        </motion.div>
+                    )}
                 </motion.div>
 
                 {currentStep === 'details' && (

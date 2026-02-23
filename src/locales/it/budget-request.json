@@ -500,5 +500,82 @@
             "Instalación de falso techo en zonas húmedas",
             "Gestión de residuos y limpieza final de obra"
         ]
+    },
+    "successPage": {
+        "title": "Preventivo Generato!",
+        "description": "Abbiamo preparato un documento dettagliato con la stima del tuo progetto. Puoi aiutarci a capire meglio le tue aspettative prima di scaricarlo?",
+        "surveyTitle": "Budget di Sviluppo",
+        "surveyQuestion": "L'IA di Basis sostituirà centinaia di ore di personale amministrativo e geometri al mese. Strategicamente, quale range di investimento hai in mente per il tuo nuovo ERP su misura?",
+        "pricingOptions": {
+            "tier0": "Meno di 7.000 €",
+            "tier0Desc": "Per automazioni semplici o moduli molto basilari.",
+            "tier1": "Tra 7.000 € e 15.000 €",
+            "tier1Desc": "Per MVP o semplici soluzioni dipartimentali.",
+            "tier2": "Tra 15.000 € e 40.000 €",
+            "tier2Desc": "Per piattaforme di gestione e automazione (come Basis).",
+            "tier3": "Tra 40.000 € e 120.000 €",
+            "tier3Desc": "Per sistemi complessi con integrazioni multiple.",
+            "tier4": "Oltre 120.000 €",
+            "tier4Desc": "Per ERP su misura o piattaforme multinazionali.",
+            "custom": "Budget Personalizzato",
+            "customDesc": "Inserisci un importo esatto o un intervallo."
+        },
+        "customBudgetTitle": "Cifra in mente",
+        "customBudgetQuestion": "Indica il budget stimato che consideri per questo progetto.",
+        "customBudgetPlaceholder": "Es: 25.000€",
+        "customBudgetBack": "Indietro",
+        "customBudgetSubmit": "Conferma",
+        "surveyThanks": "Grazie per aver condiviso queste informazioni preziose!",
+        "frictionLabel": "C'è qualcosa che ti preoccupa nel processo di implementazione?",
+        "frictionPlaceholder": "Es. Tempo di sviluppo, migrazione dei dati, curva di apprendimento...",
+        "frictionSubmit": "Invia risposta",
+        "roiPrefix": "I nostri clienti risparmiano in media",
+        "roiStrikethrough": "15h",
+        "roiSuffix": "25h a settimana",
+        "fomoStep": "Incontro Strategico",
+        "fomoTitle": "Analizziamo il tuo caso senza impegno",
+        "fomoBadge": "Consulenza Gratuita"
+    },
+    "agenda": {
+        "title": "Scegli il tuo orario",
+        "subtitle": "Sessione di valutazione tecnica con i nostri ingegneri.",
+        "months": [
+            "Gennaio",
+            "Febbraio",
+            "Marzo",
+            "Aprile",
+            "Maggio",
+            "Giugno",
+            "Luglio",
+            "Agosto",
+            "Settembre",
+            "Ottobre",
+            "Novembre",
+            "Dicembre"
+        ],
+        "days": [
+            "Lun",
+            "Mar",
+            "Mer",
+            "Gio",
+            "Ven",
+            "Sab",
+            "Dom"
+        ],
+        "availableTime": "Orari Disponibili",
+        "emptyState": "Seleziona un giorno sul calendario per vedere gli orari.",
+        "confirming": "Conferma in corso...",
+        "confirm": "Conferma Prenotazione",
+        "success": {
+            "title": "Sessione Confermata!",
+            "datePrefix": "Ci vediamo il",
+            "of": "di",
+            "timePrefix": "alle",
+            "description": "Ti abbiamo inviato un invito al calendario con il link della videochiamata."
+        },
+        "errors": {
+            "missingData": "Dati mancanti per la prenotazione.",
+            "unknown": "Errore sconosciuto"
+        }
     }
 }

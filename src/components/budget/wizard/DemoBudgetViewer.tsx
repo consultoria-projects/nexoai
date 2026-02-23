@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye } from 'lucide-react';
+import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye, Trash2, Edit2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,7 @@ import { DemoBudgetDocument } from '@/components/pdf/DemoBudgetDocument';
 import { cn } from '@/lib/utils';
 import { Budget } from '@/backend/budget/domain/budget';
 import { useTranslations } from 'next-intl';
+import { Logo } from '@/components/logo';
 
 interface DemoBudgetViewerProps {
     budgetData: Budget;
@@ -36,6 +37,11 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
 
     const [expandedChapters, setExpandedChapters] = useState<Record<string, boolean>>(defaultExpanded);
     const [editableItems, setEditableItems] = useState<Record<string, { quantity: number; price: number }>>({});
+
+    // UX Enhancements: Local state for mutation
+    const [localChapters, setLocalChapters] = useState(budgetData.chapters);
+    const [editingItemId, setEditingItemId] = useState<string | null>(null);
+    const [editDescription, setEditDescription] = useState<string>('');
 
     // Customization Form State
     const [companyName, setCompanyName] = useState('');
@@ -77,10 +83,42 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
         }
     };
 
+    const handleDeleteItem = (chapterId: string, itemId: string) => {
+        setLocalChapters(prev => prev.map(ch => {
+            if (ch.id === chapterId) {
+                return { ...ch, items: ch.items.filter((i: any) => i.id !== itemId) };
+            }
+            return ch;
+        }));
+    };
+
+    const handleStartEdit = (itemId: string, currentDesc: string) => {
+        setEditingItemId(itemId);
+        setEditDescription(currentDesc);
+    };
+
+    const handleSaveEdit = (chapterId: string, itemId: string) => {
+        setLocalChapters(prev => prev.map(ch => {
+            if (ch.id === chapterId) {
+                return {
+                    ...ch,
+                    items: ch.items.map((i: any) => i.id === itemId ? { ...i, description: editDescription } : i)
+                };
+            }
+            return ch;
+        }));
+        setEditingItemId(null);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingItemId(null);
+        setEditDescription('');
+    };
+
     const calculateTotals = () => {
         let executionMaterial = 0;
-        budgetData.chapters.forEach(chapter => {
-            chapter.items.forEach(item => {
+        localChapters.forEach(chapter => {
+            chapter.items.forEach((item: any) => {
                 const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
                 executionMaterial += current.quantity * current.price;
             });
@@ -102,8 +140,8 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
         try {
             const { pdf } = await import('@react-pdf/renderer');
 
-            const pdfItems = budgetData.chapters.flatMap(chapter =>
-                chapter.items.map(item => {
+            const pdfItems = localChapters.flatMap(chapter =>
+                chapter.items.map((item: any) => {
                     const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
                     return {
                         chapter: chapter.name,
@@ -182,10 +220,14 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                 className="flex-1 flex flex-col bg-[#050505] border border-white/5 shadow-2xl overflow-hidden rounded-2xl relative ring-1 ring-white/10"
             >
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01] backdrop-blur-xl flex justify-between items-center z-10 sticky top-0">
+                <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01] backdrop-blur-xl flex justify-between items-center z-10 sticky top-0 relative">
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#e8c42f] to-transparent opacity-40"></div>
                     <div>
+                        <div className="mb-4">
+                            <Logo className="h-6 flex items-center" width={80} height={24} />
+                        </div>
                         <h2 className="text-2xl font-semibold tracking-tight text-white mb-1 flex items-center gap-2">
-                            <Receipt className="w-5 h-5 text-zinc-400" />
+                            <Receipt className="w-5 h-5 text-[#e8c42f]" />
                             {t('title', { fallback: 'Borrador Interactivo' })}
                         </h2>
                         <p className="text-sm text-zinc-500 font-medium">
@@ -203,12 +245,12 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                 {/* Items List */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar scroll-smooth">
                     <div className="p-4 md:p-8 space-y-4">
-                        {budgetData.chapters.map((chapter, index) => {
+                        {localChapters.map((chapter, index) => {
                             const isExpanded = expandedChapters[chapter.id];
 
                             // Calculate chapter total real-time
                             let chapterTotal = 0;
-                            chapter.items.forEach(item => {
+                            chapter.items.forEach((item: any) => {
                                 const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
                                 chapterTotal += current.quantity * current.price;
                             });
@@ -223,10 +265,10 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                 >
                                     <button
                                         onClick={() => toggleChapter(chapter.id)}
-                                        className="w-full flex items-center justify-between p-5 md:px-6 hover:bg-white/[0.02] transition-colors focus:outline-none"
+                                        className="w-full flex items-center justify-between p-5 md:px-6 hover:bg-[#e8c42f]/[0.02] transition-colors focus:outline-none"
                                     >
                                         <div className="flex items-center gap-4 text-left">
-                                            <div className="w-8 h-8 rounded bg-white/5 border border-white/10 flex items-center justify-center font-mono text-xs text-white/50">
+                                            <div className="w-8 h-8 rounded bg-[#e8c42f]/10 border border-[#e8c42f]/20 flex items-center justify-center font-mono text-xs text-[#e8c42f] font-semibold">
                                                 {(index + 1).toString().padStart(2, '0')}
                                             </div>
                                             <h3 className="font-medium text-white/90 text-sm tracking-wide uppercase">
@@ -259,19 +301,52 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                             >
                                                 <div className="px-2 pb-2">
                                                     <div className="bg-black/40 rounded-lg border border-white/5 p-1 divide-y divide-white/5">
-                                                        {chapter.items.map(item => {
+                                                        {chapter.items.map((item: any) => {
                                                             const current = editableItems[item.id] || { quantity: item.quantity, price: item.unitPrice };
                                                             const itemTotal = current.quantity * current.price;
+                                                            const isEditingId = editingItemId === item.id;
 
                                                             return (
-                                                                <div key={item.id} className="group flex flex-col xl:flex-row xl:items-center justify-between p-3 gap-4 hover:bg-white/[0.02] transition-colors rounded-md">
-                                                                    <div className="flex-1 pr-4">
-                                                                        <p className="text-sm text-zinc-300 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all">
-                                                                            {item.description}
-                                                                        </p>
+                                                                <div key={item.id} className="group/row flex flex-col xl:flex-row xl:items-start justify-between p-3 gap-4 hover:bg-white/[0.02] transition-colors rounded-md relative select-none">
+
+                                                                    {/* Action Buttons (Hover) */}
+                                                                    <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity z-10 xl:static xl:opacity-100 xl:mt-2 xl:-mr-2 xl:self-start">
+                                                                        {!isEditingId && (
+                                                                            <button onClick={() => handleStartEdit(item.id, item.description)} className="p-1.5 text-zinc-500 hover:text-white bg-black/50 hover:bg-white/10 rounded-md transition-colors" title="Editar descripción">
+                                                                                <Edit2 className="w-3.5 h-3.5" />
+                                                                            </button>
+                                                                        )}
+                                                                        <button onClick={() => handleDeleteItem(chapter.id, item.id)} className="p-1.5 text-red-500/70 hover:text-red-400 bg-black/50 hover:bg-red-500/10 rounded-md transition-colors" title="Eliminar partida">
+                                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                                        </button>
                                                                     </div>
 
-                                                                    <div className="flex items-center gap-3 shrink-0 self-end xl:self-center">
+                                                                    <div className="flex-1 pr-4 pt-1 xl:pt-0">
+                                                                        {isEditingId ? (
+                                                                            <div className="flex flex-col gap-2">
+                                                                                <textarea
+                                                                                    autoFocus
+                                                                                    value={editDescription}
+                                                                                    onChange={(e) => setEditDescription(e.target.value)}
+                                                                                    className="w-full min-h-[80px] bg-[#111] text-sm text-zinc-300 p-2 rounded-md border border-white/10 focus:border-[#e8c42f]/50 focus:ring-1 focus:ring-[#e8c42f]/50 resize-none"
+                                                                                />
+                                                                                <div className="flex items-center gap-2">
+                                                                                    <button onClick={() => handleSaveEdit(chapter.id, item.id)} className="flex items-center gap-1 text-xs bg-[#e8c42f]/10 text-[#e8c42f] hover:bg-[#e8c42f]/20 px-2 py-1.5 rounded transition-colors">
+                                                                                        <Check className="w-3 h-3" /> Guardar
+                                                                                    </button>
+                                                                                    <button onClick={handleCancelEdit} className="flex items-center gap-1 text-xs bg-white/5 text-zinc-400 hover:text-white hover:bg-white/10 px-2 py-1.5 rounded transition-colors">
+                                                                                        <X className="w-3 h-3" /> Cancelar
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <p className="text-sm text-zinc-300 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all pr-8 xl:pr-0">
+                                                                                {item.description}
+                                                                            </p>
+                                                                        )}
+                                                                    </div>
+
+                                                                    <div className="flex items-center gap-3 shrink-0 self-end xl:self-start xl:pt-1">
                                                                         {/* Quantity Input */}
                                                                         <div className="relative flex flex-col gap-1 items-end">
                                                                             <span className="text-[10px] text-zinc-600 uppercase font-semibold tracking-wider">{t('table.units', { fallback: 'Cant.' })}</span>
@@ -280,7 +355,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                                     type="number"
                                                                                     min="0"
                                                                                     step="0.1"
-                                                                                    className="w-20 h-9 bg-[#111111] border-white/10 text-right pr-8 font-mono text-sm focus:ring-1 focus:ring-zinc-400 focus:border-zinc-400 transition-colors"
+                                                                                    className="w-20 h-9 bg-[#111111] border-white/10 text-right pr-8 font-mono text-sm focus:ring-1 focus:ring-[#e8c42f]/50 focus:border-[#e8c42f]/50 transition-colors"
                                                                                     value={current.quantity}
                                                                                     onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
                                                                                 />
@@ -300,7 +375,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                                     type="number"
                                                                                     min="0"
                                                                                     step="0.01"
-                                                                                    className="w-24 h-9 bg-[#111111] border-white/10 text-right pr-6 font-mono text-sm focus:ring-1 focus:ring-zinc-400 focus:border-zinc-400 transition-colors"
+                                                                                    className="w-24 h-9 bg-[#111111] border-white/10 text-right pr-6 font-mono text-sm focus:ring-1 focus:ring-[#e8c42f]/50 focus:border-[#e8c42f]/50 transition-colors"
                                                                                     value={current.price}
                                                                                     onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
                                                                                 />
@@ -370,7 +445,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
 
                             <div className="flex justify-between items-end">
                                 <span className="text-sm text-zinc-300 font-semibold tracking-wide uppercase">{t('totals.total', { fallback: 'Total' })}</span>
-                                <span className="font-mono text-xl text-white tracking-tight font-medium">
+                                <span className="font-mono text-xl text-[#e8c42f] tracking-tight font-medium">
                                     €{totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
                                 </span>
                             </div>
@@ -459,7 +534,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                         <Button
                             onClick={handleDownloadClick}
                             disabled={!companyName || !cif || !address || isGeneratingLocal || isGeneratingPdf}
-                            className="w-full h-12 bg-white text-black hover:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-500 font-medium tracking-wide flex items-center gap-2 group transition-all rounded-lg"
+                            className="w-full h-12 bg-[#e8c42f] text-black hover:bg-[#cdae25] disabled:bg-zinc-800 disabled:text-zinc-500 font-medium tracking-wide flex items-center gap-2 group transition-all rounded-lg"
                         >
                             {(isGeneratingLocal || isGeneratingPdf) ? (
                                 <>

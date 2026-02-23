@@ -55,7 +55,7 @@ export function BudgetWizardChat() {
     const t = useTranslations('home');
     const w = t.raw('basis.wizardChat');
     const { messages, input, setInput, sendMessage, state, requirements } = useBudgetWizard();
-    const { leadId } = useWidgetContext();
+    const { leadId, closeWidget } = useWidgetContext();
     const { isRecording, startRecording, stopRecording, recordingTime } = useAudioRecorder();
     const [budgetResult, setBudgetResult] = React.useState<{ id: string; total: number; itemCount: number, fullBudget?: Budget } | null>(null);
     const router = useRouter();
@@ -66,8 +66,6 @@ export function BudgetWizardChat() {
         currentItem?: string;
         error?: string;
     }>({ step: 'idle' });
-
-    const [showFinalCta, setShowFinalCta] = React.useState(false);
 
     // Replay logic
     const [deepGeneration, setDeepGeneration] = React.useState(false); // NEW
@@ -175,41 +173,12 @@ export function BudgetWizardChat() {
     }, [messages]);
 
     const handleDownloadPdf = async (customData: CustomPdfData) => {
-        // PDF has been downloaded by the viewer. Transition to Final CTA.
-        setShowFinalCta(true);
+        // Redirigir a la pantalla de éxito cerrando primero el modal del widget
+        if (closeWidget) {
+            closeWidget();
+        }
+        router.push('/wizard/success');
     };
-
-    if (showFinalCta) {
-        return (
-            <div className="w-full max-w-lg mx-auto p-8 animate-in fade-in zoom-in duration-500 flex flex-col items-center text-center space-y-6 h-[100dvh] justify-center">
-                <div className="mx-auto h-24 w-24 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-2xl shadow-green-500/30">
-                    <CheckCircle2 className="h-12 w-12 text-white" />
-                </div>
-                <div>
-                    <h2 className="text-3xl font-extrabold text-foreground mb-3">{w.pdfDownloadCard.title}</h2>
-                    <p className="text-lg text-muted-foreground">{w.pdfDownloadCard.subtitle}</p>
-                </div>
-
-                <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 relative overflow-hidden text-left w-full mt-4">
-                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                        <Sparkles className="w-24 h-24 text-primary" />
-                    </div>
-                    <h3 className="font-bold text-lg text-foreground mb-2 relative z-10">{w.pdfDownloadCard.nextStep}</h3>
-                    <p className="text-sm text-muted-foreground relative z-10 mb-5">
-                        {w.pdfDownloadCard.benefits}
-                    </p>
-
-                    <Button
-                        size="lg"
-                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg font-semibold relative z-10"
-                        onClick={() => router.push('/dashboard/projects')}
-                    >
-                        {w.pdfDownloadCard.button}
-                    </Button>
-                </div>
-            </div>
-        );
-    }
 
     if (budgetResult && requirements.specs) {
         // Reconstruct a fake 'Budget' object for the viewer based on the action result

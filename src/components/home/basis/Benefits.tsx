@@ -50,7 +50,7 @@ export function Benefits() {
             {/* Grid Pattern Background */}
             <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
 
-            <div className="w-full px-2 md:w-[80vw] md:px-4 max-w-none mx-auto relative z-10">
+            <div className="w-full px-4 md:w-[80vw] md:px-0 mx-auto relative z-10">
                 <motion.div
                     initial="hidden"
                     whileInView="visible"

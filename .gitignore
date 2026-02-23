@@ -43,3 +43,11 @@ next-env.d.ts
 # firebase
 firebase-debug.log
 firestore-debug.log
+
+# Custom dev & analysis folders
+video/
+.agents/
+.agent/
+estrategia-marketing/
+.claude/
+logs/

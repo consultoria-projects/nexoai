@@ -505,5 +505,82 @@
         "benefits": "Si aquest nivell d'automatització i professionalitat t'ha agradat, imagina tot el que Basis pot fer per a la teva empresa constructora. Crea pressupostos, certificacions i contractes en segons.",
         "button": "Vull implementar això a la meva empresa",
         "resetting": "Restejant la conversa..."
+    },
+    "successPage": {
+        "title": "Pressupost Generat!",
+        "description": "Hem preparat un document detallat amb l'estimació del teu projecte. Ens ajudes a entendre millor les teves expectatives abans de descarregar-lo?",
+        "surveyTitle": "Pressupost del Desenvolupament",
+        "surveyQuestion": "La IA de Basis reemplaçarà centenars d'hores de personal administratiu i aparelladors al mes. Estratègicament, quin rang d'inversió tens contemplat per al teu nou ERP a mida?",
+        "pricingOptions": {
+            "tier0": "Menys de 7.000 €",
+            "tier0Desc": "Per a automatitzacions simples o mòduls molt bàsics.",
+            "tier1": "Entre 7.000 € i 15.000 €",
+            "tier1Desc": "Per a MVPs o solucions departamentals senzilles.",
+            "tier2": "Entre 15.000 € i 40.000 €",
+            "tier2Desc": "Per a plataformes de gestió i automatització (com Basis).",
+            "tier3": "Entre 40.000 € i 120.000 €",
+            "tier3Desc": "Per a sistemes complexos amb múltiples integracions.",
+            "tier4": "Més de 120.000 €",
+            "tier4Desc": "Per a ERPs a mida o plataformes multinacionals.",
+            "custom": "Pressupost Personalitzat",
+            "customDesc": "Introdueix un import exacte o rang."
+        },
+        "customBudgetTitle": "Xifra en ment",
+        "customBudgetQuestion": "Indica quin pressupost estimat maneges per a aquest projecte.",
+        "customBudgetPlaceholder": "Ex: 25.000€",
+        "customBudgetBack": "Tornar",
+        "customBudgetSubmit": "Confirmar",
+        "surveyThanks": "Gràcies per compartir aquesta informació valuosa!",
+        "frictionLabel": "Hi ha alguna cosa que et preocupi del procés d'implantació?",
+        "frictionPlaceholder": "Ex: El temps de desenvolupament, la migració de dades, la corba d'aprenentatge...",
+        "frictionSubmit": "Enviar resposta",
+        "roiPrefix": "Els nostres clients estalvien de mitjana",
+        "roiStrikethrough": "15h",
+        "roiSuffix": "25h a la setmana",
+        "fomoStep": "Reunió Estratègica",
+        "fomoTitle": "Analitzem el teu cas sense compromís",
+        "fomoBadge": "Assessoria Gratuïta"
+    },
+    "agenda": {
+        "title": "Tria el teu horari",
+        "subtitle": "Sessió d'avaluació tècnica amb els nostres enginyers.",
+        "months": [
+            "Gener",
+            "Febrer",
+            "Març",
+            "Abril",
+            "Maig",
+            "Juny",
+            "Juliol",
+            "Agost",
+            "Setembre",
+            "Octubre",
+            "Novembre",
+            "Desembre"
+        ],
+        "days": [
+            "Dll",
+            "Dmt",
+            "Dmc",
+            "Dij",
+            "Dvd",
+            "Dss",
+            "Dmg"
+        ],
+        "availableTime": "Horaris Disponibles",
+        "emptyState": "Selecciona un dia al calendari per veure les hores.",
+        "confirming": "Confirmant...",
+        "confirm": "Confirmar Reserva",
+        "success": {
+            "title": "Sessió Confirmada!",
+            "datePrefix": "Ens veiem el",
+            "of": "de",
+            "timePrefix": "a les",
+            "description": "T'hem enviat una invitació al calendari amb l'enllaç de la videotrucada."
+        },
+        "errors": {
+            "missingData": "Falten dades per a la reserva.",
+            "unknown": "Error desconegut"
+        }
     }
 }

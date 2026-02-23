@@ -386,7 +386,7 @@
         },
         "cta": {
             "title": "Find the money leak <br /> in your projects.",
-            "description": "Schedule a 15-minute Technical Evaluation. No sales PowerPoints. We upload a rate of yours to the platform and automate a real quote during the call.",
+            "description": "Schedule a 30-minute Technical Evaluation. No sales PowerPoints. We upload a rate of yours to the platform and automate a real quote during the call.",
             "btnPrimary": "Book Free Technical Evaluation",
             "features": [
                 "No binding commitments",
@@ -529,7 +529,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Archimed",
                     "otherErp": "Other ERP (Procore, Holded...)"
-                }
+                },
+                "webLabel": "Website (Optional)",
+                "webPlaceholder": "e.g. www.mycompany.com",
+                "noWebLabel": "I don't have a website yet"
             },
             "common": {
                 "stepIndicator": "Step",

@@ -40,7 +40,7 @@ export function InteractiveWizard() {
 
     return (
         <section id="wizard" className="py-24 relative bg-background">
-            <div className="w-full px-2 md:w-[80vw] md:px-4 max-w-none mx-auto max-w-5xl">
+            <div className="w-full px-4 md:w-[80vw] md:px-0 mx-auto">
 
                 {/* Section Header */}
                 <div className="text-center mb-16">

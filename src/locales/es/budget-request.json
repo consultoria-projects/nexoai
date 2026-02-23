@@ -549,5 +549,82 @@
         "benefits": "Si este nivel de automatización y profesionalismo te ha gustado, imagina todo lo que Basis puede hacer por tu empresa constructora. Crea presupuestos, certificaciones y contratos en segundos.",
         "button": "Quiero implementar esto en mi empresa",
         "resetting": "Reseteando conversación..."
+    },
+    "successPage": {
+        "title": "¡Presupuesto Generado!",
+        "description": "Hemos preparado un documento detallado con la estimación de tu proyecto. ¿Nos ayudas a entender mejor tus expectativas antes de descargarlo?",
+        "surveyTitle": "Presupuesto del Desarrollo",
+        "surveyQuestion": "La IA de Basis reemplazará cientos de horas de personal administrativo y aparejadores al mes. Estratégicamente, ¿qué rango de inversión tienes contemplado para tu nuevo ERP a medida?",
+        "pricingOptions": {
+            "tier0": "Menos de 7.000 €",
+            "tier0Desc": "Para automatizaciones simples o módulos muy básicos.",
+            "tier1": "Entre 7.000 € y 15.000 €",
+            "tier1Desc": "Para MVPs o soluciones departamentales sencillas.",
+            "tier2": "Entre 15.000 € y 40.000 €",
+            "tier2Desc": "Para plataformas de gestión y automatización (como Basis).",
+            "tier3": "Entre 40.000 € y 120.000 €",
+            "tier3Desc": "Para sistemas complejos con múltiples integraciones.",
+            "tier4": "Más de 120.000 €",
+            "tier4Desc": "Para ERPs a medida o plataformas multinacionales.",
+            "custom": "Presupuesto Personalizado",
+            "customDesc": "Introduce un importe exacto o rango."
+        },
+        "customBudgetTitle": "Cifra en mente",
+        "customBudgetQuestion": "Indica qué presupuesto estimado manejas para este proyecto.",
+        "customBudgetPlaceholder": "Ej: 25.000€",
+        "customBudgetBack": "Volver",
+        "customBudgetSubmit": "Confirmar",
+        "surveyThanks": "¡Gracias por compartir esta información valiosa!",
+        "frictionLabel": "¿Hay algo que te preocupe del proceso de implantación?",
+        "frictionPlaceholder": "Ej: El tiempo de desarrollo, migración de datos, la curva de aprendizaje...",
+        "frictionSubmit": "Enviar respuesta",
+        "roiPrefix": "Nuestros clientes ahorran de media",
+        "roiStrikethrough": "15h",
+        "roiSuffix": "25h a la semana",
+        "fomoStep": "Reunión Estratégica",
+        "fomoTitle": "Analicemos tu caso sin compromiso",
+        "fomoBadge": "Asesoría Gratuita"
+    },
+    "agenda": {
+        "title": "Elige tu horario",
+        "subtitle": "Sesión de evaluación técnica con nuestros ingenieros.",
+        "months": [
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        ],
+        "days": [
+            "Lun",
+            "Mar",
+            "Mié",
+            "Jue",
+            "Vie",
+            "Sáb",
+            "Dom"
+        ],
+        "availableTime": "Horarios Disponibles",
+        "emptyState": "Selecciona un día en el calendario para ver las horas.",
+        "confirming": "Confirmando...",
+        "confirm": "Confirmar Reserva",
+        "success": {
+            "title": "¡Sesión Confirmada!",
+            "datePrefix": "Nos vemos el",
+            "of": "de",
+            "timePrefix": "a las",
+            "description": "Te hemos enviado una invitación al calendario con el enlace de la videollamada."
+        },
+        "errors": {
+            "missingData": "Faltan datos para la reserva.",
+            "unknown": "Error desconocido"
+        }
     }
 }

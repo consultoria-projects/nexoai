@@ -386,7 +386,7 @@
         },
         "cta": {
             "title": "Vind de geldflow <br /> in uw projecten.",
-            "description": "Plan een technische evaluatie van 15 minuten. Geen verkooppresentaties. Wij voegen uw tarievenlijst toe aan het platform en genereren een real-time projectbegroting gedurende ons bellen.",
+            "description": "Plan een technische evaluatie van 30 minuten. Geen verkooppresentaties. Wij voegen uw tarievenlijst toe aan het platform en genereren een real-time projectbegroting gedurende ons bellen.",
             "btnPrimary": "Gratis technische evaluatie plannen",
             "features": [
                 "Geen bindende overeenkomsten",
@@ -529,7 +529,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Archimed",
                     "otherErp": "Ander ERP"
-                }
+                },
+                "webLabel": "Website (Optioneel)",
+                "webPlaceholder": "Bijv: www.mijnbedrijf.nl",
+                "noWebLabel": "Ik heb nog geen website"
             },
             "common": {
                 "stepIndicator": "Stap",

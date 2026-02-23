@@ -4,6 +4,7 @@ export interface PersonalInfo {
     email: string;
     phone: string;
     address?: string;
+    web?: string; // NEW: Optional website
 }
 
 // ── Client Profile (Typeform-style profiling) ──
@@ -24,6 +25,11 @@ export interface ClientProfile {
     annualSurveyorSpend: AnnualSurveyorSpend;
     weeklyManualHours: WeeklyManualHours;
     role: ClientRole;
+    feedback?: {
+        willingToPay?: string;
+        friction?: string;
+        [key: string]: string | undefined;
+    };
     completedAt?: Date;
 }
 

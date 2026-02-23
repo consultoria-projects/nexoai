@@ -1,7 +1,8 @@
 'use server';
 
 import { BudgetNarrativeBuilder } from '@/backend/budget/domain/budget-narrative-builder';
-import { generateBudgetFlow } from '@/backend/ai/flows/budget/generate-budget.flow';
+import { generateBudgetFlow } from '@/backend/ai/private-core/flows/budget/generate-budget.flow';
+import { runWithContext } from '@/backend/ai/shared/context/genkit.context';
 import { BudgetRepositoryFirestore } from '@/backend/budget/infrastructure/budget-repository-firestore';
 import { FirestoreLeadRepository } from '@/backend/lead/infrastructure/firestore-lead-repository';
 import { Budget } from '@/backend/budget/domain/budget';
@@ -12,7 +13,7 @@ const budgetRepository = new BudgetRepositoryFirestore();
 const leadRepository = new FirestoreLeadRepository();
 
 // ... imports
-import { generateBudgetRecurseFlow } from '@/backend/ai/agents/generate-budget-recurse.flow';
+import { generateBudgetRecurseFlow } from '@/backend/ai/private-core/flows/generate-budget-recurse.flow';
 
 // ... (previous code)
 
@@ -39,10 +40,12 @@ export async function generateBudgetFromSpecsAction(leadId: string, specs: Proje
         // 3. Call AI Flow
         if (deepGeneration) {
             console.log(">> Using Recursive Flow (Deep Generation)");
-            const recurseResult = await generateBudgetRecurseFlow({
-                projectDescription: narrative,
-                leadId: leadId,
-                totalArea: specs.totalArea || 0
+            const recurseResult = await runWithContext({ userId: leadId, role: 'user' }, async () => {
+                return await generateBudgetRecurseFlow({
+                    projectDescription: narrative,
+                    leadId: leadId,
+                    totalArea: specs.totalArea || 0
+                });
             });
 
             // Map Recursive Output to Standard Budget Result Structure
@@ -83,7 +86,9 @@ export async function generateBudgetFromSpecsAction(leadId: string, specs: Proje
 
         } else {
             // Standard Flow
-            budgetResult = await generateBudgetFlow({ userRequest: narrative });
+            budgetResult = await runWithContext({ userId: leadId, role: 'user' }, async () => {
+                return await generateBudgetFlow({ userRequest: narrative });
+            });
         }
 
         // 4. Persist Budget

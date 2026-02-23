@@ -355,7 +355,7 @@
         },
         "cta": {
             "title": "Troba la fuita de diners <br /> a les teves obres.",
-            "description": "Agenda una Avaluació Tècnica de 15 minuts. Sense PowerPoints de venda. Pugem una tarifa teva a la plataforma i automatitzem un pressupost real durant la trucada.",
+            "description": "Agenda una Avaluació Tècnica de 30 minuts. Sense PowerPoints de venda. Pugem una tarifa teva a la plataforma i automatitzem un pressupost real durant la trucada.",
             "btnPrimary": "Agendar Avaluació Tècnica Gratuïta",
             "features": [
                 "Sense compromisos vinculants",
@@ -498,7 +498,10 @@
                     "excel": "Excel / Word",
                     "presto": "Presto / Arquímedes",
                     "otherErp": "Un altre ERP (Procore, Holded...)"
-                }
+                },
+                "webLabel": "Pagina Web (Opcional)",
+                "webPlaceholder": "Ex: www.laevamevaempresa.com",
+                "noWebLabel": "No tinc web per ara"
             },
             "common": {
                 "stepIndicator": "Pas",

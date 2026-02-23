@@ -35,6 +35,7 @@ export class FirestoreLeadRepository implements LeadRepository {
                 annualSurveyorSpend: data.profile.annualSurveyorSpend,
                 weeklyManualHours: data.profile.weeklyManualHours,
                 role: data.profile.role,
+                feedback: data.profile.feedback,
                 completedAt: data.profile.completedAt?.toDate()
             } as ClientProfile : null,
             data.createdAt?.toDate() || new Date(),
@@ -63,6 +64,7 @@ export class FirestoreLeadRepository implements LeadRepository {
                 annualSurveyorSpend: lead.profile.annualSurveyorSpend,
                 weeklyManualHours: lead.profile.weeklyManualHours,
                 role: lead.profile.role,
+                feedback: lead.profile.feedback || null,
                 completedAt: lead.profile.completedAt || null
             } : null,
             demoBudgetsGenerated: lead.demoBudgetsGenerated,
