@@ -98,7 +98,7 @@ export default async function RootLayout({
                   <SmartBudgetWrapper dictionary={dict?.budgetRequest} />
                   <AnalyticsTracker />
                   <Toaster /> {/* Radix Toaster */}
-                  <SileoToaster /> {/* Sileo Toaster */}
+                  <SileoToaster position="top-center" /> {/* Sileo Toaster */}
                 </BudgetWidgetProvider>
               </AuthProvider>
             </Providers>

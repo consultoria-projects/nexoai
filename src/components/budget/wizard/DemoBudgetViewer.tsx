@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye, Trash2, Edit2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DemoBudgetDocument } from '@/components/pdf/DemoBudgetDocument';
@@ -44,6 +46,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
     const [editDescription, setEditDescription] = useState<string>('');
 
     // Customization Form State
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [companyName, setCompanyName] = useState('');
     const [cif, setCif] = useState('');
     const [address, setAddress] = useState('');
@@ -211,7 +214,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
     };
 
     return (
-        <div className="w-full h-[85vh] md:h-[800px] flex flex-col lg:flex-row gap-6 p-2 md:p-6 overflow-hidden bg-transparent text-zinc-300 font-sans">
+        <div className="w-full h-[85vh] md:h-[800px] flex flex-col lg:flex-row gap-6 p-2 md:p-6 pb-24 lg:pb-6 overflow-hidden bg-transparent text-zinc-300 font-sans relative">
             {/* Main Editor Section */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -220,7 +223,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                 className="flex-1 flex flex-col bg-[#050505] border border-white/5 shadow-2xl overflow-hidden rounded-2xl relative ring-1 ring-white/10"
             >
                 {/* Header */}
-                <div className="px-8 py-6 border-b border-white/5 bg-white/[0.01] backdrop-blur-xl flex justify-between items-center z-10 sticky top-0 relative">
+                <div className="p-4 md:px-8 md:py-6 border-b border-white/5 bg-white/[0.01] backdrop-blur-xl flex justify-between items-center z-10 sticky top-0 relative">
                     <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#e8c42f] to-transparent opacity-40"></div>
                     <div>
                         <div className="mb-4">
@@ -310,7 +313,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                 <div key={item.id} className="group/row flex flex-col xl:flex-row xl:items-start justify-between p-3 gap-4 hover:bg-white/[0.02] transition-colors rounded-md relative select-none">
 
                                                                     {/* Action Buttons (Hover) */}
-                                                                    <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover/row:opacity-100 transition-opacity z-10 xl:static xl:opacity-100 xl:mt-2 xl:-mr-2 xl:self-start">
+                                                                    <div className="absolute top-2 right-2 flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover/row:opacity-100 transition-opacity z-10 xl:static xl:opacity-100 xl:mt-2 xl:-mr-2 xl:self-start">
                                                                         {!isEditingId && (
                                                                             <button onClick={() => handleStartEdit(item.id, item.description)} className="p-1.5 text-zinc-500 hover:text-white bg-black/50 hover:bg-white/10 rounded-md transition-colors" title="Editar descripción">
                                                                                 <Edit2 className="w-3.5 h-3.5" />
@@ -346,13 +349,14 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                         )}
                                                                     </div>
 
-                                                                    <div className="flex items-center gap-3 shrink-0 self-end xl:self-start xl:pt-1">
+                                                                    <div className="flex items-center justify-between w-full mt-3 xl:mt-0 xl:w-auto gap-2 xl:gap-3 shrink-0 self-end xl:self-start xl:pt-1">
                                                                         {/* Quantity Input */}
                                                                         <div className="relative flex flex-col gap-1 items-end">
                                                                             <span className="text-[10px] text-zinc-600 uppercase font-semibold tracking-wider">{t('table.units', { fallback: 'Cant.' })}</span>
                                                                             <div className="relative group/input">
                                                                                 <Input
                                                                                     type="number"
+                                                                                    inputMode="decimal"
                                                                                     min="0"
                                                                                     step="0.1"
                                                                                     className="w-20 h-9 bg-[#111111] border-white/10 text-right pr-8 font-mono text-sm focus:ring-1 focus:ring-[#e8c42f]/50 focus:border-[#e8c42f]/50 transition-colors"
@@ -373,6 +377,7 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                             <div className="relative group/input">
                                                                                 <Input
                                                                                     type="number"
+                                                                                    inputMode="decimal"
                                                                                     min="0"
                                                                                     step="0.01"
                                                                                     className="w-24 h-9 bg-[#111111] border-white/10 text-right pr-6 font-mono text-sm focus:ring-1 focus:ring-[#e8c42f]/50 focus:border-[#e8c42f]/50 transition-colors"
@@ -408,12 +413,12 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                 </div>
             </motion.div>
 
-            {/* Sidebar Section */}
+            {/* Sidebar Section (Desktop) */}
             <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-                className="w-full lg:w-[400px] flex flex-col gap-4 shrink-0"
+                className="hidden lg:flex w-full lg:w-[400px] flex-col gap-4 shrink-0"
             >
                 {/* Customization Card */}
                 <div className="bg-[#050505] border border-white/5 shadow-2xl overflow-hidden rounded-2xl ring-1 ring-white/10 p-6 flex-1 flex flex-col relative">
@@ -556,6 +561,138 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                     </div>
                 </div>
             </motion.div>
+
+            {/* Mobile Sidebar Sheet */}
+            <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
+                <SheetContent side="bottom" className="h-[90vh] p-0 bg-transparent border-none sm:max-w-none flex flex-col">
+                    <VisuallyHidden.Root><SheetTitle>Opciones de Exportación</SheetTitle></VisuallyHidden.Root>
+                    <div className="bg-[#050505] border border-white/5 shadow-2xl rounded-t-3xl ring-1 ring-white/10 p-6 flex-1 flex flex-col overflow-hidden relative">
+                        <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-4 shrink-0" />
+                        <div className="mb-6 relative z-10 shrink-0">
+                            <h3 className="text-lg font-medium text-white flex items-center gap-2 mb-2">
+                                <Eye className="w-4 h-4 text-zinc-400" />
+                                {t('pdf.title', { fallback: 'Personalizar Documento' })}
+                            </h3>
+                            <p className="text-sm text-zinc-500 font-light leading-relaxed">
+                                {t('pdf.description', { fallback: 'Añade tus datos corporativos. Los cálculos actualizados se incluirán en el documento final.' })}
+                            </p>
+                        </div>
+
+                        <div className="space-y-5 flex-1 overflow-y-auto custom-scrollbar pr-2 relative z-10">
+                            {/* Summary Block */}
+                            <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02] space-y-3 relative overflow-hidden shrink-0">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-800/10 blur-2xl rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+                                <div className="flex justify-between items-end">
+                                    <span className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{t('totals.pem', { fallback: 'P.E.M.' })}</span>
+                                    <span className="font-mono text-sm text-zinc-400">€{totals.executionMaterial.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                </div>
+                                <div className="flex justify-between items-end">
+                                    <span className="text-xs text-zinc-500 font-medium tracking-wide uppercase">{t('totals.tax', { fallback: 'IVA (21%)' })}</span>
+                                    <span className="font-mono text-sm text-zinc-400">€{totals.tax.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</span>
+                                </div>
+
+                                <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent my-4" />
+
+                                <div className="flex justify-between items-end">
+                                    <span className="text-sm text-zinc-300 font-semibold tracking-wide uppercase">{t('totals.total', { fallback: 'Total' })}</span>
+                                    <span className="font-mono text-xl text-[#e8c42f] tracking-tight font-medium">
+                                        €{totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Form Fields Mobile */}
+                            <div className="space-y-4 pt-2 pb-6 shrink-0">
+                                <div className="space-y-2">
+                                    <Label htmlFor="companyNameMobile" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.companyName', { fallback: 'Empresa Emisora' })}</Label>
+                                    <Input
+                                        id="companyNameMobile"
+                                        placeholder="Nombre corporativo"
+                                        value={companyName}
+                                        onChange={(e) => setCompanyName(e.target.value)}
+                                        className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="cifMobile" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.cif', { fallback: 'CIF / NIF' })}</Label>
+                                        <Input
+                                            id="cifMobile"
+                                            placeholder="Ej: B12345678"
+                                            value={cif}
+                                            onChange={(e) => setCif(e.target.value)}
+                                            className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="clientNameMobile" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold flex items-center gap-1">
+                                            <User className="w-3 h-3" />
+                                            {t('pdf.clientName', { fallback: 'Cliente' })}
+                                        </Label>
+                                        <Input
+                                            id="clientNameMobile"
+                                            placeholder="Para quién..."
+                                            value={clientName}
+                                            onChange={(e) => setClientName(e.target.value)}
+                                            className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="addressMobile" className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">{t('pdf.address', { fallback: 'Dirección Comercial' })}</Label>
+                                    <Input
+                                        id="addressMobile"
+                                        placeholder="Calle Principal 123..."
+                                        value={address}
+                                        onChange={(e) => setAddress(e.target.value)}
+                                        className="bg-[#0a0a0a] border-white/10 focus:border-white/20 h-10 text-sm focus:ring-1 focus:ring-white/20"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Area */}
+                        <div className="pt-4 mt-2 border-t border-white/10 shrink-0">
+                            <Button
+                                onClick={handleDownloadClick}
+                                disabled={!companyName || !cif || !address || isGeneratingLocal || isGeneratingPdf}
+                                className="w-full h-12 bg-[#e8c42f] text-black hover:bg-[#cdae25] disabled:bg-zinc-800 disabled:text-zinc-500 font-medium tracking-wide flex items-center gap-2 group transition-all rounded-lg"
+                            >
+                                {(isGeneratingLocal || isGeneratingPdf) ? (
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        {t('pdf.generating', { fallback: 'Generando Documento...' })}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="w-4 h-4" />
+                                        {t('pdf.button', { fallback: 'Descargar Documento Listo' })}
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+                </SheetContent>
+            </Sheet>
+
+            {/* Fixed Bottom Bar (Mobile) */}
+            <div className="lg:hidden fixed bottom-6 left-4 right-4 bg-[#050505] border border-white/10 rounded-2xl p-4 z-50 shadow-[0_0_40px_rgba(0,0,0,0.8)] flex items-center justify-between pointer-events-auto">
+                <div>
+                    <p className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold mb-0.5">Total Proyecto</p>
+                    <p className="text-lg text-[#e8c42f] tracking-tight font-medium leading-none">
+                        €{totals.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                    </p>
+                </div>
+                <Button
+                    onClick={() => setIsMobileSidebarOpen(true)}
+                    className="h-10 bg-[#e8c42f] text-black hover:bg-[#cdae25] font-medium px-5 rounded-xl shadow-lg"
+                >
+                    Exportar
+                </Button>
+            </div>
 
             <style jsx global>{`
                 .custom-scrollbar::-webkit-scrollbar {

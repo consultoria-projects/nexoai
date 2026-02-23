@@ -177,17 +177,6 @@ export function HeroSection() {
                                         aria-label="Play video"
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.95 }}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (videoRef.current) {
-                                                videoRef.current.src = DEMO_VIDEO_URL;
-                                                videoRef.current.muted = false;
-                                                videoRef.current.loop = false;
-                                                videoRef.current.play().catch(() => { });
-                                                setIsPlaying(true);
-                                                setIsPaused(false);
-                                            }
-                                        }}
                                         className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-white/90 dark:bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-2xl shadow-black/30 group-hover:shadow-primary/30 transition-shadow"
                                     >
                                         <Play className="w-8 h-8 md:w-10 md:h-10 text-primary fill-primary ml-1" />

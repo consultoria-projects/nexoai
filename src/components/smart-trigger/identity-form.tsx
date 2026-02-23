@@ -318,7 +318,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             <InputOTPSlot
                                                 key={i}
                                                 index={i}
-                                                className="h-14 w-12 border-border/50 bg-muted/20 text-xl rounded-xl text-foreground font-display"
+                                                className="h-14 w-12 border border-white/30 bg-white/5 text-xl rounded-xl text-foreground font-display"
                                             />
                                         ))}
                                     </InputOTPGroup>
@@ -328,7 +328,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             <InputOTPSlot
                                                 key={i}
                                                 index={i}
-                                                className="h-14 w-12 border-border/50 bg-muted/20 text-xl rounded-xl text-foreground font-display"
+                                                className="h-14 w-12 border border-white/30 bg-white/5 text-xl rounded-xl text-foreground font-display"
                                             />
                                         ))}
                                     </InputOTPGroup>

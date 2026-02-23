@@ -349,12 +349,12 @@ export function AgendaSection() {
                                 if (val.length === 6) handleVerifyOtp(val);
                             }} disabled={loading}>
                                 <InputOTPGroup className="gap-2">
-                                    <InputOTPSlot index={0} className="w-12 h-14 text-xl rounded-xl border-border bg-secondary/30" />
-                                    <InputOTPSlot index={1} className="w-12 h-14 text-xl rounded-xl border-border bg-secondary/30" />
-                                    <InputOTPSlot index={2} className="w-12 h-14 text-xl rounded-xl border-border bg-secondary/30" />
-                                    <InputOTPSlot index={3} className="w-12 h-14 text-xl rounded-xl border-border bg-secondary/30" />
-                                    <InputOTPSlot index={4} className="w-12 h-14 text-xl rounded-xl border-border bg-secondary/30" />
-                                    <InputOTPSlot index={5} className="w-12 h-14 text-xl rounded-xl border-border bg-secondary/30" />
+                                    <InputOTPSlot index={0} className="w-12 h-14 text-xl rounded-xl border border-white/30 bg-white/5" />
+                                    <InputOTPSlot index={1} className="w-12 h-14 text-xl rounded-xl border border-white/30 bg-white/5" />
+                                    <InputOTPSlot index={2} className="w-12 h-14 text-xl rounded-xl border border-white/30 bg-white/5" />
+                                    <InputOTPSlot index={3} className="w-12 h-14 text-xl rounded-xl border border-white/30 bg-white/5" />
+                                    <InputOTPSlot index={4} className="w-12 h-14 text-xl rounded-xl border border-white/30 bg-white/5" />
+                                    <InputOTPSlot index={5} className="w-12 h-14 text-xl rounded-xl border border-white/30 bg-white/5" />
                                 </InputOTPGroup>
                             </InputOTP>
                         </div>

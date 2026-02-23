@@ -15,6 +15,7 @@ import { BudgetGenerationProgress, GenerationStep } from '@/components/budget/Bu
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
+import { Drawer, DrawerContent, DrawerTitle, DrawerDescription, DrawerHeader } from '@/components/ui/drawer';
 
 import { Trash2 } from 'lucide-react';
 import { BudgetStreamListener } from './BudgetStreamListener';
@@ -67,8 +68,11 @@ export function BudgetWizardChat() {
         error?: string;
     }>({ step: 'idle' });
 
+    // Drawer state for mobile progress
+    const [isMobileModalOpen, setIsMobileModalOpen] = React.useState(false);
+
     // Replay logic
-    const [deepGeneration, setDeepGeneration] = React.useState(false); // NEW
+    const [deepGeneration, setDeepGeneration] = React.useState(true); // NEW: true by default
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleAttachmentClick = () => {
@@ -180,6 +184,80 @@ export function BudgetWizardChat() {
         router.push('/wizard/success');
     };
 
+    const handleGenerateBudget = async () => {
+        if (!requirements || !requirements.specs) return;
+
+        if (!leadId) {
+            console.error("Lead ID missing");
+            return;
+        }
+
+        // Open mobile drawer immediately if we are on mobile
+        setIsMobileModalOpen(true);
+        setGenerationProgress({ step: 'extracting' });
+        sendMessage(w.progress.generatingMsg);
+
+        try {
+            await new Promise(r => setTimeout(r, 1500));
+            const detectedCount = requirements.detectedNeeds?.length || 15;
+            setGenerationProgress({
+                step: 'extracting',
+                extractedItems: detectedCount
+            });
+
+            await new Promise(r => setTimeout(r, 1000));
+            setGenerationProgress({
+                step: 'searching',
+                extractedItems: detectedCount,
+                currentItem: w.progress.searching
+            });
+
+            const { generateDemoBudgetAction } = await import('@/actions/budget/generate-demo-budget.action');
+
+            setTimeout(() => {
+                setGenerationProgress(prev => ({
+                    ...prev,
+                    step: 'calculating',
+                    currentItem: w.progress.calculating
+                }));
+            }, 3000);
+
+            const result = await generateDemoBudgetAction(leadId, requirements);
+
+            if (result.success && result.budgetResult) {
+                const budgetId = result.budgetId || result.budgetResult.id;
+                const itemCount = result.budgetResult.chapters?.reduce((acc: number, c: any) => acc + c.items.length, 0) || 0;
+                const total = result.budgetResult.costBreakdown?.total || result.budgetResult.totalEstimated || 0;
+
+                setGenerationProgress({
+                    step: 'complete',
+                    extractedItems: itemCount,
+                    matchedItems: itemCount
+                });
+
+                await new Promise(r => setTimeout(r, 1500));
+                setBudgetResult({
+                    id: budgetId,
+                    total,
+                    itemCount,
+                    fullBudget: result.budgetResult
+                } as any);
+                setIsMobileModalOpen(false);
+            } else {
+                setGenerationProgress({
+                    step: 'error',
+                    error: result.error || w.errors.generateError
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            setGenerationProgress({
+                step: 'error',
+                error: w.errors.generateError
+            });
+        }
+    };
+
     if (budgetResult && requirements.specs) {
         // Reconstruct a fake 'Budget' object for the viewer based on the action result
         // The action currently returns a minimal object, we might need to adjust `generateDemoBudgetAction` to return the full budget to make this robust. 
@@ -192,7 +270,7 @@ export function BudgetWizardChat() {
                     onDownloadPdf={handleDownloadPdf}
                     isGeneratingPdf={false}
                 />
-                <SileoToaster position="bottom-right" />
+                <SileoToaster position="top-center" />
             </div>
         );
     }
@@ -233,6 +311,86 @@ export function BudgetWizardChat() {
             sendMessage(input);
         }
     };
+
+    const progressScore = calculateProgress(requirements, state);
+    const showGenerateButton = (progressScore >= 80 || state === 'review') && generationProgress.step === 'idle';
+
+    // Shared progress content component to render in both Desktop Sidebar and Mobile Drawer
+    const SidebarProgressContent = () => (
+        <>
+            <div className="space-y-3 mb-4">
+                <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <span>{w.panel.completed}</span>
+                    <span className="text-gray-900 dark:text-white">{progressScore}%</span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
+                    <div
+                        className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full transition-all duration-500"
+                        style={{ width: `${progressScore}%` }}
+                    />
+                </div>
+            </div>
+
+            {/* Generation Progress Component */}
+            <AnimatePresence>
+                {generationProgress.step !== 'idle' && (
+                    <BudgetGenerationProgress
+                        progress={generationProgress}
+                        className="mb-4"
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Deep Generation Toggle - Always visible for beta testing */}
+            {generationProgress.step === 'idle' && (
+                <div className="mb-4 flex items-center justify-between p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/20">
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold text-primary dark:text-primary-foreground flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            {w.panel.deepGenTitle}
+                            <Badge variant="outline" className="text-[9px] h-4 px-1 bg-white ml-2 text-primary border-primary/30">Beta</Badge>
+                        </span>
+                        <span className="text-[10px] text-primary/70 dark:text-primary-foreground/70 leading-tight">
+                            {w.panel.deepGenDesc}
+                        </span>
+                    </div>
+                    <div
+                        className={cn(
+                            "w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out shrink-0",
+                            deepGeneration ? "bg-primary" : "bg-gray-200 dark:bg-white/10"
+                        )}
+                        onClick={() => setDeepGeneration(!deepGeneration)}
+                    >
+                        <div
+                            className={cn(
+                                "w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-200 ease-in-out",
+                                deepGeneration ? "translate-x-4" : "translate-x-0"
+                            )}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* Generate Button (Desktop and Drawer) */}
+            <AnimatePresence>
+                {showGenerateButton && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                    >
+                        <Button
+                            onClick={handleGenerateBudget}
+                            className="w-full bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-bold h-12 rounded-xl shadow-xl shadow-gray-200/50 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        >
+                            <Sparkles className="mr-2 h-4 w-4 animate-pulse" />
+                            {w.progress.generateBtn}
+                        </Button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
+    );
 
     return (
         <div className="flex h-full w-full overflow-hidden md:rounded-3xl md:border md:border-white/20 bg-background md:bg-white/95 md:dark:bg-black/90 md:shadow-2xl md:backdrop-blur-2xl md:ring-1 md:ring-black/5 md:dark:ring-white/10 relative">
@@ -374,7 +532,28 @@ export function BudgetWizardChat() {
                                 </Button>
                             )}
                         </div>
-                        <p className="mt-3 text-center text-xs font-medium text-gray-400 dark:text-gray-600">
+
+                        {/* Mobile Generation Area Component */}
+                        <AnimatePresence>
+                            {showGenerateButton && !isMobileModalOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    className="w-full mt-3 md:hidden pointer-events-auto"
+                                >
+                                    <Button
+                                        onClick={handleGenerateBudget}
+                                        className="w-full bg-gray-900 dark:bg-white text-white dark:text-black font-bold h-12 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/10"
+                                    >
+                                        <Sparkles className="mr-2 h-4 w-4 animate-pulse text-[#e8c42f]" />
+                                        {w.progress.generateBtn}
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <p className="mt-3 text-center text-xs font-medium text-gray-400 dark:text-gray-600 hidden md:block pointer-events-auto">
                             {isRecording ? `${w.input.recordingInfo} ${formatTime(recordingTime)}` : w.input.keyboardHint}
                         </p>
                     </div>
@@ -398,153 +577,28 @@ export function BudgetWizardChat() {
 
                 {/* Progress Indicator */}
                 <div className="shrink-0 p-6 bg-white dark:bg-zinc-900 border-t border-gray-100 dark:border-white/5">
-                    <div className="space-y-3 mb-4">
-                        <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400">
-                            <span>{w.panel.completed}</span>
-                            <span className="text-gray-900 dark:text-white">{calculateProgress(requirements, state)}%</span>
-                        </div>
-                        <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
-                            <div
-                                className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full transition-all duration-500"
-                                style={{ width: `${calculateProgress(requirements, state)}%` }}
-                            />
-                        </div>
-                    </div>
-
-                    {/* Generation Progress Component */}
-                    <AnimatePresence>
-                        {generationProgress.step !== 'idle' && (
-                            <BudgetGenerationProgress
-                                progress={generationProgress}
-                                className="mb-4"
-                            />
-                        )}
-                    </AnimatePresence>
-
-                    {/* Deep Generation Toggle - Always visible for beta testing */}
-                    {generationProgress.step === 'idle' && (
-                        <div className="mb-4 flex items-center justify-between p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/20">
-                            <div className="flex flex-col">
-                                <span className="text-xs font-bold text-primary dark:text-primary-foreground flex items-center gap-1">
-                                    <Sparkles className="w-3 h-3" />
-                                    {w.panel.deepGenTitle}
-                                    <Badge variant="outline" className="text-[9px] h-4 px-1 bg-white ml-2 text-primary border-primary/30">Beta</Badge>
-                                </span>
-                                <span className="text-[10px] text-primary/70 dark:text-primary-foreground/70 leading-tight">
-                                    {w.panel.deepGenDesc}
-                                </span>
-                            </div>
-                            <div
-                                className={cn(
-                                    "w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out",
-                                    deepGeneration ? "bg-primary" : "bg-gray-200 dark:bg-white/10"
-                                )}
-                                onClick={() => setDeepGeneration(!deepGeneration)}
-                            >
-                                <div
-                                    className={cn(
-                                        "w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-200 ease-in-out",
-                                        deepGeneration ? "translate-x-4" : "translate-x-0"
-                                    )}
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Generate Button */}
-                    <AnimatePresence>
-                        {(calculateProgress(requirements, state) >= 80 || state === 'review') && generationProgress.step === 'idle' && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                            >
-                                <Button
-                                    onClick={async () => {
-                                        /* ... (keep existing logic) ... */
-                                        if (!requirements || !requirements.specs) return;
-
-                                        // Retrieve leadId from context or storage (if context is lost on refresh, we might need a backup plan)
-                                        // For now, assuming context is valid from the trigger flow.
-                                        if (!leadId) {
-                                            console.error("Lead ID missing");
-                                            // Ideally show a toast or prompt to re-verify
-                                            return;
-                                        }
-
-                                        setGenerationProgress({ step: 'extracting' });
-                                        sendMessage(w.progress.generatingMsg);
-
-                                        try {
-                                            await new Promise(r => setTimeout(r, 1500));
-                                            const detectedCount = requirements.detectedNeeds?.length || 15;
-                                            setGenerationProgress({
-                                                step: 'extracting',
-                                                extractedItems: detectedCount
-                                            });
-
-                                            await new Promise(r => setTimeout(r, 1000));
-                                            setGenerationProgress({
-                                                step: 'searching',
-                                                extractedItems: detectedCount,
-                                                currentItem: w.progress.searching
-                                            });
-
-                                            const { generateDemoBudgetAction } = await import('@/actions/budget/generate-demo-budget.action');
-
-                                            setTimeout(() => {
-                                                setGenerationProgress(prev => ({
-                                                    ...prev,
-                                                    step: 'calculating',
-                                                    currentItem: w.progress.calculating
-                                                }));
-                                            }, 3000);
-
-                                            const result = await generateDemoBudgetAction(leadId, requirements);
-
-                                            if (result.success && result.budgetResult) {
-                                                const budgetId = result.budgetId || result.budgetResult.id;
-                                                const itemCount = result.budgetResult.chapters?.reduce((acc: number, c: any) => acc + c.items.length, 0) || 0;
-                                                const total = result.budgetResult.costBreakdown?.total || result.budgetResult.totalEstimated || 0;
-
-                                                setGenerationProgress({
-                                                    step: 'complete',
-                                                    extractedItems: itemCount,
-                                                    matchedItems: itemCount
-                                                });
-
-                                                await new Promise(r => setTimeout(r, 1500));
-                                                setBudgetResult({
-                                                    id: budgetId,
-                                                    total,
-                                                    itemCount,
-                                                    fullBudget: result.budgetResult // Passing the full object down to the viewer
-                                                } as any);
-                                            } else {
-                                                setGenerationProgress({
-                                                    step: 'error',
-                                                    error: result.error || w.errors.generateError
-                                                });
-                                            }
-                                        } catch (e) {
-                                            console.error(e);
-                                            setGenerationProgress({
-                                                step: 'error',
-                                                error: w.errors.generateError
-                                            });
-                                        }
-                                    }}
-                                    className="w-full bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-bold h-12 rounded-xl shadow-xl shadow-gray-200/50 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
-                                >
-                                    <Sparkles className="mr-2 h-4 w-4 animate-pulse" />
-                                    {w.progress.generateBtn}
-                                </Button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    <SidebarProgressContent />
                 </div>
             </div>
-            <SileoToaster position="bottom-right" />
+
+            {/* Mobile Progress Drawer */}
+            <Drawer open={isMobileModalOpen} onOpenChange={setIsMobileModalOpen} shouldScaleBackground>
+                <DrawerContent className="bg-white dark:bg-zinc-900 outline-none">
+                    <div className="mx-auto w-full max-w-sm">
+                        <DrawerHeader>
+                            <DrawerTitle className="text-left font-display">{w.progress.generateBtn}</DrawerTitle>
+                            <DrawerDescription className="text-left">
+                                {w.panel.status}
+                            </DrawerDescription>
+                        </DrawerHeader>
+                        <div className="p-4 pb-8">
+                            <SidebarProgressContent />
+                        </div>
+                    </div>
+                </DrawerContent>
+            </Drawer>
+
+            <SileoToaster position="top-center" />
         </div>
     );
 }

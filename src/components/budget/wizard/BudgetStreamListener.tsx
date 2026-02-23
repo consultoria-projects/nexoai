@@ -151,7 +151,7 @@ function handleGenerationEvent(event: GenerationEvent) {
             sileo.show({
                 description: CustomCard,
                 duration: 5000,
-                position: 'bottom-right',
+                position: 'top-center',
                 styles: {
                     // Start of Selection
                     // Override default styles if needed, mainly relying on the custom component

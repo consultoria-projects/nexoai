@@ -208,3 +208,13 @@
     text-wrap: balance;
   }
 }
+
+/* Fix Sileo Toasts z-index on Mobile Drawers */
+
+/* High Z-Index for Sileo Toasts over Drawers */
+.sileo-viewport {
+  z-index: 2147483647 !important;
+}
+[data-sileo] {
+  z-index: 2147483647 !important;
+}
