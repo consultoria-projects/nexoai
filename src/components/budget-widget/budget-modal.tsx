@@ -357,13 +357,7 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
                     {renderContent()}
                 </div>
 
-                {activeMode !== 'general' && (
-                    <DrawerFooter className="pt-2 shrink-0">
-                        <DrawerClose asChild>
-                            <Button variant="outline">Cancelar</Button>
-                        </DrawerClose>
-                    </DrawerFooter>
-                )}
+                {/* Bottom Cancel button removed — close now handled by the X button inside each component */}
             </DrawerContent>
         </Drawer>
     );

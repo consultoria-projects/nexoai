@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
+import { useWidgetContext } from '@/context/budget-widget-context';
 
 export type GenerationStep =
     | 'idle'
@@ -49,8 +50,56 @@ function getStepIndex(step: GenerationStep): number {
 
 export function BudgetGenerationProgress({ progress, className }: BudgetGenerationProgressProps) {
     const t = useTranslations('budgetRequest.demoProgress');
+    const { leadId } = useWidgetContext();
     const { step, extractedItems, matchedItems, currentItem, error } = progress;
     const currentStepIndex = getStepIndex(step);
+
+    // Track recently resolved items for inline display
+    const [recentItems, setRecentItems] = React.useState<any[]>([]);
+    const eventSourceRef = React.useRef<EventSource | null>(null);
+    const processedEvents = React.useRef<Set<number>>(new Set());
+
+    React.useEffect(() => {
+        if (!leadId || step === 'idle' || step === 'complete' || step === 'error') return;
+
+        // Close existing connection if any
+        if (eventSourceRef.current) {
+            eventSourceRef.current.close();
+        }
+
+        const url = `/api/budget/stream?leadId=${leadId}`;
+        const es = new EventSource(url);
+        eventSourceRef.current = es;
+
+        es.onmessage = (event) => {
+            try {
+                const parsed = JSON.parse(event.data);
+                if (processedEvents.current.has(parsed.timestamp)) return;
+                processedEvents.current.add(parsed.timestamp);
+
+                if (parsed.type === 'item_resolved') {
+                    setRecentItems(prev => {
+                        // Keep only the last 3 items to avoid overwhelming the UI
+                        const newItems = [parsed.data, ...prev].slice(0, 3);
+                        return newItems;
+                    });
+                }
+            } catch (e) {
+                // Ignore parse errors from heartbeats
+            }
+        };
+
+        return () => {
+            if (eventSourceRef.current) {
+                eventSourceRef.current.close();
+            }
+        };
+    }, [leadId, step]);
+
+    // Helper for formatting currency inline
+    const formatCurrency = (val: number) => {
+        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(val);
+    };
 
     if (step === 'idle') return null;
 
@@ -166,6 +215,85 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                                 </p>
                             </div>
                         )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Inline Recent Items Display */}
+            <AnimatePresence>
+                {recentItems.length > 0 && step !== 'complete' && step !== 'error' && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="mt-4 space-y-2 border-t border-primary/10 pt-4"
+                    >
+                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                            Partidas Procesadas
+                        </p>
+                        {/* Show 2 on mobile, 3 on desktop */}
+                        <div className="space-y-2">
+                            <AnimatePresence mode="popLayout">
+                                {recentItems.slice(0, 2).map((data, idx) => {
+                                    const item = data.item;
+                                    const isMaterial = data.type === 'MATERIAL';
+
+                                    return (
+                                        <motion.div
+                                            key={`${item.code || item.sku}-${idx}`}
+                                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
+                                            exit={{
+                                                opacity: 0,
+                                                x: idx === 0 ? -60 : 60,
+                                                scale: 0.92,
+                                            }}
+                                            transition={{
+                                                type: 'spring',
+                                                stiffness: 300,
+                                                damping: 24,
+                                                mass: 0.8,
+                                                exit: { duration: 0.2, ease: [0.4, 0, 1, 1] },
+                                            }}
+                                            layout
+                                            className={cn(
+                                                "p-3 rounded-xl border bg-background/50 dark:bg-zinc-900/50 backdrop-blur-sm",
+                                                isMaterial ? "border-amber-200/50 dark:border-amber-900/30" : "border-blue-200/50 dark:border-blue-900/30",
+                                                idx === 0 ? "ring-1 ring-primary/20 shadow-sm" : "opacity-70"
+                                            )}
+                                        >
+                                            <div className="flex justify-between items-start mb-1.5">
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className={cn(
+                                                        "text-[10px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider",
+                                                        isMaterial ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400" : "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
+                                                    )}>
+                                                        {isMaterial ? 'Material' : 'Partida'}
+                                                    </span>
+                                                </div>
+                                                <span className="text-[10px] font-mono font-medium text-emerald-600 dark:text-emerald-400">
+                                                    {item.code || item.sku || 'N/A'}
+                                                </span>
+                                            </div>
+
+                                            <p className="text-xs font-medium text-foreground line-clamp-2 leading-snug mb-2">
+                                                {item.description || item.name}
+                                            </p>
+
+                                            <div className="flex justify-between items-end border-t border-border/50 pt-2 mt-auto">
+                                                <p className="text-[10px] text-muted-foreground">
+                                                    {item.quantity} {item.unit} x {formatCurrency(item.unitPrice)}
+                                                </p>
+                                                <span className="text-xs font-bold text-foreground bg-primary/5 px-1.5 py-0.5 rounded">
+                                                    {formatCurrency(item.totalPrice)}
+                                                </span>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </AnimatePresence>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

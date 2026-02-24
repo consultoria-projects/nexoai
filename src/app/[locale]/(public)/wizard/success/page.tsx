@@ -135,8 +135,8 @@ export default function WizardSuccessPage() {
 
             {/* Background elements to unify the look */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-                <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full mix-blend-screen" />
-                <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full mix-blend-screen" />
+                <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full" />
+                <div className="absolute top-[40%] -right-[10%] w-[40%] h-[40%] bg-blue-500/5 blur-[120px] rounded-full" />
             </div>
 
             {/* ─── Left Side: Success & Survey ─── */}
@@ -145,7 +145,7 @@ export default function WizardSuccessPage() {
                 <div className="w-full max-w-lg mx-auto flex flex-col items-center lg:items-start text-center lg:text-left">
                     {/* Hero */}
                     <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 w-full">
-                        <div className="mx-auto lg:mx-0 h-20 w-20 rounded-2xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-2xl shadow-primary/20 mb-8 relative border border-white/10">
+                        <div className="mx-auto lg:mx-0 h-20 w-20 rounded-2xl bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-2xl shadow-primary/20 mb-8 relative border border-border/20">
                             <CheckCircle2 className="h-10 w-10 text-white relative z-10" />
                             <div className="absolute inset-0 rounded-2xl bg-white animate-ping opacity-20 duration-1000" />
                         </div>
@@ -153,7 +153,7 @@ export default function WizardSuccessPage() {
                         {isLoadingUser ? (
                             <div className="h-12 w-64 bg-muted animate-pulse rounded-lg mb-4 mx-auto lg:mx-0" />
                         ) : (
-                            <h1 className="text-4xl lg:text-5xl font-display font-extrabold text-white mb-4 tracking-tight drop-shadow-sm">
+                            <h1 className="text-4xl lg:text-5xl font-display font-extrabold text-foreground mb-4 tracking-tight drop-shadow-sm">
                                 {titleStr}
                             </h1>
                         )}
@@ -164,7 +164,7 @@ export default function WizardSuccessPage() {
                     </div>
 
                     {/* Survey Card */}
-                    <div className="w-full bg-secondary/30 backdrop-blur-xl border border-white/5 rounded-3xl p-6 lg:p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-12 duration-700 delay-150 relative overflow-hidden">
+                    <div className="w-full bg-secondary/30 backdrop-blur-xl border border-border/30 rounded-3xl p-6 lg:p-8 shadow-2xl animate-in fade-in slide-in-from-bottom-12 duration-700 delay-150 relative overflow-hidden">
                         <div className="absolute -top-10 -right-10 p-4 opacity-5 pointer-events-none">
                             <Sparkles className="w-40 h-40 text-primary rotate-12" />
                         </div>
@@ -178,7 +178,7 @@ export default function WizardSuccessPage() {
                                         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
                                             <EuroIcon className="w-4 h-4 text-primary" />
                                         </div>
-                                        <h3 className="font-bold text-xl text-white tracking-tight">{t('surveyTitle')}</h3>
+                                        <h3 className="font-bold text-xl text-foreground tracking-tight">{t('surveyTitle')}</h3>
                                     </div>
                                     <p className="text-sm text-muted-foreground mb-6 leading-relaxed">{t('surveyQuestion')}</p>
 
@@ -191,7 +191,7 @@ export default function WizardSuccessPage() {
                                                 className={`w-full flex items-center justify-between p-4 bg-background/50 hover:bg-background border rounded-2xl transition-all text-left outline-none ${selectedPricing === opt.value ? 'border-primary shadow-[0_0_15px_rgba(232,196,47,0.15)] bg-primary/5' : 'border-border/50 hover:border-primary/50'}`}
                                             >
                                                 <div>
-                                                    <p className="font-semibold text-sm text-white">{opt.label}</p>
+                                                    <p className="font-semibold text-sm text-foreground">{opt.label}</p>
                                                     <p className="text-xs text-muted-foreground mt-1 opacity-80">{opt.desc}</p>
                                                 </div>
                                                 <div className={`w-5 h-5 rounded-full border-2 flex-shrink-0 ml-4 flex items-center justify-center transition-all ${selectedPricing === opt.value ? 'border-primary bg-primary' : 'border-border/50'}`}>
@@ -209,18 +209,18 @@ export default function WizardSuccessPage() {
                             {/* Step 1b — custom budget (only if "unknown" selected) */}
                             {!feedbackSent && showCustomBudget && (
                                 <motion.div key="custom" initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} className="relative z-10 space-y-5">
-                                    <h3 className="font-bold text-xl text-white tracking-tight">{t('customBudgetTitle')}</h3>
+                                    <h3 className="font-bold text-xl text-foreground tracking-tight">{t('customBudgetTitle')}</h3>
                                     <p className="text-sm text-muted-foreground">{t('customBudgetQuestion')}</p>
                                     <input
                                         type="text"
                                         value={customBudget}
                                         onChange={(e) => setCustomBudget(e.target.value)}
                                         placeholder={t('customBudgetPlaceholder')}
-                                        className="w-full px-5 py-4 bg-background/80 border border-white/10 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-white placeholder:text-muted-foreground/50 transition-all focus:bg-background"
+                                        className="w-full px-5 py-4 bg-background/80 border border-border/30 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground placeholder:text-muted-foreground/50 transition-all focus:bg-background"
                                         autoFocus
                                     />
                                     <div className="flex gap-3 pt-2">
-                                        <Button variant="ghost" className="flex-1 rounded-xl hover:bg-white/5" onClick={() => { setShowCustomBudget(false); setSelectedPricing(null); }}>
+                                        <Button variant="ghost" className="flex-1 rounded-xl hover:bg-secondary" onClick={() => { setShowCustomBudget(false); setSelectedPricing(null); }}>
                                             {t('customBudgetBack')}
                                         </Button>
                                         <Button className="flex-1 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20" onClick={handleCustomBudgetSubmit} disabled={submittingFeedback || !customBudget.trim()}>
@@ -243,9 +243,9 @@ export default function WizardSuccessPage() {
                                             value={frictionText}
                                             onChange={(e) => setFrictionText(e.target.value)}
                                             placeholder={t('frictionPlaceholder')}
-                                            className="w-full bg-background/50 border border-white/10 rounded-2xl p-4 text-sm min-h-[100px] resize-none focus:ring-2 focus:ring-primary/50 mb-4 text-white placeholder:text-muted-foreground/50 transition-all focus:bg-background"
+                                            className="w-full bg-background/50 border border-border/30 rounded-2xl p-4 text-sm min-h-[100px] resize-none focus:ring-2 focus:ring-primary/50 mb-4 text-foreground placeholder:text-muted-foreground/50 transition-all focus:bg-background"
                                         />
-                                        <Button variant="outline" className="w-full rounded-xl border-white/10 hover:bg-white/5 hover:text-white" onClick={handleFrictionSubmit} disabled={!frictionText.trim() || submittingFeedback}>
+                                        <Button variant="outline" className="w-full rounded-xl border-border/30 hover:bg-secondary hover:text-foreground" onClick={handleFrictionSubmit} disabled={!frictionText.trim() || submittingFeedback}>
                                             {submittingFeedback ? <Loader2 className="w-4 h-4 animate-spin" /> : t('frictionSubmit')}
                                         </Button>
                                     </div>
@@ -257,20 +257,20 @@ export default function WizardSuccessPage() {
 
                     {/* ROI Badge */}
                     <div className="w-full mt-8 animate-in fade-in duration-1000 delay-300">
-                        <p className="text-sm font-medium text-center text-muted-foreground/80 bg-background/30 backdrop-blur-md py-3 px-6 rounded-full border border-white/5 inline-flex items-center gap-2 justify-center w-full">
+                        <p className="text-sm font-medium text-center text-muted-foreground/80 bg-background/30 backdrop-blur-md py-3 px-6 rounded-full border border-border/20 inline-flex items-center gap-2 justify-center w-full">
                             <Clock className="w-4 h-4 text-primary flex-shrink-0" />
-                            {t('roiPrefix')} <span className="font-bold line-through mx-1 opacity-50 px-1 bg-white/5 rounded">{t('roiStrikethrough')}</span> <span className="text-primary font-bold">{t('roiSuffix')}</span>
+                            {t('roiPrefix')} <span className="font-bold line-through mx-1 opacity-50 px-1 bg-secondary/50 rounded">{t('roiStrikethrough')}</span> <span className="text-primary font-bold">{t('roiSuffix')}</span>
                         </p>
                     </div>
                 </div>
 
             </div>
 
-            {/* ─── Right Side: Agenda (Fixed Dark Mode Contrast) ─── */}
-            <div className="w-full lg:w-1/2 bg-black/40 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-white/5 overflow-y-auto relative flex items-start lg:items-center justify-center p-0 lg:p-8 pb-20 lg:pb-8 z-10 custom-scrollbar">
+            {/* ─── Right Side: Agenda ─── */}
+            <div className="w-full lg:w-1/2 bg-secondary/40 backdrop-blur-sm border-t lg:border-t-0 lg:border-l border-border/30 overflow-y-auto relative flex items-start lg:items-center justify-center p-0 lg:p-8 pb-20 lg:pb-8 z-10 custom-scrollbar">
 
                 {/* Refined Agenda Container */}
-                <div className="w-full max-w-[540px] bg-background lg:bg-card/50 lg:backdrop-blur-xl lg:rounded-3xl shadow-none lg:shadow-2xl border-none lg:border lg:border-white/10 overflow-hidden flex flex-col min-h-full lg:min-h-[auto]">
+                <div className="w-full max-w-[540px] bg-background lg:bg-white/80 dark:lg:bg-zinc-900/80 lg:backdrop-blur-xl lg:rounded-3xl shadow-none lg:shadow-2xl border-none lg:border lg:border-border/30 overflow-hidden flex flex-col min-h-full lg:min-h-[auto]">
 
                     {/* FOMO header (Integrated beautifully) */}
                     <div className="bg-gradient-to-r from-primary/20 to-transparent border-b border-primary/20 px-6 py-5 lg:py-6 flex items-center justify-between">
@@ -279,23 +279,17 @@ export default function WizardSuccessPage() {
                                 <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-primary leading-none">{t('fomoStep')}</span>
                             </div>
-                            <h2 className="text-lg lg:text-xl font-bold text-white tracking-tight leading-tight">{t('fomoTitle')}</h2>
+                            <h2 className="text-lg lg:text-xl font-bold text-foreground tracking-tight leading-tight">{t('fomoTitle')}</h2>
                         </div>
                         <div className="hidden sm:block">
-                            <div className="bg-black/40 border border-primary/30 px-3 py-1.5 rounded-full text-xs font-semibold text-primary/90 whitespace-nowrap shadow-inner">
+                            <div className="bg-secondary/80 dark:bg-black/40 border border-primary/30 px-3 py-1.5 rounded-full text-xs font-semibold text-primary/90 whitespace-nowrap shadow-inner">
                                 {t('fomoBadge')}
                             </div>
                         </div>
                     </div>
 
                     <div className="p-0 sm:p-2 lg:p-4 flex-1">
-                        {/* 
-                          We wrap AgendaBooking in a 'dark' forcing container so it inherits styles correctly 
-                          This prevents the awkward light-mode calendar inside a dark app.
-                        */}
-                        <div className="dark [&_.bg-white]:bg-background [&_.text-gray-900]:text-white">
-                            <AgendaBooking />
-                        </div>
+                        <AgendaBooking />
                     </div>
                 </div>
             </div>

@@ -60,7 +60,7 @@ export function Header({ t }: { t: any }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {/*    <ThemeSwitcher /> */}
+          <ThemeSwitcher />
           <LanguageSwitcher />
         </div>
       </div>

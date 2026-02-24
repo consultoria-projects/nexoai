@@ -17,10 +17,11 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription, DrawerHeader } from '@/components/ui/drawer';
 
-import { Trash2 } from 'lucide-react';
+import { Trash2, X } from 'lucide-react';
 import { BudgetStreamListener } from './BudgetStreamListener';
 import { Toaster as SileoToaster } from 'sileo';
 import 'sileo/styles.css';
+import { Logo } from '@/components/logo';
 import { DemoBudgetViewer, CustomPdfData } from './DemoBudgetViewer';
 import { Budget } from '@/backend/budget/domain/budget';
 
@@ -402,24 +403,32 @@ export function BudgetWizardChat() {
                 {/* Header */}
                 <header className="absolute top-0 left-0 right-0 z-10 flex h-16 md:h-20 items-center justify-between px-4 md:px-8 bg-gradient-to-b from-background via-background/95 to-transparent backdrop-blur-sm">
                     <div className="flex items-center gap-3 md:gap-4">
-                        <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-primary to-blue-600 shadow-lg shadow-primary/20 ring-1 ring-white/20">
-                            <Sparkles className="h-4 w-4 md:h-5 md:w-5 text-white" />
-                        </div>
-                        <div>
-                            <h3 className="font-display text-base md:text-lg font-bold text-foreground tracking-tight">{w.header.title}</h3>
-                            <p className="text-[10px] md:text-xs font-medium text-muted-foreground tracking-wide uppercase">{w.header.subtitle}</p>
-                        </div>
+                        <Logo className="h-6 flex items-center" width={80} height={24} />
                     </div>
 
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={handleReset}
-                        className="text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        title={w.header.clearTooltip}
-                    >
-                        <Trash2 className="h-5 w-5" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                        {/* Hidden trash button as requested */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={handleReset}
+                            className="hidden text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            title={w.header.clearTooltip}
+                        >
+                            <Trash2 className="h-5 w-5" />
+                        </Button>
+
+                        {/* Top Right Close 'X' Button */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={closeWidget}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            title="Cerrar"
+                        >
+                            <X className="h-5 w-5" />
+                        </Button>
+                    </div>
                 </header>
 
                 {/* Messages Area */}

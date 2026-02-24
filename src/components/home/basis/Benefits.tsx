@@ -86,8 +86,8 @@ export function Benefits() {
                                 }}
                                 className="flex-1 w-full"
                             >
-                                <div className="aspect-square md:aspect-video rounded-2xl bg-gradient-to-br from-background to-secondary/30 border border-border p-2 relative flex items-center justify-center overflow-hidden">
-                                    <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full" />
+                                <div className="aspect-video w-full rounded-2xl bg-gradient-to-br from-background to-secondary/30 border border-border p-2 relative flex items-center justify-center overflow-hidden">
+                                    <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full pointer-events-none" />
                                     <video
                                         src={index === 0 ? "/videos/dashboard_projects.mp4" : index === 1 ? "/videos/dashboard_projects_id.mp4" : "/videos/dashboard_expenses.mp4"}
                                         autoPlay

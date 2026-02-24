@@ -73,12 +73,12 @@ export function InteractiveWizard() {
                                     className="w-full h-32 bg-transparent border-0 focus:ring-0 text-xl resize-none placeholder:text-muted-foreground/50 p-0"
                                 />
 
-                                <div className="flex justify-between items-center mt-6 pt-6 border-t border-border">
+                                <div className="flex flex-col md:flex-row justify-between items-center mt-6 pt-6 border-t border-border gap-4 md:gap-0">
                                     <span className="text-sm text-muted-foreground flex items-center gap-1"><Sparkles className="w-4 h-4 text-primary" /> {t('analyze')}</span>
                                     <button
                                         onClick={handleGenerate}
                                         disabled={!input.trim()}
-                                        className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50"
+                                        className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 w-full md:w-auto"
                                     >
                                         {t('generateBtn')} <Send className="w-4 h-4" />
                                     </button>

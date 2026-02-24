@@ -467,6 +467,7 @@
             "step3": {
                 "title1": "Quant gastes a l'any en aparelladors o gestió tècnica?",
                 "options1": {
+                    "<5k": "Menys de 5k €",
                     "<10k": "Menys de 10k €",
                     "10-30k": "De 10k a 30k €",
                     "30-60k": "De 30k a 60k €",
@@ -485,7 +486,7 @@
                 "subtitle": "Dades bàsiques de la teva empresa.",
                 "companyNameLabel": "Com es diu la teva empresa?",
                 "companyNamePlaceholder": "Escriu el nom de la teva empresa...",
-                "companySizeLabel": "Mida de l'empresa",
+                "companySizeLabel": "Mida de l'empresa (Nombre d'empleats)",
                 "companySizeOptions": {
                     "solo": "Només 1",
                     "2-5": "2-5",

@@ -498,10 +498,11 @@
             "step3": {
                 "title1": "How much do you spend annually on surveyors or technical management?",
                 "options1": {
-                    "<10k": "Under 10k €",
+                    "<5k": "Less than 5k €",
+                    "<10k": "Less than 10k €",
                     "10-30k": "10k to 30k €",
                     "30-60k": "30k to 60k €",
-                    "60k+": "Over 60k €"
+                    "60k+": "More than 60k €"
                 },
                 "title2": "How many hours a week do you spend on manual tasks (Excel, paper, WhatsApp)?",
                 "options2": {
@@ -516,7 +517,7 @@
                 "subtitle": "Basic details about your company.",
                 "companyNameLabel": "What is your company called?",
                 "companyNamePlaceholder": "Enter your company name...",
-                "companySizeLabel": "Company size",
+                "companySizeLabel": "Company size (Number of employees)",
                 "companySizeOptions": {
                     "solo": "Just 1",
                     "2-5": "2-5",

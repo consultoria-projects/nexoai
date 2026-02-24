@@ -98,10 +98,10 @@ export function AgendaBooking() {
                 </div>
                 <div>
                     <h2 className="text-3xl font-display font-bold text-foreground">{t('success.title') || '¡Sesión Confirmada!'}</h2>
-                    <p className="text-muted-foreground mt-2 text-lg lg:text-white/70">
+                    <p className="text-muted-foreground mt-2 text-lg">
                         {t('success.datePrefix') || 'Nos vemos el'} <strong>{selectedDay} {t('success.of') || 'de'} {monthNames[today.getMonth()]}</strong> {t('success.timePrefix') || 'a las'} <strong>{selectedSlot}</strong>.
                     </p>
-                    <p className="text-sm text-muted-foreground mt-2 lg:text-white/50">
+                    <p className="text-sm text-muted-foreground mt-2">
                         {t('success.description') || 'Te hemos enviado una invitación al calendario con el enlace de la videollamada.'}
                     </p>
                 </div>
@@ -116,21 +116,21 @@ export function AgendaBooking() {
                 <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 text-primary">
                     <Calendar className="w-7 h-7" />
                 </div>
-                <h2 className="text-2xl font-display font-bold text-white">{t('title') || 'Elige tu horario'}</h2>
-                <p className="text-muted-foreground text-sm text-white/70">{t('subtitle') || 'Sesión de evaluación técnica con nuestros ingenieros.'}</p>
+                <h2 className="text-2xl font-display font-bold text-foreground">{t('title') || 'Elige tu horario'}</h2>
+                <p className="text-muted-foreground text-sm">{t('subtitle') || 'Sesión de evaluación técnica con nuestros ingenieros.'}</p>
             </div>
 
             <div className="flex flex-col flex-1">
                 {/* Calendar Side */}
                 <div className="p-2 sm:p-4">
-                    <h3 className="text-base sm:text-lg font-bold font-display mb-4 flex items-center justify-center gap-2 text-white">
+                    <h3 className="text-base sm:text-lg font-bold font-display mb-4 flex items-center justify-center gap-2 text-foreground">
                         <Calendar className="w-5 h-5 text-primary" />
                         {monthNames[today.getMonth()]} {today.getFullYear()}
                     </h3>
 
                     <div className="grid grid-cols-7 gap-1 mb-2">
                         {dayNames.map((d: string) => (
-                            <div key={d} className="text-center text-xs font-semibold text-muted-foreground/70 py-1 sm:py-2 text-white/50">{d}</div>
+                            <div key={d} className="text-center text-xs font-semibold text-muted-foreground py-1 sm:py-2">{d}</div>
                         ))}
                     </div>
                     <div className="grid grid-cols-7 gap-1 sm:gap-2">
@@ -150,7 +150,7 @@ export function AgendaBooking() {
                                     onClick={() => { setSelectedDay(day); setSelectedSlot(null); }}
                                     className={`
                                         w-full aspect-square rounded-xl text-sm font-medium transition-all flex items-center justify-center
-                                        ${isDisabled ? 'text-muted-foreground/30 text-white/20 cursor-not-allowed' : 'hover:bg-primary/20 cursor-pointer text-white/80'}
+                                        ${isDisabled ? 'text-muted-foreground/30 cursor-not-allowed' : 'hover:bg-primary/20 cursor-pointer text-foreground/80'}
                                         ${isSelected ? 'bg-primary text-primary-foreground shadow-[0_0_15px_rgba(232,196,47,0.3)] scale-110 font-bold z-10' : ''}
                                         ${isToday && !isSelected ? 'border-2 border-primary/40 text-primary font-bold' : ''}
                                     `}
@@ -164,14 +164,14 @@ export function AgendaBooking() {
 
                 {/* Time Slots Side */}
                 <div className="p-2 sm:p-4 mt-2 h-44">
-                    <h4 className="text-sm font-bold text-muted-foreground/80 text-white/60 mb-3 flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-muted-foreground mb-3 flex items-center gap-2">
                         <Clock className="w-4 h-4" /> {t('availableTime') || 'Horarios Disponibles'}
                     </h4>
 
                     {!selectedDay ? (
-                        <div className="flex flex-col items-center justify-center text-muted-foreground/50 bg-background/20 rounded-2xl border border-dashed border-border/30 p-6 text-center h-full">
-                            <CalendarDays className="w-6 h-6 mb-2 opacity-30 text-white/30" />
-                            <p className="text-xs text-white/40">{t('emptyState') || 'Selecciona un día en el calendario para ver las horas.'}</p>
+                        <div className="flex flex-col items-center justify-center text-muted-foreground/50 bg-secondary/50 rounded-2xl border border-dashed border-border/50 p-6 text-center h-full">
+                            <CalendarDays className="w-6 h-6 mb-2 opacity-30 text-muted-foreground" />
+                            <p className="text-xs text-muted-foreground">{t('emptyState') || 'Selecciona un día en el calendario para ver las horas.'}</p>
                         </div>
                     ) : loading ? (
                         <div className="flex items-center justify-center h-full">
@@ -191,10 +191,10 @@ export function AgendaBooking() {
                                     onClick={() => setSelectedSlot(slot.startTime)}
                                     className={`
                                         py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-medium border transition-all
-                                        ${!slot.isAvailable ? 'bg-background/10 text-muted-foreground/30 border-border/20 cursor-not-allowed line-through text-white/20'
+                                        ${!slot.isAvailable ? 'bg-secondary/50 text-muted-foreground/30 border-border/20 cursor-not-allowed line-through'
                                             : selectedSlot === slot.startTime
                                                 ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(232,196,47,0.3)]'
-                                                : 'bg-background/40 hover:bg-background/80 border-border/50 hover:border-primary/50 text-white/80'
+                                                : 'bg-secondary/50 hover:bg-secondary border-border/50 hover:border-primary/50 text-foreground/80'
                                         }
                                     `}
                                 >
@@ -205,7 +205,7 @@ export function AgendaBooking() {
                     )}
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-white/10 px-2 sm:px-4 pb-2">
+                <div className="mt-4 pt-4 border-t border-border/30 px-2 sm:px-4 pb-2">
                     {error && <p className="text-xs text-red-400 bg-red-400/10 rounded-lg p-2 mb-3 text-center">{error}</p>}
 
                     <button

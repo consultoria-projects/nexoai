@@ -25,6 +25,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { cn } from '@/lib/utils';
+import { X } from 'lucide-react';
 
 const identitySchema = z.object({
     name: z.string().min(2, "El nombre es necesario"),
@@ -168,11 +169,11 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                     {onBack && step === 'contact' && (
                         <Button
                             variant="ghost"
-                            size="sm"
-                            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground z-10"
+                            size="icon"
+                            className="absolute top-4 right-4 text-muted-foreground hover:text-foreground z-10 w-8 h-8 rounded-full bg-secondary/50 hover:bg-secondary transition-colors"
                             onClick={onBack}
                         >
-                            {t.buttons?.cancel || "Cancelar"}
+                            <X className="w-4 h-4" />
                         </Button>
                     )}
 
@@ -318,7 +319,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             <InputOTPSlot
                                                 key={i}
                                                 index={i}
-                                                className="h-14 w-12 border border-white/30 bg-white/5 text-xl rounded-xl text-foreground font-display"
+                                                className="h-14 w-12 border border-zinc-400 dark:border-white/30 bg-white/5 text-xl rounded-xl text-foreground font-display"
                                             />
                                         ))}
                                     </InputOTPGroup>
@@ -328,7 +329,7 @@ export function IdentityForm({ onVerified, onBack, intent, dictionary }: Identit
                                             <InputOTPSlot
                                                 key={i}
                                                 index={i}
-                                                className="h-14 w-12 border border-white/30 bg-white/5 text-xl rounded-xl text-foreground font-display"
+                                                className="h-14 w-12 border border-zinc-400 dark:border-white/30 bg-white/5 text-xl rounded-xl text-foreground font-display"
                                             />
                                         ))}
                                     </InputOTPGroup>
