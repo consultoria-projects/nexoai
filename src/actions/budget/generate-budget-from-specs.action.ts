@@ -17,18 +17,19 @@ import { generateBudgetRecurseFlow } from '@/backend/ai/private-core/flows/gener
 
 // ... (previous code)
 
-export async function generateBudgetFromSpecsAction(leadId: string, specs: ProjectSpecs, deepGeneration: boolean = false) {
+export async function generateBudgetFromSpecsAction(leadId: string | null, specs: ProjectSpecs, deepGeneration: boolean = false) {
     try {
         console.log(`>> Generating Budget from Specs (Deep Mode: ${deepGeneration})...`);
 
-        // ... (lead validation) ... 
-        let lead = await leadRepository.findById(leadId);
-        if (!lead) {
-            // ... (auto-create logic) ...
-            const { ensureLeadProfile } = await import('@/actions/debug/fix-account.action');
-            await ensureLeadProfile(leadId);
+        let lead = null;
+        if (leadId && leadId !== 'admin-user' && leadId !== 'unknown-lead') {
             lead = await leadRepository.findById(leadId);
-            if (!lead) throw new Error("Lead not found");
+            if (!lead) {
+                // ... (auto-create logic) ...
+                const { ensureLeadProfile } = await import('@/actions/debug/fix-account.action');
+                await ensureLeadProfile(leadId);
+                lead = await leadRepository.findById(leadId);
+            }
         }
 
         // 2. Build Narrative
@@ -38,12 +39,13 @@ export async function generateBudgetFromSpecsAction(leadId: string, specs: Proje
         let budgetResult: any;
 
         // 3. Call AI Flow
+        const contextUserId = leadId || 'admin-user';
         if (deepGeneration) {
             console.log(">> Using Recursive Flow (Deep Generation)");
-            const recurseResult = await runWithContext({ userId: leadId, role: 'user' }, async () => {
+            const recurseResult = await runWithContext({ userId: contextUserId, role: 'user' }, async () => {
                 return await generateBudgetRecurseFlow({
                     projectDescription: narrative,
-                    leadId: leadId,
+                    leadId: contextUserId,
                     totalArea: specs.totalArea || 0
                 });
             });
@@ -86,7 +88,7 @@ export async function generateBudgetFromSpecsAction(leadId: string, specs: Proje
 
         } else {
             // Standard Flow
-            budgetResult = await runWithContext({ userId: leadId, role: 'user' }, async () => {
+            budgetResult = await runWithContext({ userId: contextUserId, role: 'user' }, async () => {
                 return await generateBudgetFlow({ userRequest: narrative });
             });
         }
@@ -96,8 +98,8 @@ export async function generateBudgetFromSpecsAction(leadId: string, specs: Proje
 
         const newBudget: Budget = {
             id: budgetId,
-            leadId: lead.id,
-            clientSnapshot: lead.personalInfo,
+            leadId: lead?.id || 'unassigned',
+            clientSnapshot: lead?.personalInfo || { name: 'Admin', email: '', phone: '' },
             specs: specs,
             status: 'draft',
             createdAt: new Date(),

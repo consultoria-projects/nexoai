@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { useWidgetContext } from '@/context/budget-widget-context';
 
@@ -10,57 +10,145 @@ export type Message = {
     attachments?: string[];
 };
 
+export type ConversationThread = {
+    id: string;
+    title: string;
+    updatedAt: string;
+    status: string;
+};
+
 export type WizardState = 'idle' | 'listening' | 'processing' | 'generating' | 'review';
 
-export const useBudgetWizard = () => {
+export const useBudgetWizard = (isAdmin: boolean = false) => {
     const { leadId } = useWidgetContext();
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [state, setState] = useState<WizardState>('idle');
     const [requirements, setRequirements] = useState<Partial<BudgetRequirement>>({});
+
+    // Multi-chat State
+    const [conversations, setConversations] = useState<ConversationThread[]>([]);
     const [conversationId, setConversationId] = useState<string | null>(null);
-    const hasLoadedRef = useRef(false);
+    const [isLoadingChats, setIsLoadingChats] = useState(false);
 
-    // Load Conversation History
+    // We use a generic 'admin-user' ID for now, as auth is out of scope for the wizard component itself.
+    const effectiveUserId = isAdmin ? 'admin-user' : (leadId || 'unknown-lead');
+
+    // 1. Initial Load
     useEffect(() => {
-        if (!leadId || hasLoadedRef.current) return;
+        if (!isAdmin && effectiveUserId === 'unknown-lead') return;
 
-        const loadHistory = async () => {
-            try {
+        loadConversations();
+    }, [isAdmin, effectiveUserId]);
+
+    const loadConversations = async () => {
+        setIsLoadingChats(true);
+        try {
+            if (isAdmin) {
+                // Admin Mode: Load all thread history
+                const { getAdminConversationsAction } = await import('@/actions/chat/get-admin-conversations.action');
+                const result = await getAdminConversationsAction(effectiveUserId);
+
+                if (result.success && result.conversations && result.conversations.length > 0) {
+                    setConversations(result.conversations);
+                    switchConversation(result.conversations[0].id);
+                }
+            } else {
+                // Lead Mode: Just load the default conversation for this lead
                 const { getConversationAction } = await import('@/actions/chat/get-conversation.action');
-                const result = await getConversationAction(leadId);
+                const result = await getConversationAction(effectiveUserId);
 
                 if (result.success && result.messages) {
                     setConversationId(result.conversationId || null);
-
                     if (result.messages.length > 0) {
-                        const history = result.messages.map((m: any) => ({
+                        setMessages(result.messages.map((m: any) => ({
                             id: m.id,
                             role: m.role,
                             content: m.content,
                             createdAt: new Date(m.createdAt),
                             attachments: m.attachments
-                        }));
-                        setMessages(history);
-                    } else {
-                        // User requested to keep the empty state visible, therefore no initial AI message is pushed into the array.
+                        })));
                     }
                 }
-            } catch (error) {
-                console.error("Failed to load conversation:", error);
-            } finally {
-                hasLoadedRef.current = true;
             }
-        };
+        } catch (error) {
+            console.error("Failed to load conversations:", error);
+        } finally {
+            setIsLoadingChats(false);
+        }
+    };
 
-        loadHistory();
-    }, [leadId]);
+    const switchConversation = async (id: string | null) => {
+        setConversationId(id);
+        setMessages([]);
+        setRequirements({});
+        setState('idle');
+
+        if (!id) return;
+
+        try {
+            // Re-use the existing action to get messages by conversationId, but 
+            // since getConversationAction expects leadId, we have an architecture mismatch.
+            // Wait, getConversationAction expects leadId, but internally it uses GetOrCreateConversationUseCase.
+            // We need an action to get specifically the messages for a known conversationId.
+            // Let's import the specific usecase logic inline or via action later. 
+            // For now, let's load it from getConversationHistory action if it exists.
+            const { getConversationHistoryAction } = await import('@/actions/chat/get-conversation-history.action');
+            const result = await getConversationHistoryAction(id);
+
+            if (result.success && result.messages) {
+                setMessages(result.messages.map((m: any) => ({
+                    id: m.id,
+                    role: m.role,
+                    content: m.content,
+                    createdAt: new Date(m.createdAt),
+                    attachments: m.attachments
+                })));
+            }
+        } catch (error) {
+            console.error("Error switching conversation:", error);
+        }
+    };
+
+    const startNewConversation = async () => {
+        if (!isAdmin) return;
+        setIsLoadingChats(true);
+        try {
+            const { createAdminConversationAction } = await import('@/actions/chat/create-admin-conversation.action');
+            const result = await createAdminConversationAction(effectiveUserId);
+            if (result.success && result.conversationId) {
+                // Refresh list and switch to new
+                await loadConversations();
+                switchConversation(result.conversationId);
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoadingChats(false);
+        }
+    };
+
+    const deleteConversation = async (id: string) => {
+        if (!isAdmin) return;
+        try {
+            const { deleteAdminConversationAction } = await import('@/actions/chat/delete-admin-conversation.action');
+            await deleteAdminConversationAction(id);
+            if (conversationId === id) {
+                setConversationId(null);
+                setMessages([]);
+                setRequirements({});
+            }
+            // remove from state
+            setConversations(prev => prev.filter(c => c.id !== id));
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
 
     const sendMessage = async (text: string, attachments: string[] = [], llmTextOverride?: string) => {
-        if ((!text.trim() && attachments.length === 0) || !conversationId || !leadId) return;
+        if ((!text.trim() && attachments.length === 0) || !conversationId) return;
 
-        // Optimistic Update
         const tempId = Date.now().toString();
         const userMsg: Message = {
             id: tempId,
@@ -77,7 +165,13 @@ export const useBudgetWizard = () => {
         try {
             // 1. Persist User Message
             const { sendMessageAction } = await import('@/actions/chat/send-message.action');
-            await sendMessageAction(conversationId, text, 'lead', leadId, attachments);
+            await sendMessageAction(
+                conversationId,
+                text,
+                isAdmin ? 'admin' : 'lead',
+                effectiveUserId,
+                attachments
+            );
 
             // 2. Process AI Response
             await processAIResponse(llmTextOverride || text, attachments);
@@ -85,22 +179,17 @@ export const useBudgetWizard = () => {
         } catch (error) {
             console.error("Failed to send message:", error);
             setState('idle');
-            // Revert optimistic update? Or show error state on message
         }
     };
 
     const processHiddenMessage = async (context: string) => {
-        if (!conversationId || !leadId) return;
+        if (!conversationId) return;
         setState('processing');
-        // Hidden messages are system events or context injections, 
-        // strictly speaking they might not need to be 'user' messages in the chat history visible to user,
-        // but for the AI context they are valid.
-        // For persistence, we might want to save them as 'system' messages or just pass them to AI flow.
         await processAIResponse(context, [], true);
     };
 
     const processAIResponse = async (text: string, attachments: string[] = [], isHidden: boolean = false) => {
-        if (!conversationId || !leadId) return;
+        if (!conversationId) return;
 
         try {
             const history = messages.map(m => ({
@@ -108,13 +197,14 @@ export const useBudgetWizard = () => {
                 content: [{ text: m.content }]
             }));
 
-            // Add current message to history if it wasn't added yet (for hidden ones)
-            // Actually, processClientMessageAction expects history EXCLUDING current message typically,
-            // or including it. Let's check the flow. 
-            // Usually we send history + current prompt.
-
-            const { processClientMessageAction } = await import('@/actions/budget/process-client-message.action');
-            const result = await processClientMessageAction(leadId, text, history, requirements);
+            let result;
+            if (isAdmin) {
+                const { processAdminMessageAction } = await import('@/actions/budget/process-admin-message.action');
+                result = await processAdminMessageAction(conversationId, text, history, requirements);
+            } else {
+                const { processClientMessageAction } = await import('@/actions/budget/process-client-message.action');
+                result = await processClientMessageAction(effectiveUserId, text, history, requirements);
+            }
 
             if (result.success && result.data) {
                 const aiMsg: Message = {
@@ -134,7 +224,7 @@ export const useBudgetWizard = () => {
                 const data = result.data as any;
 
                 if (data.isLimitReached) {
-                    setState('idle'); // Or 'limit_reached' if we added that
+                    setState('idle');
                 } else if (data.isComplete) {
                     setState('review');
                 } else {
@@ -157,6 +247,13 @@ export const useBudgetWizard = () => {
         sendMessage,
         processHiddenMessage,
         state,
-        requirements
+        requirements,
+        // New exports for multi-chat UI
+        conversations,
+        conversationId,
+        isLoadingChats,
+        startNewConversation,
+        switchConversation,
+        deleteConversation
     };
 };

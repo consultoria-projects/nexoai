@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription, DrawerHeader } from '@/components/ui/drawer';
 
-import { Trash2, X } from 'lucide-react';
+import { Trash2, X, PlusCircle, MessageSquare } from 'lucide-react';
 import { BudgetStreamListener } from './BudgetStreamListener';
 import { Toaster as SileoToaster } from 'sileo';
 import 'sileo/styles.css';
@@ -35,28 +35,24 @@ function calculateProgress(req: Partial<BudgetRequirement>, state?: string) {
     if (req.specs?.interventionType) score += 20;
     if (req.specs?.totalArea) score += 20;
 
-    // Detailed Requirements:
-    // If we have detected needs, great (+30)
-    // If not, but we have attachments, good (+10)
-    // If the user has provided premium qualities or other specs (implied by non-empty specs keys > 3), give points
-
     if (req.detectedNeeds?.length) {
-        score += 30; // 60 + 30 = 90 (Enough to start)
+        score += 30; // 60 + 30 = 90
     } else if (Object.keys(req.specs || {}).length > 3) {
-        // Fallback: If we have extras like 'quality' or 'floors' in specs
-        score += 20; // 60 + 20 = 80 (Enough to start)
+        score += 20; // 60 + 20 = 80
     }
 
     if (req.attachmentUrls?.length) score += 10; // Bonus
 
-    // Cap at 100
     return Math.min(score, 100);
 }
 
-export function BudgetWizardChat() {
+export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
     const t = useTranslations('home');
     const w = t.raw('basis.wizardChat');
-    const { messages, input, setInput, sendMessage, state, requirements } = useBudgetWizard();
+    const {
+        messages, input, setInput, sendMessage, state, requirements,
+        conversations, conversationId, isLoadingChats, startNewConversation, switchConversation, deleteConversation
+    } = useBudgetWizard(isAdmin);
     const { leadId, closeWidget } = useWidgetContext();
     const { isRecording, startRecording, stopRecording, recordingTime } = useAudioRecorder();
     const [budgetResult, setBudgetResult] = React.useState<{ id: string; total: number; itemCount: number, fullBudget?: Budget } | null>(null);
@@ -188,13 +184,15 @@ export function BudgetWizardChat() {
     const handleGenerateBudget = async () => {
         if (!requirements || !requirements.specs) return;
 
-        if (!leadId) {
+        if (!isAdmin && !leadId) {
             console.error("Lead ID missing");
             return;
         }
 
         // Open mobile drawer immediately if we are on mobile
-        setIsMobileModalOpen(true);
+        if (window.innerWidth < 768) {
+            setIsMobileModalOpen(true);
+        }
         setGenerationProgress({ step: 'extracting' });
         sendMessage(w.progress.generatingMsg);
 
@@ -213,17 +211,17 @@ export function BudgetWizardChat() {
                 currentItem: w.progress.searching
             });
 
-            const { generateDemoBudgetAction } = await import('@/actions/budget/generate-demo-budget.action');
+            let result;
 
-            setTimeout(() => {
-                setGenerationProgress(prev => ({
-                    ...prev,
-                    step: 'calculating',
-                    currentItem: w.progress.calculating
-                }));
-            }, 3000);
-
-            const result = await generateDemoBudgetAction(leadId, requirements);
+            if (isAdmin) {
+                const { generateBudgetFromSpecsAction } = await import('@/actions/budget/generate-budget-from-specs.action');
+                // Ensure specs exists, we have guarded against it above
+                result = await generateBudgetFromSpecsAction(leadId, requirements.specs as any, deepGeneration);
+            } else {
+                if (!leadId) return;
+                const { generateDemoBudgetAction } = await import('@/actions/budget/generate-demo-budget.action');
+                result = await generateDemoBudgetAction(leadId, requirements);
+            }
 
             if (result.success && result.budgetResult) {
                 const budgetId = result.budgetId || result.budgetResult.id;
@@ -243,7 +241,9 @@ export function BudgetWizardChat() {
                     itemCount,
                     fullBudget: result.budgetResult
                 } as any);
-                setIsMobileModalOpen(false);
+                if (window.innerWidth < 768) {
+                    setIsMobileModalOpen(false);
+                }
             } else {
                 setGenerationProgress({
                     step: 'error',
@@ -260,10 +260,18 @@ export function BudgetWizardChat() {
     };
 
     if (budgetResult && requirements.specs) {
-        // Reconstruct a fake 'Budget' object for the viewer based on the action result
-        // The action currently returns a minimal object, we might need to adjust `generateDemoBudgetAction` to return the full budget to make this robust. 
-        // For now, let's assume we update the action to return the full budget data, or fetch it here.
+        // Redirigir el administrador a la vista avanzada en el CRM una vez se ha generado su draft
+        if (isAdmin) {
+            router.push(`/dashboard/admin/budgets/${budgetResult.id}/edit`);
+            return (
+                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
+                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
+                    <p>Redirigiendo al editor avanzado de presupuesto...</p>
+                </div>
+            );
+        }
 
+        // Reconstruct a fake 'Budget' object for the public viewer based on the action result
         return (
             <div className="w-full h-[100dvh] pt-4 md:pt-8 bg-zinc-50 dark:bg-zinc-950/50 overflow-x-hidden">
                 <DemoBudgetViewer
@@ -398,8 +406,57 @@ export function BudgetWizardChat() {
             {/* Stream Listener for Sileo Notifications */}
             <BudgetStreamListener />
 
-            {/* Left Panel: Chat Interface */}
-            <div className="flex w-full flex-col md:w-2/3 relative h-full min-h-0">
+            {/* Admin Left Sidebar: Chat History */}
+            {isAdmin && (
+                <div className="hidden md:flex flex-col w-64 border-r border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-zinc-900/50 h-full">
+                    <div className="p-4 border-b border-gray-100 dark:border-white/5">
+                        <Button
+                            onClick={startNewConversation}
+                            disabled={isLoadingChats}
+                            className="w-full justify-start font-medium text-sm transition-all"
+                            variant="outline"
+                        >
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Nuevo Chat
+                        </Button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto px-2 py-4 space-y-1 custom-scrollbar">
+                        {isLoadingChats && conversations.length === 0 ? (
+                            <div className="flex justify-center p-4"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+                        ) : (
+                            conversations.map(chat => (
+                                <div key={chat.id} className="group flex items-center gap-2">
+                                    <button
+                                        onClick={() => switchConversation(chat.id)}
+                                        className={cn(
+                                            "flex-1 flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-left transition-colors whitespace-nowrap overflow-hidden text-ellipsis",
+                                            conversationId === chat.id
+                                                ? "bg-primary/10 text-primary font-medium dark:bg-primary/20"
+                                                : "text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5"
+                                        )}
+                                    >
+                                        <MessageSquare className="w-4 h-4 shrink-0" />
+                                        <span className="truncate">{chat.title || 'Conversación sin título'}</span>
+                                    </button>
+                                    <button
+                                        onClick={() => deleteConversation(chat.id)}
+                                        className={cn(
+                                            "p-2 text-muted-foreground hover:text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-all focus:opacity-100",
+                                            conversationId === chat.id && "opacity-100 text-red-400"
+                                        )}
+                                        title="Eliminar Chat"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* Middle Panel: Chat Interface */}
+            <div className={cn("flex w-full flex-col relative h-full min-h-0", isAdmin ? "md:flex-1" : "md:w-2/3")}>
                 {/* Header */}
                 <header className="absolute top-0 left-0 right-0 z-10 flex h-16 md:h-20 items-center justify-between px-4 md:px-8 bg-gradient-to-b from-background via-background/95 to-transparent backdrop-blur-sm">
                     <div className="flex items-center gap-3 md:gap-4">
@@ -407,16 +464,17 @@ export function BudgetWizardChat() {
                     </div>
 
                     <div className="flex items-center gap-1">
-                        {/* Hidden trash button as requested */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={handleReset}
-                            className="hidden text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                            title={w.header.clearTooltip}
-                        >
-                            <Trash2 className="h-5 w-5" />
-                        </Button>
+                        {isAdmin && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={startNewConversation}
+                                className="mr-2 hidden md:flex text-muted-foreground hover:text-primary transition-colors"
+                            >
+                                <PlusCircle className="mr-1 h-4 w-4" />
+                                Nuevo Chat
+                            </Button>
+                        )}
 
                         {/* Top Right Close 'X' Button */}
                         <Button
@@ -570,7 +628,7 @@ export function BudgetWizardChat() {
             </div>
 
             {/* Right Panel: Context & Requirements (Visible on Desktop) */}
-            <div className="hidden border-l border-gray-100 dark:border-white/5 md:flex md:w-1/3 flex-col bg-gray-50/50 dark:bg-zinc-900/50 backdrop-blur-sm h-full min-h-0">
+            <div className={cn("hidden border-l border-gray-100 dark:border-white/5 md:flex flex-col bg-gray-50/50 dark:bg-zinc-900/50 backdrop-blur-sm h-full min-h-0", isAdmin ? "w-80" : "w-1/3")}>
                 <div className="h-20 border-b border-gray-100 dark:border-white/5 px-6 flex items-center justify-between shrink-0">
                     <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider uppercase">{w.panel.title}</h4>
                     <span className="px-2 py-1 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground text-[10px] font-bold rounded-md uppercase">
@@ -580,8 +638,7 @@ export function BudgetWizardChat() {
 
                 {/* Requirements Area */}
                 <div className="flex-1 min-h-0 overflow-y-auto p-4 custom-scrollbar">
-                    {/* Slightly adjust padding to make it less squeezed if needed, but the width 1/4 is standard */}
-                    <RequirementCard requirements={requirements} className="h-full border-none shadow-none bg-transparent" />
+                    <RequirementCard requirements={requirements} className="border-none shadow-none bg-transparent max-w-full" />
                 </div>
 
                 {/* Progress Indicator */}

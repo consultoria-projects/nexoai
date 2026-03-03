@@ -19,6 +19,7 @@ import { AIThinkingTrace } from './AIThinkingTrace';
 import { Menu, Sparkles, FileText, User, Home } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { AssignClientModal } from './AssignClientModal';
 
 interface BudgetEditorWrapperProps {
     budget: Budget;
@@ -171,8 +172,11 @@ const BudgetEditorMain = ({ budget, isAdmin }: BudgetEditorWrapperProps) => {
                                 <span className="text-xs font-mono text-muted-foreground">#{budget.id.substring(0, 8).toUpperCase()}</span>
                             </div>
 
-                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight font-headline text-foreground">
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight font-headline text-foreground flex items-center">
                                 {budget.clientSnapshot?.name || 'Cliente Desconocido'}
+                                {isAdmin && budget.leadId === 'unassigned' && (
+                                    <AssignClientModal budgetId={budget.id} />
+                                )}
                             </h1>
 
                             <div className="flex flex-wrap items-center gap-2 md:gap-3 text-sm text-muted-foreground pt-1">

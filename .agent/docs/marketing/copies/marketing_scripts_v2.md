@@ -22,11 +22,16 @@
 
 **(0:00)** ¿Y si hacer un presupuesto fuera tan fácil como enviar una nota de voz?
 **(0:05)** Con [PLATAFORMA], lo es.
-**(0:07)** Dicta la reforma a nuestro **Arquitecto Virtual**.
-**(0:10)** Él interpreta, desglosa partidas y busca precios reales automáticamente.
+**(0:07)** Dicta la reforma a nuestro **Agente Inteligente**.
+**(0:10)** Este interpreta, desglosa partidas y busca precios reales automáticamente.
 **(0:15)** Calcula desperdicios, mano de obra y materiales auxiliares por ti.
 **(0:20)** Ajusta tus márgenes globales en un clic y genera un PDF impecable al instante.
 **(0:25)** Deja de echarle horas a los números. Deja que la IA trabaje para ti.
+**(0:30)** ¿Quieres comprobarlo en tiempo real con uno de tus proyectos?
+**(0:35)** Simplemente entra a nuestro sitio web: **basis.consultoria.systems**
+**(0:40)** Completa un par de datos rápidos sobre tu empresa.
+**(0:45)** Y empieza a hablar con Basis ahora mismo, gratis y sin compromiso.
+**(0:52)** Dale un respiro a tu calculadora, jubila tu excel y habla con Basis.
 
 ---
 

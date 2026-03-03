@@ -11,7 +11,7 @@ export interface Participant {
 export type ConversationStatus = 'active' | 'archived' | 'waiting_for_admin' | 'waiting_for_user';
 
 export interface RelatedEntity {
-    type: 'lead' | 'budget';
+    type: 'lead' | 'budget' | 'admin';
     id: string;
 }
 

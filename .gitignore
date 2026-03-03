@@ -46,6 +46,7 @@ firestore-debug.log
 
 # Custom dev & analysis folders
 video/
+.basis/
 .agents/
 .agent/
 estrategia-marketing/

@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Hammer, Ruler, Home, Layers, Clock, Wallet } from 'lucide-react';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface RequirementCardProps {
     requirements: Partial<BudgetRequirement>;
@@ -24,7 +23,7 @@ export function RequirementCard({ requirements, className }: RequirementCardProp
     }
 
     return (
-        <ScrollArea className={cn("h-full pr-4", className)}>
+        <div className={cn("flex flex-col gap-6 pb-4", className)}>
             <div className="space-y-6">
                 {/* Key Metrics Grid */}
                 <MetricItem
@@ -89,7 +88,7 @@ export function RequirementCard({ requirements, className }: RequirementCardProp
                     </span>
                 </div>
             )}
-        </ScrollArea >
+        </div>
     );
 }
 
