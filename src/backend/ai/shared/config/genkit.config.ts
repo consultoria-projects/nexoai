@@ -1,11 +1,14 @@
-
 import { genkit } from 'genkit';
 import { googleAI, geminiEmbedding001, textEmbedding004, gemini } from '@genkit-ai/googleai';
+import dns from 'node:dns';
 
 /**
  * Shared Genkit Instance Configuration.
  * Initializes Genkit with Google AI plugin and exports the AI instance and Embedding Model.
  */
+
+// Fix for Node.js Undici fetch taking 60s to timeout on Windows IPv6 networks
+dns.setDefaultResultOrder('ipv4first');
 
 // Initialize Genkit
 export const ai = genkit({

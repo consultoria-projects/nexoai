@@ -1,15 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    FileSearch,
-    Search,
-    Calculator,
-    CheckCircle2,
-    Loader2,
-    Package,
-    Sparkles
+    Terminal, Database, Scale, CheckCircle2, Loader2, Sparkles, ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
@@ -36,15 +30,15 @@ interface BudgetGenerationProgressProps {
     className?: string;
 }
 
-const steps = [
-    { id: 'extracting', label: 'Extrayendo partidas', icon: FileSearch },
-    { id: 'searching', label: 'Buscando en Price Book', icon: Search },
-    { id: 'calculating', label: 'Calculando precios', icon: Calculator },
-    { id: 'complete', label: 'Presupuesto listo', icon: CheckCircle2 },
+const AGENT_NODES = [
+    { id: 'extracting', name: 'Arquitecto IA', role: 'Deconstrucción Semántica', icon: Terminal, color: 'text-blue-400' },
+    { id: 'searching', name: 'Aparejador RAG', role: 'Vector Search 2025', icon: Database, color: 'text-emerald-400' },
+    { id: 'calculating', name: 'Juez Cognitivo', role: 'Consolidación de Precios', icon: Scale, color: 'text-purple-400' },
+    { id: 'complete', name: 'Sistema', role: 'Finalizado', icon: CheckCircle2, color: 'text-zinc-400' },
 ];
 
 function getStepIndex(step: GenerationStep): number {
-    const idx = steps.findIndex(s => s.id === step);
+    const idx = AGENT_NODES.findIndex(s => s.id === step);
     return idx === -1 ? 0 : idx;
 }
 
@@ -54,15 +48,61 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
     const { step, extractedItems, matchedItems, currentItem, error } = progress;
     const currentStepIndex = getStepIndex(step);
 
-    // Track recently resolved items for inline display
-    const [recentItems, setRecentItems] = React.useState<any[]>([]);
-    const eventSourceRef = React.useRef<EventSource | null>(null);
-    const processedEvents = React.useRef<Set<number>>(new Set());
+    // Track recently resolved items for inline display (Logs)
+    const [terminalLogs, setTerminalLogs] = useState<{ id: string, text: string, type: string, timestamp: string }[]>([]);
+    const [localExtractedItems, setLocalExtractedItems] = useState(extractedItems || 0);
+    const [localResolvedCount, setLocalResolvedCount] = useState(0);
+    const [localStep, setLocalStep] = useState<GenerationStep>(step);
 
-    React.useEffect(() => {
+    // Auto-update local state initially
+    useEffect(() => {
+        setLocalStep(step);
+        if (step === 'idle' || step === 'extracting') setLocalResolvedCount(0);
+    }, [step]);
+
+    const activeStep = localStep;
+    const activeStepIndex = getStepIndex(activeStep);
+
+    const eventSourceRef = useRef<EventSource | null>(null);
+    const processedEvents = useRef<Set<number>>(new Set());
+    const logEndRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll logs
+    useEffect(() => {
+        if (logEndRef.current) {
+            logEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [terminalLogs]);
+
+
+    // Fake terminal strings for UI flavor based on generic progress if real stream fails/delays
+    useEffect(() => {
+        if (step === 'extracting') {
+            addLog('[Arquitecto] Analizando requisitos estructurales...', 'system');
+            addLog(`[Arquitecto] Estimando ${extractedItems || 0} capítulos base...`, 'info');
+        } else if (step === 'searching') {
+            addLog(`[Aparejador] Conectando a VectorDB [price_book_2025]...`, 'system');
+            if (currentItem) addLog(`[Aparejador] Expandiendo query: "${currentItem}"`, 'warning');
+        } else if (step === 'calculating') {
+            addLog(`[Juez] Verificando mermas y rendimientos...`, 'system');
+        } else if (step === 'complete') {
+            addLog(`[Sistema] Presupuesto compilado con éxito.`, 'success');
+        }
+    }, [step, extractedItems, currentItem]);
+
+    const addLog = (text: string, type: 'info' | 'system' | 'success' | 'warning' | 'error' = 'info') => {
+        const now = new Date();
+        const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0')}`;
+
+        setTerminalLogs(prev => {
+            const newLog = { id: Math.random().toString(36).substr(2, 9), text, type, timestamp: time };
+            return [...prev, newLog].slice(-15); // Keep last 15
+        });
+    };
+
+    useEffect(() => {
         if (!leadId || step === 'idle' || step === 'complete' || step === 'error') return;
 
-        // Close existing connection if any
         if (eventSourceRef.current) {
             eventSourceRef.current.close();
         }
@@ -77,12 +117,17 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                 if (processedEvents.current.has(parsed.timestamp)) return;
                 processedEvents.current.add(parsed.timestamp);
 
-                if (parsed.type === 'item_resolved') {
-                    setRecentItems(prev => {
-                        // Keep only the last 3 items to avoid overwhelming the UI
-                        const newItems = [parsed.data, ...prev].slice(0, 3);
-                        return newItems;
-                    });
+                if (parsed.type === 'subtasks_extracted') {
+                    if (parsed.data.totalTasks) setLocalExtractedItems(parsed.data.totalTasks);
+                    setLocalStep('searching');
+                } else if (parsed.type === 'item_resolved') {
+                    setLocalStep('calculating');
+                    setLocalResolvedCount(prev => prev + 1);
+
+                    const item = parsed.data.item;
+                    const price = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(item.totalPrice || 0);
+                    const agentPrefix = parsed.data.type === 'MATERIAL' ? '[Aparejador]' : '[Juez]';
+                    addLog(`${agentPrefix} Resolved: [${item.code || item.code}] ${item.description?.substring(0, 40) || ''}... -> ${price}`, 'success');
                 }
             } catch (e) {
                 // Ignore parse errors from heartbeats
@@ -90,16 +135,9 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
         };
 
         return () => {
-            if (eventSourceRef.current) {
-                eventSourceRef.current.close();
-            }
+            if (eventSourceRef.current) eventSourceRef.current.close();
         };
     }, [leadId, step]);
-
-    // Helper for formatting currency inline
-    const formatCurrency = (val: number) => {
-        return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(val);
-    };
 
     if (step === 'idle') return null;
 
@@ -109,216 +147,123 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             className={cn(
-                "rounded-xl border border-primary/20 bg-gradient-to-br from-primary/5 to-blue-500/5 p-5",
-                "backdrop-blur-sm shadow-lg shadow-primary/10",
+                "w-full flex-1 rounded-2xl bg-[#0A0A0A] border border-white/10 overflow-hidden shadow-2xl flex flex-col font-mono",
                 className
             )}
         >
-            {/* Header */}
-            <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-tr from-primary to-blue-600 shadow-lg shadow-primary/30">
-                    <Sparkles className="h-5 w-5 text-white animate-pulse" />
+            {/* Header: Terminal Style */}
+            <div className="flex items-center justify-between px-4 py-2 bg-white/[0.03] border-b border-white/5 shrink-0">
+                <div className="flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+                    <span className="text-[10px] text-white/50 tracking-widest uppercase">Basis Core Pipeline</span>
                 </div>
-                <div>
-                    <h4 className="text-sm font-semibold text-foreground dark:text-white">
-                        {t('generating')}
-                    </h4>
-                    <p className="text-xs text-muted-foreground dark:text-white/50">
-                        {step === 'complete' ? t('completed') : t('wait')}
-                    </p>
+                <div className="flex gap-1.5">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-amber-500/20 border border-amber-500/50" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50" />
                 </div>
             </div>
 
-            {/* Step Progress */}
-            <div className="space-y-3 mb-5">
-                {steps.map((s, idx) => {
-                    const Icon = s.icon;
-                    const isActive = s.id === step;
-                    const isComplete = idx < currentStepIndex || step === 'complete';
-                    const isPending = idx > currentStepIndex && step !== 'complete';
+            {/* Agent Nodes (Timeline) */}
+            <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-white/5 bg-zinc-950/50">
+                {AGENT_NODES.map((node, idx) => {
+                    const Icon = node.icon;
+                    const isActive = node.id === activeStep;
+                    const isComplete = idx < activeStepIndex || activeStep === 'complete';
 
                     return (
-                        <motion.div
-                            key={s.id}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: idx * 0.1 }}
-                            className={cn(
-                                "flex items-center gap-3 p-2.5 rounded-lg transition-all duration-300",
-                                isActive && "bg-primary/10 ring-1 ring-primary/30",
-                                isComplete && "opacity-100",
-                                isPending && "opacity-40"
+                        <div key={node.id} className={cn(
+                            "flex-1 p-2 md:p-3 flex flex-row md:flex-col items-center md:items-start gap-2 md:gap-3 transition-all duration-500 relative overflow-hidden",
+                            isActive ? "bg-white/[0.02]" : "opacity-40 grayscale"
+                        )}>
+                            {isActive && node.id !== 'complete' && (
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent animate-pulse" />
                             )}
-                        >
                             <div className={cn(
-                                "flex h-8 w-8 items-center justify-center rounded-full transition-all",
-                                isComplete && "bg-green-500/20 text-green-500",
-                                isActive && "bg-primary/20 text-primary",
-                                isPending && "bg-muted/30 text-muted-foreground"
+                                "flex items-center justify-center w-6 h-6 md:w-8 md:h-8 rounded-lg border",
+                                isActive ? `bg-white/5 border-white/20 ${node.color}` : "bg-transparent border-white/10 text-white/40",
+                                isComplete && 'border-green-500/30 text-green-500 bg-green-500/5'
                             )}>
-                                {isActive && step !== 'complete' ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                {isActive && node.id !== 'complete' ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
                                 ) : isComplete ? (
-                                    <CheckCircle2 className="h-4 w-4" />
+                                    <CheckCircle2 className="w-4 h-4" />
                                 ) : (
-                                    <Icon className="h-4 w-4" />
+                                    <Icon className="w-4 h-4" />
                                 )}
                             </div>
-                            <span className={cn(
-                                "text-sm font-medium",
-                                isActive && "text-primary dark:text-primary-foreground",
-                                isComplete && "text-green-600 dark:text-green-400",
-                                isPending && "text-muted-foreground"
-                            )}>
-                                {t(`steps.${s.id}`)}
-                            </span>
-                        </motion.div>
+                            <div className="flex flex-col">
+                                <span className={cn(
+                                    "text-xs font-semibold uppercase tracking-wider",
+                                    isActive ? "text-white" : "text-white/40"
+                                )}>
+                                    {node.name}
+                                </span>
+                                <span className="text-[10px] text-white/30 truncate max-w-[120px]">
+                                    {node.role}
+                                </span>
+                            </div>
+                        </div>
                     );
                 })}
             </div>
 
-            {/* Live Stats */}
-            <AnimatePresence mode="wait">
-                {(extractedItems || matchedItems || currentItem) && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="border-t border-primary/10 pt-4 space-y-2"
-                    >
-                        {extractedItems && (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="flex items-center gap-2 text-muted-foreground dark:text-white/60">
-                                    <Package className="h-4 w-4" />
-                                    {t('extracted')}
+            {/* Telemetry Stream (Logs) */}
+            <div className="bg-black/80 flex-1 min-h-[300px] p-4 overflow-y-auto custom-scrollbar relative flex flex-col">
+                <div className="space-y-1.5 flex-1">
+                    <AnimatePresence initial={false}>
+                        {terminalLogs.map((log) => (
+                            <motion.div
+                                key={log.id}
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="flex items-start gap-3 group"
+                            >
+                                <span className="text-[10px] text-zinc-600 shrink-0 select-none">
+                                    [{log.timestamp}]
                                 </span>
-                                <span className="font-mono font-semibold text-primary dark:text-primary-foreground">
-                                    {extractedItems}
+                                <ChevronRight className="w-3 h-3 text-zinc-700 shrink-0 mt-[1px] group-hover:text-primary transition-colors" />
+                                <span className={cn(
+                                    "text-[11px] leading-relaxed break-all font-mono",
+                                    log.type === 'info' && "text-zinc-300",
+                                    log.type === 'system' && "text-blue-400",
+                                    log.type === 'success' && "text-emerald-400",
+                                    log.type === 'warning' && "text-amber-400",
+                                    log.type === 'error' && "text-red-400"
+                                )}>
+                                    {log.text}
                                 </span>
-                            </div>
-                        )}
-                        {matchedItems !== undefined && (
-                            <div className="flex items-center justify-between text-sm">
-                                <span className="flex items-center gap-2 text-muted-foreground dark:text-white/60">
-                                    <Search className="h-4 w-4" />
-                                    {t('matches')}
-                                </span>
-                                <span className="font-mono font-semibold text-green-600 dark:text-green-400">
-                                    {matchedItems} / {extractedItems || '?'}
-                                </span>
-                            </div>
-                        )}
-                        {currentItem && (
-                            <div className="mt-2 p-2 rounded bg-muted/30 dark:bg-white/5">
-                                <p className="text-xs text-muted-foreground dark:text-white/50 truncate">
-                                    Procesando: <span className="text-foreground dark:text-white">{currentItem}</span>
-                                </p>
-                            </div>
-                        )}
-                    </motion.div>
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                    <div ref={logEndRef} className="h-4" />
+                </div>
+
+                <div ref={logEndRef} className="h-4 shrink-0" />
+
+                {isActiveStreaming(activeStep) && (
+                    <div className="sticky bottom-0 left-0 w-full flex items-center gap-2 p-2 bg-zinc-900 border border-white/10 shadow-xl rounded-lg mt-2 shrink-0 overflow-hidden">
+                        <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(var(--primary),0.8)]" />
+                        <span className="text-[11px] font-bold text-white uppercase tracking-[0.15em]">
+                            {localExtractedItems ? `PROCESANDO ${localResolvedCount || 0}/${localExtractedItems} VARS` : 'ESCUCHANDO TELEMETRÍA...'}
+                        </span>
+                    </div>
                 )}
-            </AnimatePresence>
-
-            {/* Inline Recent Items Display */}
-            <AnimatePresence>
-                {recentItems.length > 0 && step !== 'complete' && step !== 'error' && (
-                    <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="mt-4 space-y-2 border-t border-primary/10 pt-4"
-                    >
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                            Partidas Procesadas
-                        </p>
-                        {/* Show 2 on mobile, 3 on desktop */}
-                        <div className="space-y-2">
-                            <AnimatePresence mode="popLayout">
-                                {recentItems.slice(0, 2).map((data, idx) => {
-                                    const item = data.item;
-                                    const isMaterial = data.type === 'MATERIAL';
-
-                                    return (
-                                        <motion.div
-                                            key={`${item.code || item.sku}-${idx}`}
-                                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                                            animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-                                            exit={{
-                                                opacity: 0,
-                                                x: idx === 0 ? -60 : 60,
-                                                scale: 0.92,
-                                            }}
-                                            transition={{
-                                                type: 'spring',
-                                                stiffness: 300,
-                                                damping: 24,
-                                                mass: 0.8,
-                                                exit: { duration: 0.2, ease: [0.4, 0, 1, 1] },
-                                            }}
-                                            layout
-                                            className={cn(
-                                                "p-3 rounded-xl border bg-background/50 dark:bg-zinc-900/50 backdrop-blur-sm",
-                                                isMaterial ? "border-amber-200/50 dark:border-amber-900/30" : "border-blue-200/50 dark:border-blue-900/30",
-                                                idx === 0 ? "ring-1 ring-primary/20 shadow-sm" : "opacity-70"
-                                            )}
-                                        >
-                                            <div className="flex justify-between items-start mb-1.5">
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className={cn(
-                                                        "text-[10px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider",
-                                                        isMaterial ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400" : "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400"
-                                                    )}>
-                                                        {isMaterial ? 'Material' : 'Partida'}
-                                                    </span>
-                                                </div>
-                                                <span className="text-[10px] font-mono font-medium text-emerald-600 dark:text-emerald-400">
-                                                    {item.code || item.sku || 'N/A'}
-                                                </span>
-                                            </div>
-
-                                            <p className="text-xs font-medium text-foreground line-clamp-2 leading-snug mb-2">
-                                                {item.description || item.name}
-                                            </p>
-
-                                            <div className="flex justify-between items-end border-t border-border/50 pt-2 mt-auto">
-                                                <p className="text-[10px] text-muted-foreground">
-                                                    {item.quantity} {item.unit} x {formatCurrency(item.unitPrice)}
-                                                </p>
-                                                <span className="text-xs font-bold text-foreground bg-primary/5 px-1.5 py-0.5 rounded">
-                                                    {formatCurrency(item.totalPrice)}
-                                                </span>
-                                            </div>
-                                        </motion.div>
-                                    );
-                                })}
-                            </AnimatePresence>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            </div>
 
             {/* Error State */}
             {error && (
-                <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-                </div>
-            )}
-
-            {/* Success Animation */}
-            {step === 'complete' && (
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 200, damping: 15 }}
-                    className="flex justify-center mt-4"
-                >
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 text-green-600 dark:text-green-400">
-                        <CheckCircle2 className="h-5 w-5" />
-                        <span className="text-sm font-medium">{t('success')}</span>
+                <div className="p-4 bg-red-500/10 border-t border-red-500/20">
+                    <div className="flex items-center gap-2 text-red-500">
+                        <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                        <p className="text-xs font-medium uppercase tracking-wider">Exception: {error}</p>
                     </div>
-                </motion.div>
+                </div>
             )}
         </motion.div>
     );
+}
+
+function isActiveStreaming(step: GenerationStep) {
+    return step === 'extracting' || step === 'searching' || step === 'calculating';
 }

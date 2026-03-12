@@ -271,13 +271,13 @@
             "ctaSecondary": "Book Technical Evaluation"
         },
         "wizard": {
-            "title": "The poison test.",
-            "description": "Describe your project in natural language. Our AI will cross-reference real market prices and structure your items in seconds.",
+            "title": "Your next quote, on autopilot.",
+            "description": "Tell Basis what you need to quote. Our AI structures detailed items and crosses market prices in seconds.",
             "examples": {
-                "kitchen": "Load Example: Kitchen",
-                "roof": "Load Example: Roof"
+                "kitchen": "Complete Kitchen Remodel",
+                "roof": "Roof Waterproofing"
             },
-            "placeholder": "Ex: Complete bathroom renovation of 6m2. Remove bathtub, resin shower tray, Roca toilets and matte white tile...",
+            "placeholder": "Ex: I need a quote for a bathroom in central Palma, medium qualities, resin shower tray, new multilayer plumbing...",
             "analyze": "Semantic analyzer activated",
             "generateBtn": "Generate Quote",
             "loadingTitle": "Extracting items...",

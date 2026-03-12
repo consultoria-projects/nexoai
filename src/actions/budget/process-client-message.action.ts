@@ -3,6 +3,10 @@
 import { publicDemoRequirementsFlow } from '@/backend/ai/public-demo/agents/public-demo.agent';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { FirestoreLeadRepository } from '@/backend/lead/infrastructure/firestore-lead-repository';
+import dns from 'node:dns';
+
+// Fix for Node.js Undici fetch taking 60s to timeout on Windows IPv6 networks
+dns.setDefaultResultOrder('ipv4first');
 
 export async function processClientMessageAction(
     leadId: string,

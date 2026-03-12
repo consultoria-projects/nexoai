@@ -40,7 +40,9 @@ export class FirestoreLeadRepository implements LeadRepository {
             } as ClientProfile : null,
             data.createdAt?.toDate() || new Date(),
             data.updatedAt?.toDate() || new Date(),
-            data.demoBudgetsGenerated || 0
+            data.demoBudgetsGenerated || 0,
+            data.demoPdfsDownloaded || 0,
+            data.pdfMetadata || {}
         );
     }
 
@@ -61,13 +63,15 @@ export class FirestoreLeadRepository implements LeadRepository {
                 currentStack: lead.profile.currentStack,
                 companyName: lead.profile.companyName,
                 companySize: lead.profile.companySize,
-                annualSurveyorSpend: lead.profile.annualSurveyorSpend,
-                weeklyManualHours: lead.profile.weeklyManualHours,
                 role: lead.profile.role,
-                feedback: lead.profile.feedback || null,
-                completedAt: lead.profile.completedAt || null
+                ...(lead.profile.annualSurveyorSpend ? { annualSurveyorSpend: lead.profile.annualSurveyorSpend } : {}),
+                ...(lead.profile.weeklyManualHours ? { weeklyManualHours: lead.profile.weeklyManualHours } : {}),
+                ...(lead.profile.feedback ? { feedback: lead.profile.feedback } : {}),
+                ...(lead.profile.completedAt ? { completedAt: lead.profile.completedAt } : {})
             } : null,
             demoBudgetsGenerated: lead.demoBudgetsGenerated,
+            demoPdfsDownloaded: lead.demoPdfsDownloaded,
+            pdfMetadata: lead.pdfMetadata,
             createdAt: lead.createdAt,
             updatedAt: lead.updatedAt
         };
@@ -132,5 +136,9 @@ export class FirestoreLeadRepository implements LeadRepository {
         }
 
         return { verified, unverified, profiled };
+    }
+
+    async delete(id: string): Promise<void> {
+        await this.db.collection('leads').doc(id).delete();
     }
 }

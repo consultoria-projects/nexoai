@@ -274,13 +274,13 @@
             "ctaSecondary": "Prenota Valutazione Tecnica"
         },
         "wizard": {
-            "title": "Il test del veleno.",
-            "description": "Descrivi il tuo progetto in linguaggio naturale. La nostra IA incrocerà i prezzi di mercato reali e strutturerà le tue voci in pochi secondi.",
+            "title": "Il tuo prossimo preventivo, con il pilota automatico.",
+            "description": "Dì a Basis cosa devi preventivare. La nostra IA struttura voci dettagliate e incrocia i prezzi di mercato in pochi secondi.",
             "examples": {
-                "kitchen": "Carica Esempio: Cucina",
-                "roof": "Carica Esempio: Tetto"
+                "kitchen": "Ristrutturazione Completa Cucina",
+                "roof": "Impermeabilizzazione Tetto"
             },
-            "placeholder": "Es: Ristrutturazione bagno 6mq. Rimozione vasca, piatto doccia in resina...",
+            "placeholder": "Es: Ho bisogno di un preventivo per un bagno nel centro di Palma, qualità media, piatto doccia in resina, nuovo impianto idraulico multistrato...",
             "analyze": "Analizzatore semantico attivato",
             "generateBtn": "Genera Preventivo",
             "loadingTitle": "Estrazione voci...",

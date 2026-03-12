@@ -240,13 +240,13 @@
             "ctaSecondary": "Agendar Avaluació Tècnica"
         },
         "wizard": {
-            "title": "La prova del verí.",
-            "description": "Descriu la teva obra en llenguatge natural. La nostra IA creuarà preus de mercat reals i estructurarà les teves partides en segons.",
+            "title": "El teu proper pressupost, en pilot automàtic.",
+            "description": "Digues a Basis què necessites pressupostar. La nostra IA estructura partides detallades i creua preus de mercat en segons.",
             "examples": {
-                "kitchen": "Carregar Exemple: Cuina",
-                "roof": "Carregar Exemple: Coberta"
+                "kitchen": "Reforma Completa de Cuina",
+                "roof": "Impermeabilització de Coberta"
             },
-            "placeholder": "Ex: Reforma de bany complet de 6m2. Treure banyera, plat de dutxa de resina, sanitaris Roca i rajola blanca mat...",
+            "placeholder": "Ex: Necessito pressupostar un bany al centre de Palma, qualitats mitjanes, plat de dutxa de resina, nova fontaneria multicapa...",
             "analyze": "Analitzador semàntic activat",
             "generateBtn": "Generar Pressupost",
             "loadingTitle": "Extraient partides...",

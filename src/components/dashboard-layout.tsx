@@ -23,10 +23,11 @@ export function DashboardLayout({ children, t }: { children: React.ReactNode, t:
   }, [pathname]);
 
   // Determine if the current page should be full-width/app-like (no default padding)
+  const isBudgetsEditView = pathname.includes('/budgets/') && pathname.includes('/edit');
   const isAppPage = pathname.includes('/admin/messages') ||
     pathname.includes('/wizard') ||
     pathname.includes('/projects') ||
-    pathname.includes('/budgets') ||
+    isBudgetsEditView ||
     pathname.includes('/presupuesto');
 
   const [mounted, setMounted] = React.useState(false);

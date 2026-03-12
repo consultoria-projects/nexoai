@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Mic, Paperclip, Sparkles, Loader2, Square, CheckCircle2, ExternalLink, Bot } from 'lucide-react';
 import { useBudgetWizard, Message } from './useBudgetWizard';
@@ -17,45 +17,29 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription, DrawerHeader } from '@/components/ui/drawer';
 
-import { Trash2, X, PlusCircle, MessageSquare } from 'lucide-react';
-import { BudgetStreamListener } from './BudgetStreamListener';
-import { Toaster as SileoToaster } from 'sileo';
-import 'sileo/styles.css';
+import { Trash2, X, PlusCircle, MessageSquare, Home, Hammer, Layers, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+// removed sileo imports
 import { Logo } from '@/components/logo';
-import { DemoBudgetViewer, CustomPdfData } from './DemoBudgetViewer';
 import { Budget } from '@/backend/budget/domain/budget';
+import { BudgetWizardTips } from './BudgetWizardTips';
 
-// Update to accept 'state' to override score if AI thinks it's done
-function calculateProgress(req: Partial<BudgetRequirement>, state?: string) {
-    if (state === 'review') return 100;
 
-    let score = 0;
-    // Core Requirements (Essential): 60% total
-    if (req.specs?.propertyType) score += 20;
-    if (req.specs?.interventionType) score += 20;
-    if (req.specs?.totalArea) score += 20;
-
-    if (req.detectedNeeds?.length) {
-        score += 30; // 60 + 30 = 90
-    } else if (Object.keys(req.specs || {}).length > 3) {
-        score += 20; // 60 + 20 = 80
-    }
-
-    if (req.attachmentUrls?.length) score += 10; // Bonus
-
-    return Math.min(score, 100);
-}
-
-export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
+export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { isAdmin?: boolean, isPublicMode?: boolean }) {
     const t = useTranslations('home');
     const w = t.raw('basis.wizardChat');
     const {
-        messages, input, setInput, sendMessage, state, requirements,
-        conversations, conversationId, isLoadingChats, startNewConversation, switchConversation, deleteConversation
+        messages,
+        input,
+        setInput,
+        sendMessage,
+        addSystemMessage,
+        state,
+        setState,
+        requirements,
+        conversations, conversationId, isLoadingChats, startNewConversation, switchConversation, deleteConversation, resetConversation
     } = useBudgetWizard(isAdmin);
-    const { leadId, closeWidget } = useWidgetContext();
+    const { leadId, closeWidget, initialPrompt, setInitialPrompt } = useWidgetContext();
     const { isRecording, startRecording, stopRecording, recordingTime } = useAudioRecorder();
-    const [budgetResult, setBudgetResult] = React.useState<{ id: string; total: number; itemCount: number, fullBudget?: Budget } | null>(null);
     const router = useRouter();
     const [generationProgress, setGenerationProgress] = React.useState<{
         step: GenerationStep;
@@ -65,16 +49,37 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
         error?: string;
     }>({ step: 'idle' });
 
-    // Drawer state for mobile progress
-    const [isMobileModalOpen, setIsMobileModalOpen] = React.useState(false);
+
+
+    // Auto-resume generation after answering the Architect
+    const [isAwaitingArchitect, setIsAwaitingArchitect] = React.useState(false);
 
     // Replay logic
-    const [deepGeneration, setDeepGeneration] = React.useState(true); // NEW: true by default
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const [leadName, setLeadName] = React.useState<string | null>(null);
+
+    // Persistent lock check from chat history
+    const isLimitReached = messages.some(m => m.content.toLowerCase().includes('ya has agotado tu presupuesto gratuito'));
+
+    useEffect(() => {
+        if (isPublicMode && leadId) {
+            import('@/actions/lead/dashboard.action').then(m => {
+                m.getLeadByIdAction(leadId).then(L => {
+                    if (L && L.personalInfo?.name) {
+                        setLeadName(L.personalInfo.name.split(' ')[0]);
+                    }
+                }).catch(e => console.error(e));
+            });
+        }
+    }, [isPublicMode, leadId]);
 
     const handleAttachmentClick = () => {
         fileInputRef.current?.click();
     };
+
+    const [showRequirements, setShowRequirements] = useState(false);
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -173,13 +178,28 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
         }
     }, [messages]);
 
-    const handleDownloadPdf = async (customData: CustomPdfData) => {
-        // Redirigir a la pantalla de éxito cerrando primero el modal del widget
-        if (closeWidget) {
-            closeWidget();
+    // Auto-resume generation when the Architect question is answered
+    useEffect(() => {
+        if (state === 'review' && isAwaitingArchitect && generationProgress.step === 'idle') {
+            setIsAwaitingArchitect(false);
+            handleGenerateBudget();
         }
-        router.push('/wizard/success');
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state, isAwaitingArchitect, generationProgress.step]);
+
+    // Auto-send initial prompt from context if present
+    const initialPromptSentRef = useRef(false);
+
+    useEffect(() => {
+        if (initialPrompt && initialPrompt.trim() !== '' && !initialPromptSentRef.current) {
+            initialPromptSentRef.current = true;
+            // Give the UI a tiny bit to mount then send
+            setTimeout(() => {
+                sendMessage(initialPrompt);
+                setInitialPrompt(''); // clear so it only happens once
+            }, 300);
+        }
+    }, [initialPrompt, sendMessage, setInitialPrompt]);
 
     const handleGenerateBudget = async () => {
         if (!requirements || !requirements.specs) return;
@@ -189,26 +209,15 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
             return;
         }
 
-        // Open mobile drawer immediately if we are on mobile
-        if (window.innerWidth < 768) {
-            setIsMobileModalOpen(true);
-        }
+        // removed mobile modal handling
         setGenerationProgress({ step: 'extracting' });
-        sendMessage(w.progress.generatingMsg);
+        addSystemMessage(w.progress.generatingMsg);
 
         try {
-            await new Promise(r => setTimeout(r, 1500));
             const detectedCount = requirements.detectedNeeds?.length || 15;
             setGenerationProgress({
                 step: 'extracting',
                 extractedItems: detectedCount
-            });
-
-            await new Promise(r => setTimeout(r, 1000));
-            setGenerationProgress({
-                step: 'searching',
-                extractedItems: detectedCount,
-                currentItem: w.progress.searching
             });
 
             let result;
@@ -216,7 +225,14 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
             if (isAdmin) {
                 const { generateBudgetFromSpecsAction } = await import('@/actions/budget/generate-budget-from-specs.action');
                 // Ensure specs exists, we have guarded against it above
-                result = await generateBudgetFromSpecsAction(leadId, requirements.specs as any, deepGeneration);
+                result = await generateBudgetFromSpecsAction(leadId, requirements as any, true);
+            } else if (isPublicMode) {
+                if (!leadId) return;
+                const { generatePublicDemoAction } = await import('@/actions/budget/generate-public-demo.action');
+
+                // Format history for the backend
+                const chatHistory = messages.map(m => ({ role: m.role, content: m.content }));
+                result = await generatePublicDemoAction(leadId, requirements as any, chatHistory);
             } else {
                 if (!leadId) return;
                 const { generateDemoBudgetAction } = await import('@/actions/budget/generate-demo-budget.action');
@@ -224,9 +240,16 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
             }
 
             if (result.success && result.budgetResult) {
-                const budgetId = result.budgetId || result.budgetResult.id;
-                const itemCount = result.budgetResult.chapters?.reduce((acc: number, c: any) => acc + c.items.length, 0) || 0;
-                const total = result.budgetResult.costBreakdown?.total || result.budgetResult.totalEstimated || 0;
+                setGenerationProgress({
+                    step: 'searching',
+                    extractedItems: detectedCount,
+                    currentItem: w.progress.searching
+                });
+                const typedResult: any = result;
+
+                const budgetId = typedResult.budgetId || typedResult.budgetResult?.id;
+                const itemCount = typedResult.budgetResult?.chapters?.reduce((acc: number, c: any) => acc + c.items.length, 0) || 0;
+                const total = typedResult.budgetResult?.costBreakdown?.total || typedResult.budgetResult?.totalEstimated || 0;
 
                 setGenerationProgress({
                     step: 'complete',
@@ -235,15 +258,30 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
                 });
 
                 await new Promise(r => setTimeout(r, 1500));
-                setBudgetResult({
-                    id: budgetId,
-                    total,
-                    itemCount,
-                    fullBudget: result.budgetResult
-                } as any);
-                if (window.innerWidth < 768) {
-                    setIsMobileModalOpen(false);
+
+                // Instead of breaking the chat UX with a page redirect or a massive PDF viewer,
+                // we keep the immersive chat going by sending a system message with a direct link.
+                const viewLink = isAdmin
+                    ? `/dashboard/admin/budgets/${typedResult.budgetId}/edit`
+                    : isPublicMode
+                        ? `/demo/viewer/${typedResult.traceId}`
+                        : `/budget/${typedResult.budgetId}`;
+
+                setGenerationProgress({ step: 'idle' });
+                addSystemMessage(`¡El presupuesto se ha generado con éxito! \n\n[Ver el resultado y Descargar](${viewLink})`);
+                
+                if (isPublicMode) {
+                    setState('generated'); // Lock the wizard ONLY for public demo
+                } else {
+                    setState('idle'); // Leave open for others
                 }
+
+            } else if ((result as any).isAsking) {
+                // Return to chat with the system question
+                setGenerationProgress({ step: 'idle' });
+                addSystemMessage((result as any).question);
+                setIsAwaitingArchitect(true);
+                setState('idle'); // Break the infinite generation loop
             } else {
                 setGenerationProgress({
                     step: 'error',
@@ -259,30 +297,7 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
         }
     };
 
-    if (budgetResult && requirements.specs) {
-        // Redirigir el administrador a la vista avanzada en el CRM una vez se ha generado su draft
-        if (isAdmin) {
-            router.push(`/dashboard/admin/budgets/${budgetResult.id}/edit`);
-            return (
-                <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center text-muted-foreground">
-                    <Loader2 className="w-8 h-8 animate-spin mb-4 text-primary" />
-                    <p>Redirigiendo al editor avanzado de presupuesto...</p>
-                </div>
-            );
-        }
 
-        // Reconstruct a fake 'Budget' object for the public viewer based on the action result
-        return (
-            <div className="w-full h-[100dvh] pt-4 md:pt-8 bg-zinc-50 dark:bg-zinc-950/50 overflow-x-hidden">
-                <DemoBudgetViewer
-                    budgetData={budgetResult.fullBudget as any} // We need to update the action to return this
-                    onDownloadPdf={handleDownloadPdf}
-                    isGeneratingPdf={false}
-                />
-                <SileoToaster position="top-center" />
-            </div>
-        );
-    }
 
     const handleKeyDown = async (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -321,145 +336,86 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
         }
     };
 
-    const progressScore = calculateProgress(requirements, state);
-    const showGenerateButton = (progressScore >= 80 || state === 'review') && generationProgress.step === 'idle';
+    // Only show button if AI explicitly marked it as complete ('review' state)
+    const showGenerateButton = state === 'review' && generationProgress.step === 'idle';
 
-    // Shared progress content component to render in both Desktop Sidebar and Mobile Drawer
-    const SidebarProgressContent = () => (
-        <>
-            <div className="space-y-3 mb-4">
-                <div className="flex justify-between text-xs font-medium text-gray-500 dark:text-gray-400">
-                    <span>{w.panel.completed}</span>
-                    <span className="text-gray-900 dark:text-white">{progressScore}%</span>
-                </div>
-                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
-                    <div
-                        className="h-full bg-gradient-to-r from-primary to-blue-500 rounded-full transition-all duration-500"
-                        style={{ width: `${progressScore}%` }}
-                    />
-                </div>
-            </div>
 
-            {/* Generation Progress Component */}
-            <AnimatePresence>
-                {generationProgress.step !== 'idle' && (
-                    <BudgetGenerationProgress
-                        progress={generationProgress}
-                        className="mb-4"
-                    />
-                )}
-            </AnimatePresence>
-
-            {/* Deep Generation Toggle - Always visible for beta testing */}
-            {generationProgress.step === 'idle' && (
-                <div className="mb-4 flex items-center justify-between p-3 rounded-xl bg-primary/5 dark:bg-primary/10 border border-primary/20 dark:border-primary/20">
-                    <div className="flex flex-col">
-                        <span className="text-xs font-bold text-primary dark:text-primary-foreground flex items-center gap-1">
-                            <Sparkles className="w-3 h-3" />
-                            {w.panel.deepGenTitle}
-                            <Badge variant="outline" className="text-[9px] h-4 px-1 bg-white ml-2 text-primary border-primary/30">Beta</Badge>
-                        </span>
-                        <span className="text-[10px] text-primary/70 dark:text-primary-foreground/70 leading-tight">
-                            {w.panel.deepGenDesc}
-                        </span>
-                    </div>
-                    <div
-                        className={cn(
-                            "w-10 h-6 rounded-full p-1 cursor-pointer transition-colors duration-200 ease-in-out shrink-0",
-                            deepGeneration ? "bg-primary" : "bg-gray-200 dark:bg-white/10"
-                        )}
-                        onClick={() => setDeepGeneration(!deepGeneration)}
-                    >
-                        <div
-                            className={cn(
-                                "w-4 h-4 rounded-full bg-white shadow-sm transform transition-transform duration-200 ease-in-out",
-                                deepGeneration ? "translate-x-4" : "translate-x-0"
-                            )}
-                        />
-                    </div>
-                </div>
-            )}
-
-            {/* Generate Button (Desktop and Drawer) */}
-            <AnimatePresence>
-                {showGenerateButton && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                    >
-                        <Button
-                            onClick={handleGenerateBudget}
-                            className="w-full bg-gray-900 hover:bg-black dark:bg-white dark:hover:bg-gray-200 text-white dark:text-black font-bold h-12 rounded-xl shadow-xl shadow-gray-200/50 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
-                        >
-                            <Sparkles className="mr-2 h-4 w-4 animate-pulse" />
-                            {w.progress.generateBtn}
-                        </Button>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    );
 
     return (
         <div className="flex h-full w-full overflow-hidden md:rounded-3xl md:border md:border-white/20 bg-background md:bg-white/95 md:dark:bg-black/90 md:shadow-2xl md:backdrop-blur-2xl md:ring-1 md:ring-black/5 md:dark:ring-white/10 relative">
-            {/* Stream Listener for Sileo Notifications */}
-            <BudgetStreamListener />
-
             {/* Admin Left Sidebar: Chat History */}
             {isAdmin && (
-                <div className="hidden md:flex flex-col w-64 border-r border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-zinc-900/50 h-full">
-                    <div className="p-4 border-b border-gray-100 dark:border-white/5">
-                        <Button
-                            onClick={startNewConversation}
-                            disabled={isLoadingChats}
-                            className="w-full justify-start font-medium text-sm transition-all"
-                            variant="outline"
-                        >
-                            <PlusCircle className="mr-2 h-4 w-4" />
-                            Nuevo Chat
-                        </Button>
-                    </div>
-                    <div className="flex-1 overflow-y-auto px-2 py-4 space-y-1 custom-scrollbar">
-                        {isLoadingChats && conversations.length === 0 ? (
-                            <div className="flex justify-center p-4"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
-                        ) : (
-                            conversations.map(chat => (
-                                <div key={chat.id} className="group flex items-center gap-2">
-                                    <button
-                                        onClick={() => switchConversation(chat.id)}
-                                        className={cn(
-                                            "flex-1 flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-left transition-colors whitespace-nowrap overflow-hidden text-ellipsis",
-                                            conversationId === chat.id
-                                                ? "bg-primary/10 text-primary font-medium dark:bg-primary/20"
-                                                : "text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5"
-                                        )}
-                                    >
-                                        <MessageSquare className="w-4 h-4 shrink-0" />
-                                        <span className="truncate">{chat.title || 'Conversación sin título'}</span>
-                                    </button>
-                                    <button
-                                        onClick={() => deleteConversation(chat.id)}
-                                        className={cn(
-                                            "p-2 text-muted-foreground hover:text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-all focus:opacity-100",
-                                            conversationId === chat.id && "opacity-100 text-red-400"
-                                        )}
-                                        title="Eliminar Chat"
-                                    >
-                                        <Trash2 className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            ))
-                        )}
+                <div className={cn(
+                    "hidden md:flex flex-col border-r border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-zinc-900/50 h-full transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-hidden",
+                    isSidebarOpen ? "w-64" : "w-0 border-r-0 opacity-0"
+                )}>
+                    <div className="w-64 flex flex-col h-full">
+                        <div className="p-4 border-b border-gray-100 dark:border-white/5">
+                            <Button
+                                onClick={startNewConversation}
+                                disabled={isLoadingChats}
+                                className="w-full justify-start font-medium text-sm transition-all"
+                                variant="outline"
+                            >
+                                <PlusCircle className="mr-2 h-4 w-4" />
+                                Nuevo Chat
+                            </Button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto px-2 py-4 space-y-1 custom-scrollbar">
+                            {isLoadingChats && conversations.length === 0 ? (
+                                <div className="flex justify-center p-4"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+                            ) : (
+                                conversations.map(chat => (
+                                    <div key={chat.id} className="group flex items-center gap-2">
+                                        <button
+                                            onClick={() => switchConversation(chat.id)}
+                                            className={cn(
+                                                "flex-1 flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-left transition-colors whitespace-nowrap overflow-hidden text-ellipsis",
+                                                conversationId === chat.id
+                                                    ? "bg-primary/10 text-primary font-medium dark:bg-primary/20"
+                                                    : "text-muted-foreground hover:bg-black/5 dark:hover:bg-white/5"
+                                            )}
+                                        >
+                                            <MessageSquare className="w-4 h-4 shrink-0" />
+                                            <span className="truncate">{chat.title || 'Conversación sin título'}</span>
+                                        </button>
+                                        <button
+                                            onClick={() => deleteConversation(chat.id)}
+                                            className={cn(
+                                                "p-2 text-muted-foreground hover:text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-all focus:opacity-100",
+                                                conversationId === chat.id && "opacity-100 text-red-400"
+                                            )}
+                                            title="Eliminar Chat"
+                                        >
+                                            <Trash2 className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
 
             {/* Middle Panel: Chat Interface */}
-            <div className={cn("flex w-full flex-col relative h-full min-h-0", isAdmin ? "md:flex-1" : "md:w-2/3")}>
+            {/* Added overlay active state tracking */}
+            <div className={cn(
+                "flex w-full flex-col relative h-full min-h-0 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] will-change-transform",
+                "md:flex-1"
+            )}>
                 {/* Header */}
-                <header className="absolute top-0 left-0 right-0 z-10 flex h-16 md:h-20 items-center justify-between px-4 md:px-8 bg-gradient-to-b from-background via-background/95 to-transparent backdrop-blur-sm">
+                <header className="absolute top-0 left-0 right-0 z-10 flex h-16 md:h-20 items-center justify-between px-4 md:px-8 bg-gradient-to-b from-background via-background/95 to-transparent backdrop-blur-sm transition-all duration-300">
                     <div className="flex items-center gap-3 md:gap-4">
+                        {isAdmin && (
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                                className="mr-0 md:mr-2 text-muted-foreground hover:text-primary transition-colors hidden md:flex"
+                            >
+                                {isSidebarOpen ? <PanelLeftClose className="w-5 h-5" /> : <PanelLeftOpen className="w-5 h-5" />}
+                            </Button>
+                        )}
                         <Logo className="h-6 flex items-center" width={80} height={24} />
                     </div>
 
@@ -475,80 +431,152 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
                                 Nuevo Chat
                             </Button>
                         )}
-
-                        {/* Top Right Close 'X' Button */}
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={closeWidget}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            title="Cerrar"
-                        >
-                            <X className="h-5 w-5" />
-                        </Button>
                     </div>
                 </header>
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-0 custom-scrollbar relative bg-background/50">
-                    <div className="max-w-4xl mx-auto pt-20 pb-40 px-4 md:px-0 space-y-6 md:space-y-8">
+                <div className="flex-1 overflow-y-auto p-0 custom-scrollbar relative bg-background/50 leading-relaxed px-4 md:px-6">
+                    <div className="max-w-3xl mx-auto pt-20 pb-40 space-y-6 md:space-y-8 flex flex-col items-center">
                         <AnimatePresence initial={false}>
-                            {messages.length === 0 ? (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="flex flex-col items-center justify-center min-h-[400px] text-center space-y-4"
-                                >
-                                    <div className="p-4 rounded-full bg-primary/10 dark:bg-primary/5 mb-2">
-                                        <Bot className="w-12 h-12 text-primary" />
-                                    </div>
-                                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{w.emptyState.title}</h2>
-                                    <p className="max-w-md text-gray-500 dark:text-gray-400">
-                                        {w.emptyState.subtitle}
-                                    </p>
+                            {messages.length > 0 && (
+                                messages.map((msg, index) => (
+                                    <ChatBubble key={msg.id} message={msg} isGenerating={msg.content === w.progress.generatingMsg} />
+                                ))
+                            )}
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-8 w-full max-w-2xl px-4">
-                                        {w.emptyState.suggestions.map((suggestion: any, i: number) => (
-                                            <button
-                                                key={i}
-                                                onClick={() => sendMessage(suggestion.text)}
-                                                className="flex flex-col text-left p-4 rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-primary/50 hover:bg-primary/5 transition-all group"
-                                            >
-                                                <span className="font-semibold text-sm text-gray-900 dark:text-white group-hover:text-primary transition-colors">{suggestion.title}</span>
-                                                <span className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mt-1">{suggestion.text}</span>
-                                            </button>
-                                        ))}
+                            {/* In-Stream Terminal Component */}
+                            {generationProgress.step !== 'idle' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    className="flex w-full justify-start mt-6"
+                                >
+                                    <div className="w-full bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-1">
+                                        <BudgetGenerationProgress
+                                            progress={generationProgress}
+                                            className="shadow-none border-none rounded-xl"
+                                        />
                                     </div>
                                 </motion.div>
-                            ) : (
-                                messages.map((msg, index) => (
-                                    <ChatBubble key={msg.id} message={msg} />
-                                ))
                             )}
                         </AnimatePresence>
 
-                        {state === 'processing' && (
+                        {/* Proactive Co-Pilot Suggestions */}
+                        {state === 'idle' && messages.length > 0 && generationProgress.step === 'idle' && (
                             <motion.div
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 ml-4"
+                                className="flex flex-wrap gap-2 pt-2 px-4 md:px-0"
                             >
-                                <div className="flex space-x-1">
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                    <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
-                                </div>
-                                <span>{w.input.analyzingText}</span>
+                                {!requirements.specs?.qualityLevel && (
+                                    <button onClick={() => sendMessage("Quiero usar calidades altas/premium en los materiales.")} className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors border border-primary/20 flex items-center gap-1.5">
+                                        <Sparkles className="w-3 h-3" /> Añadir calidades premium
+                                    </button>
+                                )}
+                                {(!requirements.detectedNeeds || requirements.detectedNeeds.length < 2) && (
+                                    <button onClick={() => sendMessage("Incluye también la reforma completa del baño principal y cocina.")} className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-colors border border-blue-500/20">
+                                        Añadir baño y cocina
+                                    </button>
+                                )}
+                                {!requirements.specs?.totalArea && (
+                                    <button onClick={() => sendMessage("La superficie total aproximada es de 90m2.")} className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-white/5 text-zinc-600 dark:text-white/60 hover:bg-zinc-200 dark:hover:bg-white/10 transition-colors border border-black/5 dark:border-white/10">
+                                        Definir superficie (90m2)
+                                    </button>
+                                )}
                             </motion.div>
                         )}
+
+                        {state === 'processing' && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="self-start max-w-[85%] md:max-w-[75%] rounded-2xl p-4 md:p-5 shadow-sm bg-zinc-100 dark:bg-[#2a2a2b] border border-black/5 dark:border-white/5 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-2"
+                            >
+                                <Bot className="w-5 h-5 text-primary opacity-70" />
+                                <div className="flex space-x-1">
+                                    <div className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                    <div className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                    <div className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce"></div>
+                                </div>
+                                <span className="font-medium">{w.input.analyzingText}</span>
+                            </motion.div>
+                        )}
+                        
+                        {/* Inline Generation Button */}
+                        <AnimatePresence>
+                            {showGenerateButton && generationProgress.step === 'idle' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 10 }}
+                                    className="w-full mt-6 pointer-events-auto max-w-sm mx-auto flex justify-center"
+                                >
+                                    <Button
+                                        onClick={handleGenerateBudget}
+                                        className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-12 md:h-14 md:text-base rounded-xl shadow-[0_8px_30px_rgba(var(--primary),0.3)] border border-primary/20 transition-transform active:scale-95"
+                                    >
+                                        <Sparkles className="mr-2 h-5 w-5 animate-pulse" />
+                                        GENERAR PRESUPUESTO AHORA
+                                    </Button>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         <div ref={scrollRef} />
                     </div>
                 </div>
 
-                {/* Floating Input Area */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 bg-gradient-to-t from-background via-background/90 to-transparent pointer-events-none flex justify-center z-20">
-                    <div className="pointer-events-auto w-full max-w-4xl relative">
-                        <div className="relative flex items-end gap-2 rounded-[2rem] border border-input bg-background/80 md:bg-white/80 md:dark:bg-zinc-900/80 p-1.5 md:p-2 shadow-2xl shadow-black/5 backdrop-blur-xl ring-1 ring-black/5 dark:ring-white/5 focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300">
+                {/* Floating Input Area (Animated Layout for Zero State) */}
+                <motion.div
+                    layout
+                    className={cn(
+                        "absolute left-0 right-0 p-2 md:p-6 pointer-events-none flex flex-col items-center z-20 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
+                        messages.length === 0
+                            ? "top-1/2 -translate-y-1/2 px-4"
+                            : "bottom-0 bg-gradient-to-t from-background via-background/90 to-transparent"
+                    )}
+                >
+                    <div className="pointer-events-auto w-full max-w-3xl relative flex flex-col items-center">
+
+                        {/* Greeting Header shown only when empty */}
+                        <AnimatePresence>
+                            {messages.length === 0 && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
+                                    transition={{ duration: 0.5 }}
+                                    className="w-full text-center space-y-2 mb-8 md:mb-12"
+                                >
+                                    <h2 className="text-3xl md:text-[40px] leading-tight font-display text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 to-zinc-500">
+                                        Hola{isAdmin ? ' Admin' : (leadName ? ` ${leadName}` : '')}.
+                                    </h2>
+                                    <h2 className="text-3xl md:text-[40px] leading-tight font-display text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400">
+                                        ¿Por dónde empezamos?
+                                    </h2>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Rendering RequirementCard compactly above the input when toggled */}
+                        <AnimatePresence>
+                            {(requirements.specs || requirements.detectedNeeds?.length) && showRequirements && generationProgress.step === 'idle' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                                    transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                                    className="w-full mb-3 max-h-[40vh] overflow-y-auto custom-scrollbar rounded-2xl bg-[#1e1f20]/95 backdrop-blur-xl border border-white/10 shadow-2xl"
+                                >
+                                    <RequirementCard requirements={requirements} className="bg-transparent border-none shadow-none" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <motion.div layout className={cn(
+                            "w-full relative flex items-end gap-2 rounded-3xl md:rounded-[2rem] bg-[#1e1f20] p-2 md:p-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300",
+                            generationProgress.step !== 'idle' && generationProgress.step !== 'complete' && "opacity-50 pointer-events-none grayscale"
+                        )}>
                             <input
                                 type="file"
                                 multiple
@@ -557,119 +585,151 @@ export function BudgetWizardChat({ isAdmin = false }: { isAdmin?: boolean }) {
                                 onChange={handleFileChange}
                                 accept="image/*,application/pdf"
                             />
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={handleAttachmentClick}
-                                className="h-10 w-10 shrink-0 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 rounded-xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
-                            >
-                                <Paperclip className="h-5 w-5" />
-                            </Button>
 
-                            <Textarea
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                placeholder={w.input.placeholder}
-                                className="min-h-[44px] max-h-32 w-full resize-none border-0 bg-transparent py-3 text-base placeholder:text-gray-400 dark:placeholder:text-gray-600 focus-visible:ring-0 text-gray-900 dark:text-gray-100 scrollbar-hide font-medium"
-                                rows={1}
-                            />
-
-                            {input.trim() ? (
+                            {isAdmin && (
                                 <Button
-                                    onClick={() => sendMessage(input)}
+                                    variant="ghost"
                                     size="icon"
-                                    className="h-10 w-10 md:h-12 md:w-12 shrink-0 rounded-full bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center"
+                                    onClick={handleAttachmentClick}
+                                    className="h-12 w-12 shrink-0 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors mb-0.5"
                                 >
-                                    <Send className="h-4 w-4 md:h-5 md:w-5" />
-                                </Button>
-                            ) : (
-                                <Button
-                                    variant={isRecording ? "destructive" : "ghost"}
-                                    size="icon"
-                                    onClick={handleMicClick}
-                                    className={cn(
-                                        "h-10 w-10 shrink-0 rounded-xl transition-all duration-200",
-                                        isRecording
-                                            ? "bg-red-500 text-white hover:bg-red-600 animate-pulse ring-4 ring-red-500/20"
-                                            : "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5"
-                                    )}
-                                >
-                                    {isRecording ? <Square className="h-4 w-4 fill-current" /> : <Mic className="h-5 w-5" />}
+                                    <PlusCircle className="h-6 w-6" />
                                 </Button>
                             )}
-                        </div>
 
-                        {/* Mobile Generation Area Component */}
+                            {/* Variables Toggle Button */}
+                            {(requirements.specs || (requirements.detectedNeeds && requirements.detectedNeeds.length > 0)) && (
+                                <div className="relative mb-0.5">
+                                    {(!showRequirements && requirements.detectedNeeds && requirements.detectedNeeds.length > 0) && (
+                                        <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-primary rounded-full shadow-[0_0_8px_rgba(var(--primary),0.8)] z-10 animate-pulse pointer-events-none" />
+                                    )}
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => setShowRequirements(!showRequirements)}
+                                        className={cn(
+                                            "h-12 w-12 shrink-0 rounded-xl transition-all duration-300",
+                                            showRequirements
+                                                ? "bg-primary/20 text-primary hover:bg-primary/30 rotate-180"
+                                                : "text-gray-400 hover:text-white hover:bg-white/10"
+                                        )}
+                                        title="Variables del Entorno"
+                                    >
+                                        <Layers className="h-6 w-6" />
+                                    </Button>
+                                </div>
+                            )}
+
+                            {(state as string) === 'generated' ? (
+                                <div className="flex flex-col items-center justify-center w-full py-2">
+                                    <Sparkles className="h-6 w-6 text-primary mb-2 animate-pulse" />
+                                    <p className="text-sm font-semibold text-primary">¡Presupuesto Generado!</p>
+                                    <p className="text-xs text-gray-500 text-center mt-1">Haz clic en el enlace de arriba para verlo.</p>
+                                </div>
+                            ) : (
+                                <>
+                                    <Textarea
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        onKeyDown={handleKeyDown}
+                                        placeholder="Pega aquí todo tu proyecto o escribe..."
+                                        className="min-h-[100px] max-h-48 w-full resize-none border-0 border-transparent bg-transparent py-4 text-base placeholder:text-gray-500 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none shadow-none text-gray-100 scrollbar-hide font-medium leading-relaxed"
+                                        rows={1}
+                                        disabled={(state as string) === 'generated' || isLimitReached}
+                                    />
+
+                                    <div className="shrink-0 flex items-center gap-1 mb-0.5">
+                                        {/* Model Indicator Pill */}
+                                        <div className="hidden md:flex items-center gap-1.5 px-4 h-10 rounded-full bg-primary/10 border border-primary/20 text-xs font-semibold text-primary mr-1 hover:bg-primary/20 transition-colors cursor-pointer select-none">
+                                            <Sparkles className="w-3.5 h-3.5" />
+                                            Basis AI
+                                        </div>
+
+                                        {input.trim() ? (
+                                            <Button
+                                                onClick={() => sendMessage(input)}
+                                                size="icon"
+                                                disabled={isLimitReached}
+                                                className={cn(
+                                                    "h-10 w-10 md:h-12 md:w-12 rounded-full text-white shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-200 flex items-center justify-center border border-white/20",
+                                                    isLimitReached ? "bg-slate-500 opacity-50 cursor-not-allowed" : "bg-primary hover:bg-primary/90 hover:scale-105 active:scale-95"
+                                                )}
+                                            >
+                                                <Send className="h-4 w-4 md:h-5 md:w-5 ml-1" />
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                variant={isRecording ? "destructive" : "ghost"}
+                                                size="icon"
+                                                onClick={handleMicClick}
+                                                disabled={isLimitReached}
+                                                className={cn(
+                                                    "h-10 w-10 md:h-12 md:w-12 rounded-full transition-all duration-200",
+                                                    isRecording
+                                                        ? "bg-red-500 text-white hover:bg-red-600 animate-pulse ring-4 ring-red-500/20 shadow-[0_0_20px_rgba(239,68,68,0.5)]"
+                                                        : "text-gray-400 hover:text-white hover:bg-white/10"
+                                                )}
+                                            >
+                                                {isRecording ? <Square className="h-4 w-4 fill-current" /> : <Mic className="h-5 w-5 md:h-[22px] md:w-[22px]" />}
+                                            </Button>
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                        </motion.div>
+
+                        {/* Suggestion Pills underneath */}
                         <AnimatePresence>
-                            {showGenerateButton && !isMobileModalOpen && (
+                            {messages.length === 0 && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: 10 }}
-                                    className="w-full mt-3 md:hidden pointer-events-auto"
+                                    transition={{ delay: 0.1, duration: 0.4 }}
+                                    className="flex flex-wrap items-center justify-center gap-2 md:gap-3 mt-4 md:mt-6 w-full"
                                 >
-                                    <Button
-                                        onClick={handleGenerateBudget}
-                                        className="w-full bg-gray-900 dark:bg-white text-white dark:text-black font-bold h-12 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/10"
-                                    >
-                                        <Sparkles className="mr-2 h-4 w-4 animate-pulse text-[#e8c42f]" />
-                                        {w.progress.generateBtn}
-                                    </Button>
+                                    {w.emptyState.suggestions
+                                        .filter((s: any) => !(isPublicMode && s.title === 'Reforma integral'))
+                                        .map((suggestion: any, i: number) => {
+                                            const icons = [Home, Hammer, Layers, Sparkles];
+                                            const Icon = icons[i % icons.length];
+                                            return (
+                                                <button
+                                                    key={i}
+                                                    onClick={() => {
+                                                        setInput(suggestion.text);
+                                                        // Focus is handled correctly by normal React flow if a ref was bound, but here updating state acts naturally
+                                                    }}
+                                                    className="flex items-center gap-2 px-4 py-2 bg-[#1e1f20] hover:bg-white/10 border border-white/5 rounded-full text-[11px] md:text-xs font-medium text-white/80 transition-all hover:border-white/20 active:scale-95 shadow-sm text-left leading-tight max-w-[280px]"
+                                                >
+                                                    <Icon className="w-4 h-4 text-white/50" />
+                                                    {suggestion.title}
+                                                </button>
+                                            );
+                                        })}
                                 </motion.div>
                             )}
                         </AnimatePresence>
+
+                        {/* Desktop & Mobile Generation Area Component (Moved to chat stream) */}
 
                         <p className="mt-3 text-center text-xs font-medium text-gray-400 dark:text-gray-600 hidden md:block pointer-events-auto">
                             {isRecording ? `${w.input.recordingInfo} ${formatTime(recordingTime)}` : w.input.keyboardHint}
                         </p>
                     </div>
-                </div>
+                </motion.div>
             </div>
 
-            {/* Right Panel: Context & Requirements (Visible on Desktop) */}
-            <div className={cn("hidden border-l border-gray-100 dark:border-white/5 md:flex flex-col bg-gray-50/50 dark:bg-zinc-900/50 backdrop-blur-sm h-full min-h-0", isAdmin ? "w-80" : "w-1/3")}>
-                <div className="h-20 border-b border-gray-100 dark:border-white/5 px-6 flex items-center justify-between shrink-0">
-                    <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider uppercase">{w.panel.title}</h4>
-                    <span className="px-2 py-1 bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary-foreground text-[10px] font-bold rounded-md uppercase">
-                        {w.panel.status}
-                    </span>
-                </div>
 
-                {/* Requirements Area */}
-                <div className="flex-1 min-h-0 overflow-y-auto p-4 custom-scrollbar">
-                    <RequirementCard requirements={requirements} className="border-none shadow-none bg-transparent max-w-full" />
-                </div>
 
-                {/* Progress Indicator */}
-                <div className="shrink-0 p-6 bg-white dark:bg-zinc-900 border-t border-gray-100 dark:border-white/5">
-                    <SidebarProgressContent />
-                </div>
-            </div>
+            {/* Onboarding Sidebar (Desktop) / Drawer (Mobile) */}
+            <BudgetWizardTips setInput={setInput} />
 
-            {/* Mobile Progress Drawer */}
-            <Drawer open={isMobileModalOpen} onOpenChange={setIsMobileModalOpen} shouldScaleBackground>
-                <DrawerContent className="bg-white dark:bg-zinc-900 outline-none">
-                    <div className="mx-auto w-full max-w-sm">
-                        <DrawerHeader>
-                            <DrawerTitle className="text-left font-display">{w.progress.generateBtn}</DrawerTitle>
-                            <DrawerDescription className="text-left">
-                                {w.panel.status}
-                            </DrawerDescription>
-                        </DrawerHeader>
-                        <div className="p-4 pb-8">
-                            <SidebarProgressContent />
-                        </div>
-                    </div>
-                </DrawerContent>
-            </Drawer>
-
-            <SileoToaster position="top-center" />
-        </div>
+        </div >
     );
 }
 
-function ChatBubble({ message }: { message: Message }) {
+function ChatBubble({ message, isGenerating }: { message: Message, isGenerating?: boolean }) {
     const isUser = message.role === 'user';
 
     return (
@@ -679,7 +739,7 @@ function ChatBubble({ message }: { message: Message }) {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
             className={cn(
-                "flex w-full min-w-0",
+                "flex w-full min-w-0 max-w-3xl mx-auto",
                 isUser ? "justify-end" : "justify-start"
             )}
         >
@@ -689,7 +749,9 @@ function ChatBubble({ message }: { message: Message }) {
                     "break-words whitespace-pre-wrap",
                     isUser
                         ? "bg-primary text-primary-foreground rounded-br-none shadow-primary/10"
-                        : "bg-white dark:bg-white/10 text-slate-800 dark:text-white/90 rounded-bl-none border border-slate-100 dark:border-white/5 shadow-sm dark:backdrop-blur-md"
+                        : isGenerating
+                            ? "bg-gradient-to-r from-primary/5 to-blue-500/5 dark:from-primary/10 dark:to-blue-500/10 text-primary dark:text-blue-400 rounded-bl-none border border-primary/20 dark:border-blue-500/30 shadow-md shadow-primary/5 dark:shadow-blue-500/10 backdrop-blur-md"
+                            : "bg-white dark:bg-white/10 text-slate-800 dark:text-white/90 rounded-bl-none border border-slate-100 dark:border-white/5 shadow-sm dark:backdrop-blur-md"
                 )}
             >
                 <div className="break-words overflow-hidden space-y-2">
@@ -707,7 +769,66 @@ function ChatBubble({ message }: { message: Message }) {
                             ))}
                         </div>
                     )}
-                    <div className="whitespace-pre-wrap">{message.content}</div>
+                    {isGenerating ? (
+                        <div className="flex items-center gap-3 py-1">
+                            <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-primary/20 shrink-0">
+                                <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                                <span className="absolute inset-0 rounded-xl animate-ping bg-primary/20 opacity-75 duration-1000"></span>
+                            </div>
+                            <span className="font-semibold text-primary/90 mt-0.5 animate-pulse">
+                                {message.content}
+                            </span>
+                        </div>
+                    ) : (
+                        <div className="whitespace-pre-wrap">
+                            {(() => {
+                                const text = message.content;
+                                const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+                                const parts = [];
+                                let lastIndex = 0;
+                                let match;
+
+                                while ((match = linkRegex.exec(text)) !== null) {
+                                    if (match.index > lastIndex) {
+                                        parts.push(text.substring(lastIndex, match.index));
+                                    }
+                                    parts.push(
+                                        <div key={match.index} className="block mt-4 mb-2">
+                                            <a
+                                                href={match[2]}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-xl shadow-[0_4px_14px_rgba(var(--primary),0.3)] hover:scale-105 transition-all font-semibold"
+                                            >
+                                                <Sparkles className="w-4 h-4" />
+                                                {match[1]}
+                                            </a>
+                                        </div>
+                                    );
+                                    lastIndex = match.index + match[0].length;
+                                }
+
+                                if (lastIndex < text.length) {
+                                    parts.push(text.substring(lastIndex));
+                                }
+
+                                return parts.length > 0 ? parts : text;
+                            })()}
+                        </div>
+                    )}
+
+                    {/* Dynamic Context Pills (Extracted Info) */}
+                    {message.extractedInfo && message.extractedInfo.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-black/5 dark:border-white/5">
+                            {message.extractedInfo.map((info, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5 bg-primary/10 text-primary px-2.5 py-1 rounded-md text-[11px] font-semibold tracking-wide border border-primary/20 shadow-sm backdrop-blur-md">
+                                    <CheckCircle2 className="w-3.5 h-3.5" />
+                                    {info}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
                 </div>
                 <span className={cn(
                     "absolute -bottom-5 text-[10px] whitespace-nowrap",
@@ -716,7 +837,7 @@ function ChatBubble({ message }: { message: Message }) {
                     {message.createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
             </div>
-        </motion.div>
+        </motion.div >
     );
 }
 

@@ -65,4 +65,8 @@ export class Conversation {
         this.status = status;
         this.updatedAt = new Date();
     }
+
+    archive(): void {
+        this.setStatus('archived');
+    }
 }

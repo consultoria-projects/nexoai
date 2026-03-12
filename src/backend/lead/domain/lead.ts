@@ -22,8 +22,8 @@ export interface ClientProfile {
     currentStack: CurrentStack[];
     companyName: string;
     companySize: 'solo' | '2-5' | '6-15' | '16-50' | '50+';
-    annualSurveyorSpend: AnnualSurveyorSpend;
-    weeklyManualHours: WeeklyManualHours;
+    annualSurveyorSpend?: AnnualSurveyorSpend;
+    weeklyManualHours?: WeeklyManualHours;
     role: ClientRole;
     feedback?: {
         willingToPay?: string;
@@ -59,7 +59,9 @@ export class Lead {
         public profile: ClientProfile | null,
         public readonly createdAt: Date,
         public updatedAt: Date,
-        public demoBudgetsGenerated: number = 0
+        public demoBudgetsGenerated: number = 0,
+        public demoPdfsDownloaded: number = 0,
+        public pdfMetadata: Record<string, any> = {}
     ) { }
 
     static create(id: string, info: PersonalInfo, preferences: LeadPreferences): Lead {
@@ -71,7 +73,9 @@ export class Lead {
             null,
             new Date(),
             new Date(),
-            0
+            0,
+            0,
+            {}
         );
     }
 
@@ -85,6 +89,11 @@ export class Lead {
 
     incrementDemoBudgets(): void {
         this.demoBudgetsGenerated += 1;
+        this.updatedAt = new Date();
+    }
+
+    incrementDemoPdfs(): void {
+        this.demoPdfsDownloaded += 1;
         this.updatedAt = new Date();
     }
 
@@ -130,5 +139,10 @@ export class Lead {
         };
         this.updatedAt = new Date();
         return true;
+    }
+
+    updatePdfMetadata(metadata: Record<string, any>): void {
+        this.pdfMetadata = metadata;
+        this.updatedAt = new Date();
     }
 }

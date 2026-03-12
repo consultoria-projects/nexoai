@@ -1,5 +1,6 @@
 import { z } from 'genkit';
 import { ai, gemini25Flash } from '@/backend/ai/shared/config/genkit.config';
+import { generateWithRetry } from '@/backend/ai/shared/utils/ai-retry';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { demoMaterialRetrieverTool } from '@/backend/ai/public-demo/tools/demo-material-retriever.tool';
 import { ClientProfile, PersonalInfo, LeadPreferences } from '@/backend/lead/domain/lead';
@@ -52,7 +53,7 @@ export const publicDemoRequirementsFlow = ai.defineFlow(
         Is this request within the ALLOWED SCOPE and safe? Reply with exactly 'SAFE' or 'REJECT'.
         `;
 
-        const triageResult = await ai.generate({
+        const triageResult = await generateWithRetry({
             model: gemini25Flash, // Could be an even smaller model if available
             prompt: triagePrompt,
             config: { temperature: 0.1, maxOutputTokens: 10 }
@@ -82,8 +83,9 @@ export const publicDemoRequirementsFlow = ai.defineFlow(
         });
 
         const DetectedNeedSchema = z.object({
-            category: z.string().describe("Category of the need (e.g., 'Baños', 'Cocinas', 'Pintura'). NO ESTRUCTURA."),
-            description: z.string().describe("Detail of the need"),
+            category: z.string().default("General").describe("Category of the need (e.g., 'Baños', 'Cocinas', 'Pintura'). NO ESTRUCTURA."),
+            description: z.string().default("Detalle no especificado").describe("Detail of the need"),
+            requestedMaterial: z.string().optional().describe("Material exacto o acabado solicitado explícitamente por el usuario (ej: 'piedra mallorquina', 'encimera de granito', 'suelo laminado'). ¡CRÍTICO! Si el usuario no menciona explícitamente materiales, déjalo vacío."),
             estimatedQuantity: z.number().optional(),
             unit: z.string().optional()
         });
@@ -96,10 +98,10 @@ export const publicDemoRequirementsFlow = ai.defineFlow(
         });
 
         const extractionSchema = z.object({
-            updatedRequirements: BudgetRequirementSchema.optional().default({}),
-            response: z.string(),
+            response: z.string().describe("Mensaje conversacional directo para el usuario. EXPLICA POR QUÉ necesitas los datos que pides. OBLIGATORIO."),
+            updatedRequirements: BudgetRequirementSchema.optional().default({}).describe("Información técnica extraída del usuario."),
             nextQuestion: z.string().nullable().optional(),
-            isComplete: z.boolean().describe("Set to true if you have enough info for a SMALL demo budget (e.g. area, type, quality). Do not ask too many questions."),
+            isComplete: z.boolean().default(false).describe("true si tienes info ESTRICTA suficiente (tipo de obra y metros cuadrados parciales), false si necesitas preguntar."),
         });
 
         // Inject Lead Context into the prompt
@@ -112,8 +114,8 @@ export const publicDemoRequirementsFlow = ai.defineFlow(
         `;
 
         const analysisPrompt = `
-      You are an expert Quantity Surveyor (Aparejador) acting as a Demo Sales Engineer for Basis.
-      Your goal is to gather PRECISE technical requirements for a SMALL renovation budget to show off our platform's capabilities.
+      You are an expert Data Extractor for a Construction Budget system acting as a Demo Assistant.
+      Tu único objetivo es extraer los requerimientos técnicos descritos por el usuario en el chat y guardarlos en el esquema JSON.
       
       ${clientContextSummary}
       
@@ -123,43 +125,73 @@ export const publicDemoRequirementsFlow = ai.defineFlow(
       Conversation History: ${JSON.stringify(history)}
       
       BEHAVIOR GUIDELINES:
-      - **BE PROACTIVE & DIRECT**: Do NOT repeat your introduction. Do NOT say "me vendría genial saber" every time. If data is missing, ask for it specifically and conversationally.
+      - **CRÍTICO: SÉ EXTREMADAMENTE CONCISO**: En el campo "response", NO REPITAS la lista de specs o áreas que el usuario te acaba de dar. Asume que ya los has guardado. Da respuestas directas y cortas (<20 palabras) para mantener agilidad en el chat.
+      - **TONO CONVERSACIONAL Y PERSONALIZADO**: Dirígete al usuario por su nombre (si aparece en el contexto del Lead). Sé conversacional, cercano y profesional, pero sin excederte en el texto.
+      - **EXTRACCIÓN EXHAUSTIVA DETALLADA Y MATERIALES**: DEBES leer cada detalle del usuario. Si especifica cualquier acabado o material (ej. piedra natural, porcelánico, grifería dorada, plato de resina), GUÁRDALO explícitamente en el campo \`requestedMaterial\` de la necesidad. Si no lo pide, NO lo inventes.
+      - **PREGUNTAS DE CLARIFICACIÓN**: Si faltan datos clave (ej. los metros cuadrados de la estancia a reformar, si se cambian instalaciones, calidades), pon \`isComplete: false\` y haz una cortísima pregunta directa. 
       - **STRICT SCOPE**: You can ONLY budget partial renovations. Do not accept structural or whole-house builds.
-      - **FAST CLOSING**: We want to show them the PDF quickly. Ask maximum ONE or TWO questions per turn. 
-      - **IDENTIFYING COMPLETENESS**: You need basic dimensions (m2), quality level, and scope (e.g., "cambiar bañera por ducha"). As soon as you have a usable baseline, mark 'isComplete: true'.
-      - **FINAL CALL TO ACTION**: If 'isComplete' is true OR the user specifically asks to see the budget, your 'response' MUST explicitly tell the user to click the "Generar Presupuesto" (Generate Budget) button located in the chat header or below.
+      - **FINAL CALL TO ACTION**: ONLY when you have enough geometric data (e.g., m2) y clara visión de la obra, pon \`isComplete: true\`.
       
       Task:
       1. Analyze the user's message and history.
       2. Extract new inputs mapping to the strict schema.
-      3. Generate a natural, direct response. If missing info, ask exactly what you need (e.g. "¿De cuántos metros cuadrados hablamos?"). If complete, direct them to the Generate button.
+      3. If missing critical info (like m2), ask for it shortly in the 'response'.
       
       CRITICAL OUTPUT INSTRUCTIONS:
-      - Return ONLY valid JSON matching the schema.
-      - 'response' must be concise and actionable.
+      - Output a single flat JSON object meeting the exact schema structure.
+      - DEBES incluir OBLIGATORIAMENTE la clave "response" en la raíz del JSON con tu mensaje CORTO.
+      - DEBES incluir OBLIGATORIAMENTE la clave "isComplete" indicando si el flujo debe avanzar (si tienes áreas y detalles) o detenerse para preguntar (false).
     `;
 
-        const llmResponse = await ai.generate({
-            model: gemini25Flash,
-            prompt: analysisPrompt,
-            tools: [demoMaterialRetrieverTool],
-            output: { schema: extractionSchema },
-            config: {
-                temperature: 0.2, // Low temperature for strict compliance
-                maxOutputTokens: 2048
-            },
-        });
+        let result;
+        try {
+            const llmResponse = await generateWithRetry({
+                model: gemini25Flash,
+                prompt: analysisPrompt,
+                tools: [demoMaterialRetrieverTool],
+                output: { schema: extractionSchema },
+                config: {
+                    temperature: 0.2, // Low temperature for strict compliance
+                    maxOutputTokens: 4096 // Increased to prevent Genkit JSON auto-repair truncation
+                },
+            });
+            
+            result = llmResponse.output;
 
-        const result = llmResponse.output;
+            // FAIL-SAFE CONTRA REPARACIONES SILENCIOSAS DE JSON POR TRUNCAMIENTO
+            if (llmResponse.finishReason === 'length' || llmResponse.finishReason === 'max_tokens' || llmResponse.finishReason === 'MAX_TOKENS') {
+                console.warn("[FAIL-SAFE] Model hit max tokens limit. Genkit likely repaired the JSON but it's incomplete.");
+                if (result) {
+                    result.isComplete = false; // Prevent advancing the flow with broken/half data
+                    if (!result.response || result.response.length < 5) {
+                        result.response = `He guardado parte de los requerimientos, pero hubo un pequeño corte de red procesando la memoria. ¿Me podrías confirmar si falta algún otro detalle antes de calcular el presupuesto?`;
+                    }
+                }
+            }
 
-        if (!result) {
-            console.error("LLM returned null or invalid JSON");
-            throw new Error("Failed to generate analysis - Model returned empty");
+            if (!result) {
+                throw new Error("Failed to generate analysis - Model returned empty");
+            }
+        } catch (error: any) {
+            console.error("Schema validation or generation failed fatally:", error);
+            // FAIL-SAFE FALLBACK: Si Zod revienta por un bad JSON del modelo y se acaban los retries,
+            // no bloqueamos el chat, devolvemos un mensaje pidiendo reformulación para no asustar al lead.
+            return {
+                response: `Disculpa ${leadContext.personalInfo.name.split(' ')[0]}, he tenido un pequeño cruce de datos procesando esa última información. ¿Te importaría repetirme brevemente ese último detalle sobre las calidades o las dimensiones?`,
+                updatedRequirements: currentRequirements,
+                isComplete: false
+            };
         }
 
         // Deep merge logic for specs
         const newReqs = result.updatedRequirements || {};
         const oldReqs = currentRequirements || {};
+
+        // Remove elements without description (that bypassed the schema thanks to defaults)
+        const filteredNeeds = [
+            ...(oldReqs.detectedNeeds || []),
+            ...(newReqs.detectedNeeds || [])
+        ].filter(need => need.description && need.description !== "Detalle no especificado" && need.category !== "General");
 
         const mergedRequirements = {
             ...oldReqs,
@@ -168,10 +200,7 @@ export const publicDemoRequirementsFlow = ai.defineFlow(
                 ...(oldReqs.specs || {}),
                 ...(newReqs.specs || {})
             },
-            detectedNeeds: [
-                ...(oldReqs.detectedNeeds || []),
-                ...(newReqs.detectedNeeds || [])
-            ]
+            detectedNeeds: filteredNeeds
         };
 
         return {

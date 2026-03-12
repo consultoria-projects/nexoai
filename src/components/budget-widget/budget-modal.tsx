@@ -295,7 +295,7 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
             return <BudgetRequestWizard t={t} services={services} onBack={() => openWidget('general')} isWidget={true} />;
         }
         if (activeMode === 'chat') {
-            return <BudgetWizardChat />;
+            return <BudgetWizardChat isPublicMode={true} />;
         }
         if (activeMode === 'agenda') {
             return <AgendaBooking />;
@@ -311,7 +311,9 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
     if (isDesktop) {
         return (
             <Dialog open={isOpen} onOpenChange={closeWidget}>
-                <DialogContent className={cn(
+                <DialogContent 
+                    hideCloseIcon={activeMode === 'chat'} 
+                    className={cn(
                     "transition-all duration-300",
                     activeMode === 'chat' || activeMode === 'general' ? "overflow-hidden" : "overflow-y-auto",
                     activeMode === 'general'
@@ -331,7 +333,7 @@ export function SmartBudgetModal({ dictionary }: { dictionary?: any }) {
 
                     <div className={cn(
                         activeMode === 'general' ? "h-[100dvh] w-full p-0 flex items-center justify-center" : "pt-6 px-2",
-                        activeMode === 'chat' ? "h-[100dvh] w-full p-0 flex items-center justify-center" : "h-full"
+                        activeMode === 'chat' ? "h-[100dvh] w-full p-0 flex items-center justify-center" : "h-full flex flex-col min-h-0"
                     )}>
                         {renderContent()}
                     </div>

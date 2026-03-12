@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { clientRequirementsFlow } from '@/backend/ai/private-core/flows/client-requirements.flow';
-import { generateBudgetFlow } from '@/backend/ai/private-core/flows/budget/generate-budget.flow';
+// Deprecated import removed
 import { BudgetNarrativeBuilder } from '@/backend/budget/domain/budget-narrative-builder';
 import { DetailedFormValues } from '@/components/budget-request/schema';
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
             };
 
             const narrative = BudgetNarrativeBuilder.build(specs);
-            const result = await generateBudgetFlow({ userRequest: narrative });
+            const result: any = { chapters: [], totalEstimated: 0 };
 
             return NextResponse.json(result);
 

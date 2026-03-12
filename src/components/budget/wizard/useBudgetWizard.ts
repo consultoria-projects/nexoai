@@ -8,6 +8,7 @@ export type Message = {
     content: string;
     createdAt: Date;
     attachments?: string[];
+    extractedInfo?: string[];
 };
 
 export type ConversationThread = {
@@ -17,7 +18,7 @@ export type ConversationThread = {
     status: string;
 };
 
-export type WizardState = 'idle' | 'listening' | 'processing' | 'generating' | 'review';
+export type WizardState = 'idle' | 'listening' | 'processing' | 'generating' | 'review' | 'generated';
 
 export const useBudgetWizard = (isAdmin: boolean = false) => {
     const { leadId } = useWidgetContext();
@@ -145,9 +146,32 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
         }
     };
 
+    const resetConversation = async () => {
+        if (!conversationId) {
+            setMessages([]);
+            setRequirements({});
+            setState('idle');
+            return;
+        }
+        
+        try {
+            const { archiveConversationAction } = await import('@/actions/chat/archive-conversation.action');
+            await archiveConversationAction(conversationId);
+            setConversationId(null);
+            setMessages([]);
+            setRequirements({});
+            setState('idle');
+            
+            // Re-fetch to initialize a completely clean new chat
+            await loadConversations();
+        } catch (e) {
+            console.error("Failed to reset conversation", e);
+        }
+    };
+
 
     const sendMessage = async (text: string, attachments: string[] = [], llmTextOverride?: string) => {
-        if ((!text.trim() && attachments.length === 0) || !conversationId) return;
+        if ((!text.trim() && attachments.length === 0) || !conversationId || state === 'generated') return;
 
         const tempId = Date.now().toString();
         const userMsg: Message = {
@@ -207,11 +231,31 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
             }
 
             if (result.success && result.data) {
+                // Compute differences for Dynamic Context Pills
+                const prevNeedsCount = requirements.detectedNeeds?.length || 0;
+                const currentNeeds = result.data.updatedRequirements?.detectedNeeds || [];
+                const newNeeds = currentNeeds.slice(prevNeedsCount);
+                const extractedInfo = newNeeds.map((n: any) => `${n.category}: ${n.description}`);
+                
+                const extractedSpecs = [];
+                if (!requirements.specs?.totalArea && result.data.updatedRequirements?.specs?.totalArea) {
+                    extractedSpecs.push(`Área: ${result.data.updatedRequirements.specs.totalArea}m²`);
+                }
+                if (!requirements.specs?.propertyType && result.data.updatedRequirements?.specs?.propertyType) {
+                    extractedSpecs.push(`Propiedad: ${result.data.updatedRequirements.specs.propertyType}`);
+                }
+                if (!requirements.specs?.qualityLevel && result.data.updatedRequirements?.specs?.qualityLevel) {
+                    extractedSpecs.push(`Calidad: ${result.data.updatedRequirements.specs.qualityLevel}`);
+                }
+                
+                const allExtractedInfo = [...extractedInfo, ...extractedSpecs];
+
                 const aiMsg: Message = {
                     id: (Date.now() + 1).toString(),
                     role: 'assistant',
                     content: result.data.response,
                     createdAt: new Date(),
+                    extractedInfo: allExtractedInfo.length > 0 ? allExtractedInfo : undefined
                 };
 
                 setMessages(prev => [...prev, aiMsg]);
@@ -240,13 +284,35 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
         }
     };
 
+    const addSystemMessage = async (text: string) => {
+        if (!conversationId) return;
+
+        const aiMsg: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'assistant', // Rendered as secondary/dark bubble
+            content: text,
+            createdAt: new Date(),
+        };
+
+        setMessages(prev => [...prev, aiMsg]);
+
+        try {
+            const { sendMessageAction } = await import('@/actions/chat/send-message.action');
+            await sendMessageAction(conversationId, text, 'assistant', 'system');
+        } catch (error) {
+            console.error("Failed to persist system msg", error);
+        }
+    };
+
     return {
         messages,
         input,
         setInput,
         sendMessage,
+        addSystemMessage,
         processHiddenMessage,
         state,
+        setState,
         requirements,
         // New exports for multi-chat UI
         conversations,
@@ -254,6 +320,7 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
         isLoadingChats,
         startNewConversation,
         switchConversation,
-        deleteConversation
+        deleteConversation,
+        resetConversation
     };
 };

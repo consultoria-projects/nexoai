@@ -6,4 +6,5 @@ export interface LeadRepository {
     findByEmail(email: string): Promise<Lead | null>;
     findAll(limit: number, offset: number): Promise<Lead[]>;
     countByStatus(): Promise<{ verified: number; unverified: number; profiled: number }>;
+    delete(id: string): Promise<void>;
 }

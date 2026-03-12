@@ -1,5 +1,6 @@
 import { z } from 'genkit';
 import { ai, gemini25Flash } from '@/backend/ai/shared/config/genkit.config';
+import { generateWithRetry } from '@/backend/ai/shared/utils/ai-retry';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
 import { materialRetrieverTool } from '@/backend/ai/private-core/tools/material-retriever.tool';
 
@@ -31,20 +32,45 @@ export const clientRequirementsFlow = ai.defineFlow(
         const { userMessage, history = [], currentRequirements = {} } = input;
 
         // Define Zod schemas for the LLM to understand the structure
+        const RoomSpecsSchema = z.object({
+            area: z.number().describe("Area of the room in square meters"),
+            height: z.number().optional().describe("Height of the room"),
+            perimeter: z.number().optional().describe("Perimeter of the room"),
+        });
+
+        const BathroomSpecsSchema = z.object({
+            area: z.number().describe("Area of the bathroom"),
+            hasShower: z.boolean().optional().describe("Whether it will have a shower (plato de ducha)"),
+            hasBathtub: z.boolean().optional().describe("Whether it will have a bathtub (bañera)"),
+            quality: z.enum(['basic', 'medium', 'premium']).describe("Quality level of the bathroom"),
+        });
+
+        const KitchenSpecsSchema = z.object({
+            area: z.number().describe("Area of the kitchen"),
+            island: z.boolean().optional().describe("Whether it has an island"),
+            quality: z.enum(['basic', 'medium', 'premium']).describe("Quality level of the kitchen"),
+        });
+
         const ProjectSpecsSchema = z.object({
-            propertyType: z.enum(['flat', 'house', 'office']).optional().describe("Type of property: 'flat' (Piso), 'house' (Casa), 'office' (Oficina)"),
+            propertyType: z.enum(['flat', 'house', 'office']).optional().describe("Type of property: 'flat' (Piso), 'house' (Casa/Chalet/Unifamiliar), 'office' (Oficina)"),
             interventionType: z.enum(['total', 'partial', 'new_build']).optional().describe("Scope of work: 'total' (Integral), 'partial' (Parcial), 'new_build' (Obra Nueva)"),
             totalArea: z.number().optional().describe("Total area in square meters"),
             qualityLevel: z.enum(['basic', 'medium', 'premium', 'luxury']).optional().describe("General quality level requested"),
-            demolition: z.boolean().optional(),
-            elevator: z.boolean().optional(),
-            parking: z.boolean().optional(),
-            description: z.string().optional(),
+            terrainType: z.enum(['flat', 'sloped', 'rocky']).optional().describe("VITAL PARA OBRA NUEVA: Si el usuario quiere construir una casa nueva, pregúntale discretamente si el solar es llano ('flat'), inclinado ('sloped') o si hay roca ('rocky')."),
+            machineryAccess: z.enum(['good', 'poor', 'restricted']).optional().describe("Accesibilidad para maquinaria pesada al solar."),
+            rooms: z.array(RoomSpecsSchema).optional().describe("List of standard rooms/bedrooms"),
+            bathrooms: z.array(BathroomSpecsSchema).optional().describe("List of bathrooms"),
+            kitchens: z.array(KitchenSpecsSchema).optional().describe("List of kitchens"),
+            demolition: z.boolean().optional().describe("Whether demolition is needed"),
+            elevator: z.boolean().optional().describe("Does the building have an elevator?"),
+            parking: z.boolean().optional().describe("Does it include parking work?"),
+            description: z.string().optional().describe("General description of the project spec if not broken down into rooms")
         });
 
         const DetectedNeedSchema = z.object({
             category: z.string().describe("Category of the need (e.g., 'Flooring', 'Painting')"),
             description: z.string().describe("Detail of the need"),
+            requestedMaterial: z.string().optional().describe("Material exacto o acabado solicitado explícitamente por el usuario (ej: 'piedra mallorquina', 'suelo laminado'). ¡CRÍTICO! Si el usuario no menciona explícitamente materiales, déjalo vacío."),
             estimatedQuantity: z.number().optional(),
             unit: z.string().optional()
         });
@@ -58,8 +84,8 @@ export const clientRequirementsFlow = ai.defineFlow(
 
         // 1. Analysis Step: Extract requirements and determine next steps
         const analysisPrompt = `
-      You are "Conserje", an expert Quantity Surveyor (Aparejador) and Architect for Basis.
-      Your goal is to gather PRECISE technical requirements for a renovation budget.
+      You are an expert Data Extractor for a Construction Budget system.
+      Tu único objetivo es extraer los requerimientos técnicos descritos por el usuario en el chat y guardarlos en el esquema JSON, sin hacer tú de Arquitecto.
       
       Current Requirements State: ${JSON.stringify(currentRequirements, null, 2)}
       
@@ -67,38 +93,36 @@ export const clientRequirementsFlow = ai.defineFlow(
       Conversation History: ${JSON.stringify(history)}
       
       BEHAVIOR GUIDELINES:
-      - **BE PROACTIVE & FAST**: Do NOT repeat or echo back what the user just said. Just update your internal state and ask the NEXT question immediately.
-      - **Tone**: Professional, direct, and efficient.
-      - **Multi-intent**: Accept multiple details at once.
-      - **Tools**: Use materialRetriever if asked for prices.
+      - **SILENT EXTRACTION**: Tú NO eres el Arquitecto. Tú SOLO extraes entidades y pides clarificaciones críticas.
+      - **EXTRACCIÓN EXHAUSTIVA DETALLADA**: DEBES leer cada adjetivo del usuario (ej. "acabados de lujo", "aislamientos gruesos", "terreno de roca viva", "acceso complicado") y convertir CADA UNO en un objeto separado dentro de \`detectedNeeds\`. ¡NO TE DEJES NINGÚN DETALLE!
+      - **MANDATO DE OBRA NUEVA**: Si detectas que es una "Obra Nueva" (\`new_build\`), es **CRÍTICO Y OBLIGATORIO** conocer el \`terrainType\` y \`machineryAccess\`. Si el usuario no lo ha dicho todo, DEBES poner \`isComplete: false\` y hacer la pregunta. 
+      - **NO HAGAS OTRAS PREGUNTAS**: Para reformas parciales, asume valores estándar y pon \`isComplete: true\`.
       
       Task:
       1. Analyze the user's message and history.
       2. Extract new inputs mapping to the schema.
       3. CRITICAL: MAPPING RULES:
-         - "Piso" -> propertyType: 'flat'
-         - "Casa/Chalet" -> propertyType: 'house'
+         - "Obra nueva", "Construir vivienda", "terreno" -> interventionType: 'new_build', category: 'ESTRUCTURA_OBRA_MAYOR'.
          - "Reforma integral" -> interventionType: 'total'
-         - "Reforma parcial" -> interventionType: 'partial'
-         - "Calidad media" -> qualityLevel: 'medium'
-      4. Place technical details (area, type, scope, quality) INSIDE the 'specs' object.
-      5. Generate a response asking the next missing question.
+         - Extrae las áreas en m2 siempre que existan.
+      4. REGLA DE DETECTED NEEDS: Cualquier material específico explícito, acabado (ej. "lujo"), complicación del terreno ("roca") o aislamiento, DEBE registrarse como un objeto independiente en \`detectedNeeds\` con su \`category\` apropiada, \`description\` detallada, y el \`requestedMaterial\` extraído exactamente.
+      5. Si es Obra Mayor, SIEMPRE añade un \`detectedNeed\` con category "ESTRUCTURA_OBRA_MAYOR" describiendo el reto principal.
       
       CRITICAL OUTPUT INSTRUCTIONS:
-      - Return ONLY valid JSON matching the schema.
-      - Ensure 'isComplete' is true ONLY if you have: Type, Scope, Area, and Quality.
-      - 'response' must be under 40 words.
+      - Output a single flat JSON object meeting the exact schema structure.
+      - DEBES incluir OBLIGATORIAMENTE la clave "response" en la raíz del JSON con tu respuesta conversacional (menos de 40 palabras).
+      - **REGLA DE BLOQUEO (\`isComplete\`)**: Si es \`interventionType: new_build\` Y falta \`terrainType\` o \`machineryAccess\` o \`totalArea\`, ENTONCES \`isComplete\` DEBE SER \`false\` y debes formular la \`nextQuestion\`. De lo contrario, \`isComplete: true\`.
     `;
 
         const extractionSchema = z.object({
-            updatedRequirements: BudgetRequirementSchema.optional().default({}),
-            response: z.string(),
+            response: z.string().describe("Mensaje conversacional directo para el usuario (menos de 40 palabras). OBLIGATORIO."),
+            updatedRequirements: BudgetRequirementSchema.optional().default({}).describe("Información técnica extraída del usuario."),
             nextQuestion: z.string().nullable().optional(),
             missingFields: z.array(z.string()).optional().default([]),
-            isComplete: z.boolean().describe("Set to true if Type, Scope, Area, and Quality are all gathered."),
+            isComplete: z.boolean().describe("true si tienes info ESTRICTA suficiente, false si necesitas preguntar métricas críticas."),
         });
 
-        const llmResponse = await ai.generate({
+        const llmResponse = await generateWithRetry({
             model: gemini25Flash,
             prompt: analysisPrompt,
             tools: [materialRetrieverTool],
@@ -132,7 +156,6 @@ export const clientRequirementsFlow = ai.defineFlow(
                 ...(newReqs.detectedNeeds || [])
             ]
         };
-
         return {
             response: result.response,
             updatedRequirements: mergedRequirements,

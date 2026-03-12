@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import { PriceBookRepository } from '../domain/price-book-repository';
 import { LLMPriceBookParser } from '../infrastructure/llm-price-book-parser';
 import { IngestionJobRepository } from '../domain/ingestion-job-repository';

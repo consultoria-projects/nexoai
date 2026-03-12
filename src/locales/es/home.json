@@ -274,13 +274,13 @@
             "ctaSecondary": "Agendar Evaluación Técnica"
         },
         "wizard": {
-            "title": "La prueba del veneno.",
-            "description": "Describe tu obra en lenguaje natural. Nuestra IA cruzará precios de mercado reales y estructurará tus partidas en segundos.",
+            "title": "Tu próximo presupuesto, en piloto automático.",
+            "description": "Dile a Basis qué necesitas presupuestar. Nuestra IA estructura partidas detalladas y cruza precios de mercado en segundos.",
             "examples": {
-                "kitchen": "Cargar Ejemplo: Cocina",
-                "roof": "Cargar Ejemplo: Cubierta"
+                "kitchen": "Reforma Integral de Cocina",
+                "roof": "Impermeabilización de Cubierta"
             },
-            "placeholder": "Ej: Reforma de baño completo de 6m2. Quitar bañera, plato de ducha de resina, sanitarios Roca y azulejo blanco mate...",
+            "placeholder": "Ej: Tengo que presupuestar un baño en Palma centro, calidades medias, plato de ducha de resina, fontanería multicapa nueva...",
             "analyze": "Analizador semántico activado",
             "generateBtn": "Generar Presupuesto",
             "loadingTitle": "Extrayendo partidas...",

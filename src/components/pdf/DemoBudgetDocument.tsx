@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
+import { formatCurrency } from '@/lib/utils';
 
 const styles = StyleSheet.create({
     page: {
@@ -57,33 +58,75 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#0F172A'
     },
-    table: {
-        display: 'flex',
-        width: 'auto',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: '#E2E8F0',
-        marginTop: 10,
-        marginBottom: 20
-    },
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#E2E8F0',
-        alignItems: 'stretch',
-        minHeight: 24,
-    },
-    colRef: { width: '10%', borderRightWidth: 1, borderColor: '#E2E8F0', padding: 5 },
-    colDesc: { width: '45%', borderRightWidth: 1, borderColor: '#E2E8F0', padding: 5, flexDirection: 'column' },
-    colUnit: { width: '15%', borderRightWidth: 1, borderColor: '#E2E8F0', padding: 5, textAlign: 'right' },
-    colQty: { width: '12%', borderRightWidth: 1, borderColor: '#E2E8F0', padding: 5, textAlign: 'center' },
-    colTotal: { width: '18%', padding: 5, textAlign: 'right' },
-    tableHeader: {
-        backgroundColor: '#F8FAFC',
+    // --- NUEVOS ESTILOS PRESTO-STYLE ---
+    chapterHeader: {
+        fontSize: 14,
         fontWeight: 'bold',
-        fontSize: 8,
-        color: '#475569'
+        color: '#000000',
+        borderBottomWidth: 1.5,
+        borderBottomColor: '#000000',
+        paddingBottom: 4,
+        marginTop: 20,
+        marginBottom: 10
     },
+    itemContainer: {
+        marginBottom: 15,
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F1F5F9', // Subtle divider between items
+    },
+    itemMainRow: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        marginBottom: 4,
+    },
+    itemCode: {
+        width: '12%',
+        fontSize: 9,
+        fontWeight: 'bold',
+        color: '#000000'
+    },
+    itemUnit: {
+        width: '5%',
+        fontSize: 9,
+        fontWeight: 'bold',
+        color: '#000000'
+    },
+    itemTitleColumn: {
+        width: '68%',
+        flexDirection: 'column',
+        paddingRight: 10,
+    },
+    itemTitle: {
+        fontSize: 9,
+        color: '#334155',
+        lineHeight: 1.3
+    },
+    itemTotal: {
+        width: '15%',
+        fontSize: 10,
+        fontWeight: 'bold',
+        color: '#000000',
+        textAlign: 'right'
+    },
+    itemDescription: {
+        fontSize: 8,
+        color: '#64748B',
+        marginTop: 4,
+        marginBottom: 6,
+        lineHeight: 1.4
+    },
+    breakdownRow: {
+        flexDirection: 'row',
+        marginLeft: '17%', // Indent under description
+        marginBottom: 2,
+    },
+    bdCode: { width: '15%', fontSize: 7, color: '#475569' },
+    bdQty: { width: '10%', fontSize: 7, color: '#475569', textAlign: 'right', paddingRight: 5 },
+    bdUnit: { width: '5%', fontSize: 7, color: '#475569' },
+    bdDesc: { width: '45%', fontSize: 7, color: '#475569', paddingRight: 5 },
+    bdPrice: { width: '12%', fontSize: 7, color: '#475569', textAlign: 'right' },
+    bdTotal: { width: '13%', fontSize: 7, color: '#475569', textAlign: 'right' },
     totalSection: {
         marginTop: 10,
         paddingTop: 10,
@@ -91,7 +134,7 @@ const styles = StyleSheet.create({
         borderColor: '#E2E8F0',
         alignItems: 'flex-end',
         alignSelf: 'flex-end',
-        width: '40%'
+        width: '65%'
     },
     totalRow: {
         flexDirection: 'row',
@@ -117,7 +160,8 @@ const styles = StyleSheet.create({
         marginTop: 8,
         borderTopWidth: 1,
         borderColor: '#E2E8F0',
-        paddingTop: 5
+        paddingTop: 5,
+        textAlign: 'right'
     },
     footerContainer: {
         position: 'absolute',
@@ -146,6 +190,7 @@ interface DemoBudgetDocumentProps {
     costBreakdown: any;
     date: string;
     logoUrl?: string;
+    budgetConfig?: { tax: number; marginGG: number; marginBI: number };
 }
 
 const Footer = ({ pageNumber, companyName, cif, address }: { pageNumber: number, companyName?: string, cif?: string, address?: string }) => {
@@ -197,7 +242,8 @@ export const DemoBudgetDocument = ({
     items,
     costBreakdown,
     date,
-    logoUrl
+    logoUrl,
+    budgetConfig
 }: DemoBudgetDocumentProps) => {
 
     const itemsByChapter = items.reduce((acc: Record<string, any[]>, item) => {
@@ -225,50 +271,71 @@ export const DemoBudgetDocument = ({
 
                 <Text style={styles.sectionTitle}>Desglose Detallado de Partidas</Text>
 
-                <View style={styles.table}>
-                    <View style={[styles.tableRow, styles.tableHeader]}>
-                        <View style={styles.colRef}><Text>REF</Text></View>
-                        <View style={styles.colDesc}><Text>CONCEPTO</Text></View>
-                        <View style={styles.colUnit}><Text>P. UNIT</Text></View>
-                        <View style={styles.colQty}><Text>CANT.</Text></View>
-                        <View style={styles.colTotal}><Text>TOTAL</Text></View>
-                    </View>
+                {chapters.map((chapterName) => (
+                    <View key={chapterName} wrap={false} style={{ marginBottom: 15 }}>
+                        <Text style={styles.chapterHeader}>{chapterName}</Text>
 
-                    {chapters.map((chapterName) => (
-                        <View key={chapterName}>
-                            <View style={{ backgroundColor: '#F1F5F9', padding: 5, borderBottomWidth: 1, borderColor: '#E2E8F0' }}>
-                                <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#334155' }}>{chapterName}</Text>
-                            </View>
-                            {itemsByChapter[chapterName].map((item: any, index: number) => (
-                                <View style={styles.tableRow} key={item.id || index}>
-                                    <View style={styles.colRef}><Text>{item.item?.code || '-'}</Text></View>
-                                    <View style={styles.colDesc}>
-                                        <Text style={styles.bold}>{item.originalTask}</Text>
-                                        {(item.item?.description) && (
-                                            <Text style={{ fontSize: 7, color: '#64748B', marginTop: 3 }}>{item.item?.description}</Text>
-                                        )}
+                        {itemsByChapter[chapterName].map((item: any, index: number) => {
+                            const bTotal = (item.item?.totalPrice || item.item?.price || 0);
+                            const qTotal = (item.item?.quantity || 1);
+
+                            // Prevent duplicating title into description if they are implicitly the same 
+                            const showDescription = item.item?.description && item.item.description.trim() !== "" && item.item.description.trim() !== item.originalTask.trim();
+
+                            return (
+                                <View key={item.id || index} style={styles.itemContainer} wrap={false}>
+                                    {/* Main Row: Code | Unit | Title Column | Total */}
+                                    <View style={styles.itemMainRow}>
+                                        <Text style={styles.itemCode}>{item.item?.code || '-'}</Text>
+                                        <Text style={styles.itemUnit}>{item.item?.unit || 'ud'}</Text>
+                                        <View style={styles.itemTitleColumn}>
+                                            <Text style={styles.itemTitle}>{item.originalTask}</Text>
+                                            {showDescription && (
+                                                <Text style={styles.itemDescription}>{item.item.description}</Text>
+                                            )}
+                                        </View>
+                                        <Text style={styles.itemTotal}>{formatCurrency(bTotal)}</Text>
                                     </View>
-                                    <View style={styles.colUnit}><Text>{(item.item?.unitPrice || 0).toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</Text></View>
-                                    <View style={styles.colQty}><Text>{item.item?.quantity || 1} {item.item?.unit}</Text></View>
-                                    <View style={styles.colTotal}><Text>{(item.item?.totalPrice || item.item?.price || 0).toLocaleString('es-ES', { minimumFractionDigits: 2 })} €</Text></View>
+
+                                    {/* Detailed Breakdown nested correctly */}
+                                    {item.item?.breakdown && item.item.breakdown.length > 0 && (
+                                        <View style={{ marginTop: 2 }}>
+                                            {item.item.breakdown.map((b: any, bIdx: number) => {
+                                                const unitPrice = b.price || 0;
+                                                const qty = b.quantity || 1;
+                                                const lineTotal = unitPrice * qty;
+
+                                                return (
+                                                    <View key={bIdx} style={styles.breakdownRow}>
+                                                        <Text style={styles.bdCode}>{b.code || '-'}</Text>
+                                                        <Text style={styles.bdQty}>{parseFloat(qty.toString()).toLocaleString('es-ES', { minimumFractionDigits: 3 })}</Text>
+                                                        <Text style={styles.bdUnit}>{b.unit?.toLowerCase() === '%' ? 'h' : (b.unit || 'u')}</Text>
+                                                        <Text style={styles.bdDesc}>{b.description}</Text>
+                                                        <Text style={styles.bdPrice}>{formatCurrency(unitPrice)}</Text>
+                                                        <Text style={styles.bdTotal}>{formatCurrency(lineTotal)}</Text>
+                                                    </View>
+                                                );
+                                            })}
+                                        </View>
+                                    )}
                                 </View>
-                            ))}
-                        </View>
-                    ))}
-                </View>
+                            );
+                        })}
+                    </View>
+                ))}
 
                 <View style={styles.totalSection} wrap={false}>
                     <View style={styles.totalRow}>
-                        <Text style={styles.totalLabel}>P.E.M.</Text>
-                        <Text style={styles.totalValue}>{costBreakdown.materialExecutionPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</Text>
+                        <Text style={[styles.totalLabel, { marginRight: 24 }]}>P.E.M.</Text>
+                        <Text style={styles.totalValue}>{formatCurrency(costBreakdown.materialExecutionPrice)}</Text>
                     </View>
                     <View style={styles.totalRow}>
-                        <Text style={styles.totalLabel}>IVA (21%)</Text>
-                        <Text style={styles.totalValue}>{costBreakdown.tax.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</Text>
+                        <Text style={[styles.totalLabel, { marginRight: 24 }]}>IVA ({budgetConfig?.tax || 21}%)</Text>
+                        <Text style={styles.totalValue}>{formatCurrency(costBreakdown.tax)}</Text>
                     </View>
-                    <View style={styles.totalRow}>
-                        <Text style={[styles.totalLabel, styles.finalTotal]}>TOTAL</Text>
-                        <Text style={[styles.totalValue, styles.finalTotal]}>{costBreakdown.total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</Text>
+                    <View style={[styles.totalRow, { marginTop: 8 }]}>
+                        <Text style={[styles.totalLabel, styles.finalTotal, { marginRight: 24 }]}>TOTAL PRESUPUESTO</Text>
+                        <Text style={[styles.totalValue, styles.finalTotal]}>{formatCurrency(costBreakdown.total)}</Text>
                     </View>
                 </View>
 

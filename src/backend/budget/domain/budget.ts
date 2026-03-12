@@ -15,6 +15,8 @@ export interface BudgetPartida {
   totalPrice: number;
   originalTask?: string; // The user intent that generated this
   note?: string;
+  ai_justification?: string; // Telemetry logic from the Judge Agent
+  sourceDatabase?: string; // e.g. '2025_catalog'
   isEstimate?: boolean;
   isRealCost?: boolean; // True if recalculated by Construction Analyst
   matchConfidence?: number; // 0-100 Score from Vector Search
@@ -76,6 +78,39 @@ export interface BudgetCostBreakdown {
   total: number; // PEC + IVA
 }
 
+export interface BudgetTelemetryMetrics {
+  generationTimeMs: number;
+  tokens: {
+    inputTokens: number;
+    outputTokens: number;
+    totalTokens: number;
+  };
+  costs: {
+    fiatAmount: number; // EUR
+    fiatCurrency: string; // 'EUR'
+  };
+}
+
+export interface BudgetTelemetry {
+  blueprint?: {
+    originalRequest: string;
+    decomposedTasks: {
+      chapter: string;
+      task: string;
+      reasoning: string;
+      estimatedParametricQuantity: number;
+      estimatedParametricUnit?: string;
+    }[];
+  };
+  executionLog?: {
+    timestamp: Date;
+    agent: 'Architect' | 'Surveyor' | 'Judge' | 'System';
+    action: string;
+    details: string;
+  }[];
+  metrics?: BudgetTelemetryMetrics;
+}
+
 /**
  * Represents the core Budget entity in the domain layer.
  * Now supports Chapters and Distinct Item Types.
@@ -104,6 +139,11 @@ export interface Budget {
 
   // Financials
   costBreakdown: BudgetCostBreakdown;
+  config?: {
+    marginGG: number;
+    marginBI: number;
+    tax: number;
+  };
   totalEstimated: number; // Deprecated, use costBreakdown.total
 
   // Origin & Metadata
@@ -123,6 +163,9 @@ export interface Budget {
 
   // AI Renders
   renders?: BudgetRender[];
+
+  // AI Telemetry & Traceability
+  telemetry?: BudgetTelemetry;
 }
 
 export interface BudgetRender {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 
 interface EditableCellProps {
     value: string | number;
@@ -51,7 +51,7 @@ export const EditableCell = ({
         return (
             <div className={cn("px-2 py-1 min-h-[2rem] flex items-center", className)}>
                 {type === 'currency'
-                    ? Number(value).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+                    ? formatCurrency(Number(value))
                     : value
                 }
             </div>
@@ -76,21 +76,27 @@ export const EditableCell = ({
     }
 
     return (
-        <Input
-            ref={inputRef as any}
-            type={type === 'currency' ? 'number' : type}
-            value={localValue}
-            onChange={(e) => setLocalValue(e.target.value)}
-            onBlur={handleBlur}
-            onFocus={() => setIsFocused(true)}
-            onKeyDown={handleKeyDown}
-            className={cn(
-                "h-8 border-transparent hover:border-input focus:border-primary bg-transparent py-1 px-2 shadow-none transition-all",
-                isFocused && "bg-white",
-                className
+        <div className="relative flex items-center w-full">
+            <Input
+                ref={inputRef as any}
+                type={type === 'currency' ? 'number' : type}
+                value={Number.isNaN(localValue) ? '' : localValue}
+                onChange={(e) => setLocalValue(e.target.value)}
+                onBlur={handleBlur}
+                onFocus={() => setIsFocused(true)}
+                onKeyDown={handleKeyDown}
+                className={cn(
+                    "h-8 border-transparent hover:border-input focus:border-primary bg-transparent py-1 px-2 shadow-none transition-all",
+                    type === 'currency' && "pr-6 text-right",
+                    isFocused && "bg-white dark:bg-zinc-900",
+                    className
+                )}
+                placeholder={placeholder}
+                step={type === 'currency' ? "0.01" : "1"}
+            />
+            {type === 'currency' && (
+                <span className="absolute right-2 text-xs text-slate-400 pointer-events-none mt-[1px]">€</span>
             )}
-            placeholder={placeholder}
-            step={type === 'currency' ? "0.01" : "1"}
-        />
+        </div>
     );
 };

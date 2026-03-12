@@ -6,6 +6,7 @@ export interface LeadProps {
     email: LeadEmail;
     source: string;
     companyProfile?: Record<string, string>;
+    pdfMetadata?: Record<string, string>;
     status: LeadStatus;
     createdAt: Date;
     updatedAt: Date;
@@ -22,6 +23,7 @@ export class Lead {
     public get email(): LeadEmail { return this._props.email; }
     public get source(): string { return this._props.source; }
     public get companyProfile(): Record<string, string> | undefined { return this._props.companyProfile; }
+    public get pdfMetadata(): Record<string, string> | undefined { return this._props.pdfMetadata; }
     public get status(): LeadStatus { return this._props.status; }
     public get createdAt(): Date { return this._props.createdAt; }
     public get updatedAt(): Date { return this._props.updatedAt; }
@@ -42,6 +44,11 @@ export class Lead {
 
     public addCompanyProfile(profile: Record<string, string>): void {
         this._props.companyProfile = { ...this._props.companyProfile, ...profile };
+        this._props.updatedAt = new Date();
+    }
+
+    public updatePdfMetadata(metadata: Record<string, string>): void {
+        this._props.pdfMetadata = metadata;
         this._props.updatedAt = new Date();
     }
 }

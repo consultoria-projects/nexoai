@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye, Trash2, Edit2, Check, X } from 'lucide-react';
+import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye, Trash2, Edit2, Check, X, Sparkles, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -241,6 +241,15 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                         <p className="text-sm text-muted-foreground font-medium">
                             {t('description', { fallback: 'Edita unidades y precios. Los totales se actualizan en tiempo real.' })}
                         </p>
+                        {budgetData.telemetry?.metrics && (
+                            <div className="flex items-center gap-3 mt-3 text-xs font-mono text-muted-foreground bg-secondary/50 px-2.5 py-1.5 rounded-lg inline-flex border border-border/50 shadow-sm">
+                                <span className="flex items-center gap-1" title="Tiempo de Generación IA"><Sparkles className="w-3.5 h-3.5 text-amber-500" /> {(budgetData.telemetry.metrics.generationTimeMs / 1000).toFixed(1)}s</span>
+                                <span className="opacity-30">•</span>
+                                <span className="flex items-center gap-1" title="Tokens IA Consumidos"><Cpu className="w-3.5 h-3.5 text-indigo-500" /> {(budgetData.telemetry.metrics.tokens.totalTokens / 1000).toFixed(1)}k tokens</span>
+                                <span className="opacity-30">•</span>
+                                <span className="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-400" title="Coste Estimado API">{budgetData.telemetry.metrics.costs.fiatAmount} {budgetData.telemetry.metrics.costs.fiatCurrency}</span>
+                            </div>
+                        )}
                     </div>
                     <div className="text-right hidden sm:block">
                         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">Total Proyecto</p>
@@ -317,61 +326,19 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                             return (
                                                                 <div key={item.id} className="group/row flex flex-col xl:flex-row xl:items-start justify-between p-3 gap-4 hover:bg-secondary/30 dark:hover:bg-white/[0.02] transition-colors rounded-md relative select-none">
 
-                                                                    {/* Action Buttons (Hover) */}
-                                                                    <div className="absolute top-2 right-2 flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover/row:opacity-100 transition-opacity z-10 xl:static xl:opacity-100 xl:mt-2 xl:-mr-2 xl:self-start">
-                                                                        {!isEditingId && (
-                                                                            <button onClick={() => handleStartEdit(item.id, item.description)} className="p-1.5 text-muted-foreground hover:text-foreground bg-white/80 dark:bg-zinc-800 hover:bg-secondary border border-border/50 rounded-md transition-colors" title="Editar descripción">
-                                                                                <Edit2 className="w-3.5 h-3.5" />
-                                                                            </button>
-                                                                        )}
-                                                                        <button onClick={() => handleDeleteItem(chapter.id, item.id)} className="p-1.5 text-red-500/70 hover:text-red-500 bg-white/80 dark:bg-zinc-800 hover:bg-red-50 dark:hover:bg-red-500/10 border border-border/50 rounded-md transition-colors" title="Eliminar partida">
-                                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                                        </button>
-                                                                    </div>
-
                                                                     <div className="flex-1 pr-4 pt-1 xl:pt-0">
-                                                                        {isEditingId ? (
-                                                                            <div className="flex flex-col gap-2">
-                                                                                <textarea
-                                                                                    autoFocus
-                                                                                    value={editDescription}
-                                                                                    onChange={(e) => setEditDescription(e.target.value)}
-                                                                                    className="w-full min-h-[80px] bg-white dark:bg-zinc-900 text-sm text-foreground p-2 rounded-md border border-border focus:border-primary/50 focus:ring-1 focus:ring-primary/50 resize-none"
-                                                                                />
-                                                                                <div className="flex items-center gap-2">
-                                                                                    <button onClick={() => handleSaveEdit(chapter.id, item.id)} className="flex items-center gap-1 text-xs bg-primary/10 text-primary hover:bg-primary/20 px-2 py-1.5 rounded transition-colors">
-                                                                                        <Check className="w-3 h-3" /> Guardar
-                                                                                    </button>
-                                                                                    <button onClick={handleCancelEdit} className="flex items-center gap-1 text-xs bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 px-2 py-1.5 rounded transition-colors">
-                                                                                        <X className="w-3 h-3" /> Cancelar
-                                                                                    </button>
-                                                                                </div>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <p className="text-sm text-foreground/80 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all pr-8 xl:pr-0">
-                                                                                {item.description}
-                                                                            </p>
-                                                                        )}
+                                                                        <p className="text-sm text-foreground/80 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all pr-8 xl:pr-0">
+                                                                            {item.description}
+                                                                        </p>
                                                                     </div>
 
                                                                     <div className="flex items-center justify-between w-full mt-3 xl:mt-0 xl:w-auto gap-2 xl:gap-3 shrink-0 self-end xl:self-start xl:pt-1">
                                                                         {/* Quantity Input */}
                                                                         <div className="relative flex flex-col gap-1 items-end">
                                                                             <span className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider">{t('table.units', { fallback: 'Cant.' })}</span>
-                                                                            <div className="relative group/input">
-                                                                                <Input
-                                                                                    type="number"
-                                                                                    inputMode="decimal"
-                                                                                    min="0"
-                                                                                    step="0.1"
-                                                                                    className="w-20 h-9 bg-white dark:bg-zinc-900 border-border text-right pr-8 font-mono text-sm focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-colors"
-                                                                                    value={current.quantity}
-                                                                                    onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
-                                                                                />
-                                                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-mono pointer-events-none">
-                                                                                    {item.unit || 'u'}
-                                                                                </span>
-                                                                            </div>
+                                                                            <span className="font-mono text-sm">
+                                                                                {current.quantity} {item.unit || 'u'}
+                                                                            </span>
                                                                         </div>
 
                                                                         <span className="text-muted-foreground font-light mt-4">×</span>
@@ -379,20 +346,9 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                         {/* Price Input */}
                                                                         <div className="relative flex flex-col gap-1 items-end">
                                                                             <span className="text-[10px] text-muted-foreground uppercase font-semibold tracking-wider">{t('table.price', { fallback: 'Precio' })}</span>
-                                                                            <div className="relative group/input">
-                                                                                <Input
-                                                                                    type="number"
-                                                                                    inputMode="decimal"
-                                                                                    min="0"
-                                                                                    step="0.01"
-                                                                                    className="w-24 h-9 bg-white dark:bg-zinc-900 border-border text-right pr-6 font-mono text-sm focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-colors"
-                                                                                    value={current.price}
-                                                                                    onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
-                                                                                />
-                                                                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-mono pointer-events-none">
-                                                                                    €
-                                                                                </span>
-                                                                            </div>
+                                                                            <span className="font-mono text-sm">
+                                                                                {formatEUR(current.price)}
+                                                                            </span>
                                                                         </div>
 
                                                                         {/* Subtotal */}

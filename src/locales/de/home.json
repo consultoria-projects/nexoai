@@ -271,13 +271,13 @@
             "ctaSecondary": "Technische Bewertung planen"
         },
         "wizard": {
-            "title": "Der ultimative Test.",
-            "description": "Beschreiben Sie Ihr Projekt in natürlicher Sprache. Unsere KI gleicht echte Marktpreise ab und strukturiert Ihre Positionen in Sekundenschnelle.",
+            "title": "Ihr nächstes Angebot, auf Autopilot.",
+            "description": "Sagen Sie Basis, was Sie berechnen müssen. Unsere KI strukturiert detaillierte Positionen und vergleicht Marktpreise in Sekundenschnelle.",
             "examples": {
-                "kitchen": "Beispiel laden: Küche",
-                "roof": "Beispiel laden: Dach"
+                "kitchen": "Komplette Küchenrenovierung",
+                "roof": "Dachabdichtung"
             },
-            "placeholder": "Z.B.: Komplette Badsanierung 6m2. Badewanne entfernen, Harzduschwanne, Roca-Sanitäranlagen und mattweiße Kacheln...",
+            "placeholder": "Z.B.: Ich benötige ein Angebot für ein Badezimmer im Zentrum von Palma, mittlere Qualität, Harzduschwanne, neue Mehrschicht-Sanitäranlagen...",
             "analyze": "Semantischer Analysator aktiviert",
             "generateBtn": "Budget generieren",
             "loadingTitle": "Positionen werden extrahiert...",

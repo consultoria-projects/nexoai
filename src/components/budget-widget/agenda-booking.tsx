@@ -6,10 +6,12 @@ import { CalendarDays, Clock, CheckCircle2, ArrowRight, Loader2, Calendar } from
 import { useWidgetContext } from '@/context/budget-widget-context';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 
 const ALL_SLOTS = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-    '12:00', '12:30', '16:00', '16:30', '17:00', '17:30'
+    '12:00', '12:30', '16:00', '16:30', '17:00', '17:30',
+    '18:00', '18:30', '19:00', '19:30'
 ];
 
 function generateCalendarDays(year: number, month: number): (number | null)[] {
@@ -22,7 +24,10 @@ function generateCalendarDays(year: number, month: number): (number | null)[] {
 }
 
 export function AgendaBooking() {
-    const { leadId, closeWidget } = useWidgetContext();
+    const { leadId: contextLeadId, closeWidget } = useWidgetContext();
+    const searchParams = useSearchParams();
+    const leadId = searchParams.get('leadId') || contextLeadId;
+    
     const today = new Date();
     const t = useTranslations('budgetRequest.agenda');
 
@@ -110,7 +115,7 @@ export function AgendaBooking() {
     }
 
     return (
-        <div className="flex flex-col h-full animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-2xl mx-auto flex-1 p-2">
+        <div className="flex flex-col h-full animate-in fade-in slide-in-from-bottom-4 duration-500 w-full max-w-lg lg:max-w-xl mx-auto flex-1 p-2">
 
             <div className="text-center space-y-2 mb-6 hidden lg:block">
                 <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3 text-primary">
@@ -176,6 +181,11 @@ export function AgendaBooking() {
                     ) : loading ? (
                         <div className="flex items-center justify-center h-full">
                             <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                        </div>
+                    ) : slotsForDate.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center text-muted-foreground/80 bg-secondary/30 rounded-2xl border border-dashed border-border/50 p-6 text-center h-full">
+                            <Clock className="w-5 h-5 mb-2 opacity-50 text-muted-foreground" />
+                            <p className="text-xs text-muted-foreground">No hay horarios disponibles para este día.</p>
                         </div>
                     ) : (
                         <motion.div

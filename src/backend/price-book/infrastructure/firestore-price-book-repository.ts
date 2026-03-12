@@ -26,10 +26,12 @@ import { initFirebaseAdminApp } from '@/backend/shared/infrastructure/firebase/a
 
 export class FirestorePriceBookRepository implements PriceBookRepository {
     private db;
+    private collectionName: string;
 
-    constructor() {
+    constructor(collectionName: string = 'price_book_items') {
         initFirebaseAdminApp();
         this.db = getFirestore();
+        this.collectionName = collectionName;
     }
     async saveBatch(items: PriceBookItem[]): Promise<void> {
         // Reduced from 400 to 50 because Embeddings increase payload size significantly
@@ -46,7 +48,7 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
             chunk.forEach(item => {
                 // Create a deterministic ID or auto-id
                 const docId = `${item.year}_${item.code.replace(/\./g, '_')}`;
-                const docRef = this.db.collection('price_book_items').doc(docId);
+                const docRef = this.db.collection(this.collectionName).doc(docId);
 
                 // IMPORTANT: Must convert raw array to VectorValue for Vector Search to index it!
                 const { embedding, ...itemData } = item;
@@ -81,7 +83,7 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
     }
 
     async findByYear(year: number): Promise<PriceBookItem[]> {
-        const q = this.db.collection('price_book_items').where('year', '==', year);
+        const q = this.db.collection(this.collectionName).where('year', '==', year);
         const snapshot = await q.get();
         return snapshot.docs.map(doc => {
             const data = doc.data();
@@ -112,7 +114,7 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
     }
 
     async searchByVector(embedding: number[], limit: number = 10, year?: number, keywordFilter?: string): Promise<(PriceBookItem & { matchScore: number })[]> {
-        const collectionRef = this.db.collection('price_book_items');
+        const collectionRef = this.db.collection(this.collectionName);
 
         const vectorValue = FieldValue.vector(embedding);
 
@@ -201,7 +203,7 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
         filters: import('../domain/price-book-repository').SearchFilters,
         limit: number = 10
     ): Promise<(PriceBookItem & { matchScore: number })[]> {
-        const collectionRef = this.db.collection('price_book_items');
+        const collectionRef = this.db.collection(this.collectionName);
 
         let queryRef: any = collectionRef;
 

@@ -271,13 +271,13 @@
             "ctaSecondary": "Technische evaluatie inplannen"
         },
         "wizard": {
-            "title": "De ultieme test.",
-            "description": "Beschrijf uw project in natuurlijke taal. Onze AI kruist echte marktprijzen en structureert uw posten in seconden.",
+            "title": "Uw volgende offerte, op de automatische piloot.",
+            "description": "Vertel Basis wat u wilt begroten. Onze AI structureert gedetailleerde posten en vergelijkt marktprijzen in enkele seconden.",
             "examples": {
-                "kitchen": "Voorbeeld laden: Keuken",
-                "roof": "Voorbeeld laden: Dak"
+                "kitchen": "Complete Keukenrenovatie",
+                "roof": "Dakafdichting"
             },
-            "placeholder": "Bijv: Complete renovatie van badkamer 6m2. Bad verwijderen, douchebak van hars, Roca sanitair en mat witte tegels...",
+            "placeholder": "Bijv: Ik heb een offerte nodig voor een badkamer in het centrum van Palma, gemiddelde kwaliteit, harsdouchebak, nieuw meerlagen-loodgieterswerk...",
             "analyze": "Semantische analysator geactiveerd",
             "generateBtn": "Budget genereren",
             "loadingTitle": "Posten extraheren...",

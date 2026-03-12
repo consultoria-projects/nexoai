@@ -274,13 +274,13 @@
             "ctaSecondary": "Réserver une Évaluation Technique"
         },
         "wizard": {
-            "title": "L'épreuve de vérité.",
-            "description": "Décrivez votre projet en langage naturel. Notre IA croisera les prix réels du marché et structurera vos articles en quelques secondes.",
+            "title": "Votre prochain devis, en pilote automatique.",
+            "description": "Dites à Basis ce que vous devez budgétiser. Notre IA structure des articles détaillés et croise les prix du marché en quelques secondes.",
             "examples": {
-                "kitchen": "Charger Exemple: Cuisine",
-                "roof": "Charger Exemple: Toit"
+                "kitchen": "Rénovation Complète Cuisine",
+                "roof": "Étanchéité Toiture"
             },
-            "placeholder": "Ex: Rénovation de salle de bain 6m2. Enlever baignoire, receveur de douche...",
+            "placeholder": "Ex: J'ai besoin d'un devis pour une salle de bain au centre de Palma, qualités moyennes, receveur de douche en résine, nouvelle plomberie multicouche...",
             "analyze": "Analyseur sémantique activé",
             "generateBtn": "Générer Devis",
             "loadingTitle": "Extraction d'articles...",

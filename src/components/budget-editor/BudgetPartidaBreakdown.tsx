@@ -1,7 +1,7 @@
 import { BudgetBreakdownComponent } from "@/backend/budget/domain/budget";
-import { cn } from "@/lib/utils";
 import { AlertCircle, ArrowRight, Hammer, Package, Percent, Repeat } from "lucide-react";
 import { useState } from "react";
+import { cn, formatCurrency } from "@/lib/utils";
 import { MaterialPicker } from "./MaterialPicker";
 import { MaterialItem } from "@/backend/material-catalog/domain/material-item";
 import { Button } from "@/components/ui/button";
@@ -79,10 +79,10 @@ export function BudgetPartidaBreakdown({ breakdown, isRealCost, note, onBreakdow
                 </div>
                 <div className="flex items-center gap-4 text-xs">
                     <span className="flex items-center gap-1 text-slate-500">
-                        <Hammer className="w-3 h-3" /> Mano de obra: <b>{laborTotal.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</b>
+                        <Hammer className="w-3 h-3" /> Mano de obra: <b>{formatCurrency(laborTotal)}</b>
                     </span>
                     <span className="flex items-center gap-1 text-slate-500">
-                        <Package className="w-3 h-3" /> Materiales: <b>{materialTotal.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</b>
+                        <Package className="w-3 h-3" /> Materiales: <b>{formatCurrency(materialTotal)}</b>
                     </span>
                 </div>
             </div>
@@ -154,9 +154,9 @@ export function BudgetPartidaBreakdown({ breakdown, isRealCost, note, onBreakdow
                         </div>
 
                         {/* Price */}
-                        <div className="text-right w-20">
+                        <div className="text-right w-24">
                             <div className="text-[10px] text-slate-400 uppercase">Precio</div>
-                            <div className="font-mono">{comp.price.toFixed(2)}€</div>
+                            <div className="font-mono">{formatCurrency(comp.price)}</div>
                         </div>
 
                         {/* Rendimiento */}
@@ -178,10 +178,10 @@ export function BudgetPartidaBreakdown({ breakdown, isRealCost, note, onBreakdow
                         </div>
 
                         {/* Total */}
-                        <div className="text-right w-20">
+                        <div className="text-right w-24">
                             <div className="text-[10px] text-slate-400 uppercase">Total</div>
                             <div className="font-bold font-mono text-slate-700 dark:text-white">
-                                {comp.total.toFixed(2)}€
+                                {formatCurrency(comp.total)}
                             </div>
                         </div>
                     </div>

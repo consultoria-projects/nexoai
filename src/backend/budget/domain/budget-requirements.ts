@@ -29,6 +29,7 @@ export interface BudgetRequirement {
     detectedNeeds: {
         category: string;
         description: string;
+        requestedMaterial?: string;
         estimatedQuantity?: number;
         unit?: string;
     }[];

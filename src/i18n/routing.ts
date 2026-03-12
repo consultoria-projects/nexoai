@@ -85,6 +85,9 @@ export const routing = defineRouting({
         '/dashboard/settings/pricing': '/dashboard/settings/pricing',
         '/dashboard/settings/financial': '/dashboard/settings/financial',
         '/dashboard/admin/prices': '/dashboard/admin/prices',
+        '/dashboard/admin/traces': '/dashboard/admin/traces',
+        '/dashboard/admin/traces/[traceId]': '/dashboard/admin/traces/[traceId]',
+        '/demo/viewer/[traceId]': '/demo/viewer/[traceId]',
         '/dashboard/settings': '/dashboard/settings'
     }
 });

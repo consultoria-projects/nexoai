@@ -57,6 +57,18 @@ export class BudgetRepositoryFirestore implements BudgetRepository {
       createdAt: r.createdAt?.toDate ? r.createdAt.toDate() : (new Date(r.createdAt) || new Date())
     })) || [];
 
+    // Map nested telemetry executionLog timestamps if they exist
+    let mappedTelemetry = data.telemetry;
+    if (mappedTelemetry?.executionLog) {
+      mappedTelemetry = {
+        ...mappedTelemetry,
+        executionLog: mappedTelemetry.executionLog.map((log: any) => ({
+          ...log,
+          timestamp: log.timestamp?.toDate ? log.timestamp.toDate() : (log.timestamp ? new Date(log.timestamp) : new Date())
+        }))
+      };
+    }
+
     return {
       ...data,
       id: doc.id,
@@ -65,6 +77,7 @@ export class BudgetRepositoryFirestore implements BudgetRepository {
       updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : (new Date(data.updatedAt) || new Date()),
       // Ensure we map back the new structure if needed, or default empty chapters if migrating
       chapters: data.chapters || [],
+      telemetry: mappedTelemetry,
     } as Budget;
   }
 }

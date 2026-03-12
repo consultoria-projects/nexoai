@@ -52,3 +52,9 @@ video/
 estrategia-marketing/
 .claude/
 logs/
+tests/
+data/
+data_extraction_lab/
+prices/
+scripts/
+public/admin/

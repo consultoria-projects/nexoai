@@ -19,7 +19,7 @@ import {
     Package,
     Hammer
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 import { useState } from 'react';
 import {
     DropdownMenu,
@@ -151,7 +151,7 @@ const DraggableRow = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode }: 
                 <div className="flex items-center gap-4">
                     {showGhostMode && item.originalState && (
                         <span className="text-xs text-slate-400 line-through font-mono">
-                            {(item.originalState.quantity * item.originalState.unitPrice).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                            {formatCurrency(item.originalState.quantity * item.originalState.unitPrice)}
                         </span>
                     )}
 
@@ -494,7 +494,7 @@ const ChapterGroup = ({
 
                 <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-slate-500 mr-4">
-                        {(items.reduce((acc, i) => acc + (i.item?.totalPrice || 0), 0)).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                        {formatCurrency(items.reduce((acc, i) => acc + (i.item?.totalPrice || 0), 0))}
                     </span>
 
                     <DropdownMenu>

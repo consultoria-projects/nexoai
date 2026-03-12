@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 
 const SmartBudgetTrigger = dynamic(
     () => import('@/components/budget-widget/smart-trigger').then(mod => mod.SmartBudgetTrigger),
@@ -13,9 +14,12 @@ const SmartBudgetModal = dynamic(
 );
 
 export function SmartBudgetWrapper({ dictionary }: { dictionary?: any }) {
+    const pathname = usePathname();
+    const isDemoViewer = pathname?.includes('/demo/viewer');
+
     return (
         <>
-            <SmartBudgetTrigger dictionary={dictionary} />
+            {!isDemoViewer && <SmartBudgetTrigger dictionary={dictionary} />}
             <SmartBudgetModal dictionary={dictionary} />
         </>
     );

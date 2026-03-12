@@ -217,6 +217,17 @@ export function LeadsTable() {
                 leadId={selectedLeadId}
                 open={!!selectedLeadId}
                 onOpenChange={(open) => !open && setSelectedLeadId(null)}
+                onDeleted={(deletedId) => {
+                    const deletedLead = leads.find(l => l.id === deletedId);
+                    setLeads(prev => prev.filter(l => l.id !== deletedId));
+                    if (deletedLead) {
+                        setStats(prev => ({
+                            verified: prev.verified - (deletedLead.isVerified && !deletedLead.isProfiled ? 1 : 0),
+                            profiled: prev.profiled - (deletedLead.isProfiled ? 1 : 0),
+                            unverified: prev.unverified - (!deletedLead.isVerified && !deletedLead.isProfiled ? 1 : 0)
+                        }));
+                    }
+                }}
             />
         </div>
     );

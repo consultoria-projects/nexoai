@@ -217,7 +217,7 @@ export function HeroSection() {
             </div>
 
             {/* Bottom fade out to next section */}
-            <div className={cn("absolute bottom-0 w-full h-20 md:h-32 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none z-10 transition-opacity duration-500", isPlaying ? "opacity-0" : "opacity-100")} />
+            <div className={cn("absolute bottom-0 w-full h-20 md:h-32 bg-gradient-to-t dark:from-background dark:via-background/80 from-transparent to-transparent pointer-events-none z-10 transition-opacity duration-500", isPlaying ? "opacity-0" : "opacity-100")} />
         </section>
     );
 }

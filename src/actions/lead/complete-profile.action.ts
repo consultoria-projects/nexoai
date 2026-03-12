@@ -18,8 +18,8 @@ export interface ProfileData {
     currentStack: CurrentStack[];
     companyName: string;
     companySize: 'solo' | '2-5' | '6-15' | '16-50' | '50+';
-    annualSurveyorSpend: AnnualSurveyorSpend;
-    weeklyManualHours: WeeklyManualHours;
+    annualSurveyorSpend?: AnnualSurveyorSpend;
+    weeklyManualHours?: WeeklyManualHours;
     role: ClientRole;
     web?: string;
 }

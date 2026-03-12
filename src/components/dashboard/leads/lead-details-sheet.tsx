@@ -3,18 +3,23 @@
 import { useEffect, useState } from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { getLeadByIdAction } from '@/actions/lead/dashboard.action';
-import { User, Mail, Phone, Calendar, Loader2, Sparkles, Building, Briefcase, Clock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { User, Mail, Phone, Calendar, Loader2, Sparkles, Building, Briefcase, Clock, CheckCircle2, AlertCircle, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface LeadDetailsSheetProps {
     leadId: string | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    onDeleted?: (leadId: string) => void;
 }
 
-export function LeadDetailsSheet({ leadId, open, onOpenChange }: LeadDetailsSheetProps) {
+export function LeadDetailsSheet({ leadId, open, onOpenChange, onDeleted }: LeadDetailsSheetProps) {
     const [lead, setLead] = useState<any | null>(null);
     const [loading, setLoading] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const { toast } = useToast();
 
     useEffect(() => {
         if (!open || !leadId) return;
@@ -40,16 +45,52 @@ export function LeadDetailsSheet({ leadId, open, onOpenChange }: LeadDetailsShee
         'surveyor': 'Aparejador / Medidor'
     };
 
+    const handleDelete = async () => {
+        if (!leadId) return;
+        if (!confirm('¿Estás seguro de que deseas eliminar este lead de forma permanente?')) return;
+
+        setIsDeleting(true);
+        try {
+            const { deleteLeadAction } = await import('@/actions/lead/delete-lead.action');
+            const res = await deleteLeadAction(leadId);
+            if (res.success) {
+                toast({ title: 'Lead eliminado correctamente' });
+                onOpenChange(false);
+                if (onDeleted) onDeleted(leadId);
+            } else {
+                toast({ title: 'Error', description: res.error, variant: 'destructive' });
+            }
+        } catch (error) {
+            toast({ title: 'Error', description: 'Error de conexión', variant: 'destructive' });
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
             <SheetContent className="w-full sm:max-w-xl md:max-w-2xl overflow-y-auto outline-none" side="right">
-                <SheetHeader className="mb-6">
-                    <SheetTitle className="text-2xl font-display flex items-center gap-2">
-                        <User className="w-6 h-6 text-primary" /> Detalles del Lead
-                    </SheetTitle>
-                    <SheetDescription>
-                        Visualiza toda la información de contacto y perfilado de este cliente potencial.
-                    </SheetDescription>
+                <SheetHeader className="mb-6 flex flex-row items-start justify-between mr-8">
+                    <div>
+                        <SheetTitle className="text-2xl font-display flex items-center gap-2">
+                            <User className="w-6 h-6 text-primary" /> Detalles del Lead
+                        </SheetTitle>
+                        <SheetDescription>
+                            Visualiza toda la información de contacto y perfilado de este cliente potencial.
+                        </SheetDescription>
+                    </div>
+                    {lead && (
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={handleDelete}
+                            disabled={isDeleting}
+                            className="shrink-0 gap-2"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                            {isDeleting ? 'Eliminando...' : 'Eliminar'}
+                        </Button>
+                    )}
                 </SheetHeader>
 
                 {loading ? (

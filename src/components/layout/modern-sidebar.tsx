@@ -26,6 +26,7 @@ import {
     Users,
     CalendarDays,
     TrendingUp,
+    Bot,
 } from 'lucide-react';
 import Image from 'next/image';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -71,6 +72,7 @@ export function ModernSidebar({ t, className }: ModernSidebarProps) {
         {
             label: 'Configuración',
             items: [
+                { href: '/dashboard/admin/traces', label: 'Trazas IA', icon: Bot },
                 { href: '/dashboard/admin/prices', label: t.dashboard.nav.priceBook, icon: Briefcase },
                 { href: '/dashboard/admin/prices?view=catalog', label: 'Catálogo', icon: Package },
                 { href: '/dashboard/settings/pricing', label: t.dashboard.nav.quickPricing, icon: DollarSign },

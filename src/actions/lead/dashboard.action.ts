@@ -60,6 +60,8 @@ export async function getLeadByIdAction(id: string) {
         profile: lead.profile,
         createdAt: lead.createdAt.toISOString(),
         updatedAt: lead.updatedAt.toISOString(),
+        demoBudgetsGenerated: lead.demoBudgetsGenerated,
+        demoPdfsDownloaded: lead.demoPdfsDownloaded,
     };
 }
 

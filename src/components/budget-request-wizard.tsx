@@ -490,7 +490,7 @@ export function BudgetRequestWizard({ t, services, onBack, isWidget = false }: {
             <CardHeader>
               <CardTitle className='font-headline text-2xl text-center'>{t.budgetRequest.steps[activeSteps[currentStep]?.id]}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-y-auto max-h-[65vh] xl:max-h-[70vh] custom-scrollbar p-6">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={currentStep}
@@ -499,7 +499,7 @@ export function BudgetRequestWizard({ t, services, onBack, isWidget = false }: {
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className='min-h-[450px]'
+                  className='min-h-[400px]'
                 >
                   {renderDetailedStep()}
                 </motion.div>

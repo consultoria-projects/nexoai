@@ -2,6 +2,10 @@
 
 import { clientRequirementsFlow } from '@/backend/ai/private-core/flows/client-requirements.flow';
 import { BudgetRequirement } from '@/backend/budget/domain/budget-requirements';
+import dns from 'node:dns';
+
+// Fix for Node.js Undici fetch taking 60s to timeout on Windows IPv6 networks
+dns.setDefaultResultOrder('ipv4first');
 export async function processAdminMessageAction(
     conversationId: string,
     message: string,

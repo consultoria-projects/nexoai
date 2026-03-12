@@ -96,6 +96,13 @@ export class GetAvailabilityUseCase {
         return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     }
 
+    private toLocalFormat(date: Date): string {
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const d = String(date.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+
     async execute(params: { startDate: Date; endDate: Date }): Promise<Record<string, TimeSlot[]>> {
         const result: Record<string, TimeSlot[]> = {};
         const config = await this.availabilityRepo.getConfig();
@@ -106,7 +113,7 @@ export class GetAvailabilityUseCase {
         end.setHours(23, 59, 59, 999);
 
         while (current <= end) {
-            const dateKey = current.toISOString().split('T')[0];
+            const dateKey = this.toLocalFormat(current);
             const dynamicSlots = this.generateSlotsForDay(current, config);
 
             if (dynamicSlots.length > 0) {

@@ -15,7 +15,7 @@ export const priceBookRetrieverTool = ai.defineTool(
         inputSchema: z.object({
             query: z.string().describe('The search query or description of the construction task to look for.'),
             limit: z.number().optional().default(5).describe('Number of items to return.'),
-            year: z.number().optional().default(2024).describe('Year of the price book to search in.'),
+            year: z.number().optional().default(2025).describe('Year of the price book to search in.'),
         }),
         outputSchema: z.object({
             items: z.array(z.object({

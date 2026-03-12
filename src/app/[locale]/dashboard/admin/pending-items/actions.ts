@@ -41,7 +41,7 @@ export async function approvePendingItemAction(input: ApproveItemInput) {
             priceTotal: input.finalPrice,
             priceLabor: 0, // Default breakdown
             priceMaterial: input.finalPrice,
-            year: 2024,
+            year: 2025,
             embedding: embedding,
             searchKeywords: input.finalDescription.toLowerCase().split(' '),
             createdAt: new Date()

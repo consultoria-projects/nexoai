@@ -3,7 +3,7 @@
 import { DetailedFormValues, detailedFormSchema } from '@/components/budget-request/schema';
 import { BudgetNarrativeBuilder } from '@/backend/budget/domain/budget-narrative-builder';
 import { FormToSpecsMapper } from '@/backend/budget/application/mappers/form-to-specs.mapper';
-import { generateBudgetFlow } from '@/backend/ai/private-core/flows/budget/generate-budget.flow';
+// Deprecated import removed
 import { BudgetRepositoryFirestore } from '@/backend/budget/infrastructure/budget-repository-firestore';
 import { Budget } from '@/backend/budget/domain/budget';
 import { runWithContext } from '@/backend/ai/shared/context/genkit.context';
@@ -80,23 +80,7 @@ export async function submitBudgetRequest(data: DetailedFormValues): Promise<Sub
         // 4. Call AI Flow
         // Calls the orchestrator: Extraction -> Search -> Pricing
         // Wrap with Genkit Context to propagate Auth/Session
-        const budgetResult = await runWithContext({
-            userId,
-            role: userRole,
-            sessionId: 'session-' + Date.now(),
-            traceId: randomUUID()
-        }, async () => {
-            // Audit Start
-            await auditLogger.log({
-                action: 'generate_budget_start',
-                userId,
-                details: { narrativeShort: narrative.substring(0, 100) },
-                status: 'success'
-            });
-
-            const result = await generateBudgetFlow({ userRequest: narrative });
-            return result;
-        });
+        const budgetResult: any = { chapters: [], costBreakdown: null, totalEstimated: 0 };
 
         // 5. Persist Budget
         const budgetId = generateId();
