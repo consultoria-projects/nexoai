@@ -2,7 +2,7 @@ import { ai, gemini25Flash } from '../../shared/config/genkit.config';
 import { generateWithRetry } from '../../shared/utils/ai-retry';
 import * as fs from 'fs';
 import * as path from 'path';
-import pdfIndex from '../../../../data/pdf_index_2025.json';
+import pdfIndex from '../../../../lib/pdf_index_2025.json';
 import { z } from 'genkit';
 
 const MAIN_CHAPTERS = [

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Database, FileJson, Calculator, CheckCircle2, AlertTriangle, Layers, BookOpen, Eye, Activity } from 'lucide-react';
-import pdfIndexData from '@/data/pdf_index_2025.json';
+import pdfIndexData from '@/lib/pdf_index_2025.json';
 
 interface Chapter {
     name: string;
