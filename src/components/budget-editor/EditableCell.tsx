@@ -76,7 +76,7 @@ export const EditableCell = ({
     }
 
     return (
-        <div className="relative flex items-center w-full">
+        <div className="relative flex items-center justify-end w-full">
             <Input
                 ref={inputRef as any}
                 type={type === 'currency' ? 'number' : type}
@@ -86,8 +86,7 @@ export const EditableCell = ({
                 onFocus={() => setIsFocused(true)}
                 onKeyDown={handleKeyDown}
                 className={cn(
-                    "h-8 border-transparent hover:border-input focus:border-primary bg-transparent py-1 px-2 shadow-none transition-all",
-                    type === 'currency' && "pr-6 text-right",
+                    "flex-1 min-w-0 h-8 border-transparent hover:border-input focus:border-primary bg-transparent py-1 px-2 shadow-none transition-all [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
                     isFocused && "bg-white dark:bg-zinc-900",
                     className
                 )}
@@ -95,7 +94,7 @@ export const EditableCell = ({
                 step={type === 'currency' ? "0.01" : "1"}
             />
             {type === 'currency' && (
-                <span className="absolute right-2 text-xs text-slate-400 pointer-events-none mt-[1px]">€</span>
+                <span className="shrink-0 text-xs text-slate-500 font-medium pl-1 pointer-events-none mt-[1px]">€</span>
             )}
         </div>
     );

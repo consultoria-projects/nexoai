@@ -62,6 +62,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
     const router = useRouter();
     const [isGhostMode, setIsGhostMode] = React.useState(false);
     const [localPdfCount, setLocalPdfCount] = React.useState((budget as any).demoPdfsDownloaded || 0);
+    const [isMobileSummaryOpen, setIsMobileSummaryOpen] = React.useState(false);
 
     // PDF Config State
     const [pdfMeta, setPdfMeta] = React.useState<any>(null);
@@ -296,6 +297,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                 onAddItem={addItem}
                 isStandaloneMode={!isAdmin || !!traceData}
                 applyMarkup={applyMarkup}
+                onOpenSummary={() => setIsMobileSummaryOpen(true)}
             />
 
             <main className="flex-1 w-full p-4 md:p-6 space-y-6 md:space-y-8 animate-in fade-in duration-500 pb-24 md:pb-6 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20">
@@ -349,16 +351,10 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                             </div>
                         </div>
 
-                        {/* Mobile Only: Menu Trigger for Summary/Library Sheet */}
+                        {/* Mobile Only: Controlled Summary/Library Sheet */}
                         <div className="md:hidden">
-                            <Sheet>
-                                <SheetTrigger asChild>
-                                    <Button variant="outline" size="sm" className="gap-2">
-                                        <Menu className="w-4 h-4" />
-                                        Resumen y Partidas
-                                    </Button>
-                                </SheetTrigger>
-                                <SheetContent side="right" className="w-[85vw] sm:w-[400px] overflow-y-auto">
+                            <Sheet open={isMobileSummaryOpen} onOpenChange={setIsMobileSummaryOpen}>
+                                <SheetContent side="right" className="w-full sm:w-[400px] overflow-y-auto">
                                     <SheetTitle className="sr-only">Menú de Resumen y Partidas</SheetTitle>
                                     <Tabs defaultValue="summary" className="w-full mt-6">
                                         <TabsList className="w-full grid grid-cols-2">
@@ -394,6 +390,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                         {/* LEFT COLUMN: Main Content Area (Tabs) */}
                         <div className="min-w-0">
                             <Tabs defaultValue="editor" className="space-y-6">
+                                {(isAdmin || traceData) && (
                                 <div className="overflow-x-auto pb-2 -mb-2 md:pb-0 md:mb-0">
                                     <TabsList className="bg-white dark:bg-white/5 border dark:border-white/10 shadow-sm w-full md:w-auto inline-flex justify-start">
                                         <TabsTrigger value="editor" className="flex-1 md:flex-none">Editor</TabsTrigger>
@@ -415,6 +412,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                                         )}
                                     </TabsList>
                                 </div>
+                                )}
 
                                 <TabsContent value="editor" className="space-y-8">
                                     <BudgetEditorTable

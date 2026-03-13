@@ -337,7 +337,7 @@ const TableRowItem = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode, is
                         onChange={(val) => onUpdate(item.id, { item: { ...item.item!, unitPrice: Number(val) } })}
                         type="currency"
                         className={cn(
-                            "text-right text-sm font-mono text-slate-700 dark:text-slate-200 bg-transparent border-transparent hover:bg-slate-100 dark:hover:bg-white/5 focus:bg-white dark:focus:bg-zinc-900 w-full pr-2",
+                            "text-right text-sm font-mono text-slate-700 dark:text-slate-200 bg-transparent border-transparent hover:bg-slate-100 dark:hover:bg-white/5 focus:bg-white dark:focus:bg-zinc-900 w-full",
                             item.item?.unitPrice === 0 && "text-red-500 font-bold"
                         )}
                     />
@@ -355,7 +355,7 @@ const TableRowItem = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode, is
                     value={displayTotal}
                     onChange={handleTotalChange}
                     type="currency"
-                    className="text-right bg-transparent border-transparent w-full pr-2"
+                    className="text-right bg-transparent border-transparent w-full"
                 />
             </div>
 
@@ -550,62 +550,77 @@ const ChapterSection = ({
         <>
             {/* Chapter Header */}
             <div className="border-t border-slate-200 dark:border-white/10 bg-slate-50 hover:bg-slate-100 dark:bg-white/5 dark:hover:bg-white/10 border-b">
-                <div className="flex items-center justify-between px-3 py-2">
-                            <div className="flex items-center gap-3">
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-6 w-6 p-0 text-slate-400"
-                                    onClick={() => setIsExpanded(!isExpanded)}
-                                >
-                                    {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                <div className="flex items-center w-full min-w-[800px]">
+                    {/* Left spacing to match Drag Handle + Type + Title offset */}
+                    <div className="w-[40px] shrink-0 p-3"></div>
+                    <div className="w-[50px] shrink-0 p-3"></div>
+                            
+                    {/* Chapter Title Container (Matches Descripción / Código) */}
+                    <div className="flex-1 min-w-[300px] p-2 flex items-center justify-start gap-3">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 w-6 p-0 text-slate-400"
+                            onClick={() => setIsExpanded(!isExpanded)}
+                        >
+                            {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                        </Button>
+
+                        {isEditingName ? (
+                            <Input
+                                autoFocus
+                                value={nameDraft}
+                                onChange={(e) => setNameDraft(e.target.value)}
+                                onBlur={handleRenameSubmit}
+                                onKeyDown={(e) => e.key === 'Enter' && handleRenameSubmit()}
+                                className="h-7 w-64 font-bold text-lg bg-white"
+                            />
+                        ) : (
+                            <div
+                                className="font-bold text-lg text-slate-800 dark:text-white cursor-pointer hover:underline decoration-dashed underline-offset-4 flex items-center gap-3"
+                                onClick={() => setIsEditingName(true)}
+                            >
+                                {chapterName}
+                                <Badge variant="secondary" className="font-normal text-xs text-slate-500">
+                                    {items.length} ítems
+                                </Badge>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Empty Unit / Quantity / Unit Price */}
+                    <div className="w-[80px] shrink-0 p-2"></div>
+                    <div className="w-[100px] shrink-0 p-2"></div>
+                    <div className="w-[120px] shrink-0 p-2"></div>
+
+                    {/* Total Price */}
+                    <div className="w-[120px] shrink-0 p-2 text-right">
+                        <span className="font-mono font-bold text-slate-800 dark:text-white">
+                            {formatCurrency(totalChapter)}
+                        </span>
+                    </div>
+                                
+                    {/* Actions */}
+                    <div className="w-[50px] shrink-0 p-2 text-center pt-2">
+                        {!isReadOnly && (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400">
+                                    <MoreHorizontal className="w-4 h-4" />
                                 </Button>
-
-                                {isEditingName ? (
-                                    <Input
-                                        autoFocus
-                                        value={nameDraft}
-                                        onChange={(e) => setNameDraft(e.target.value)}
-                                        onBlur={handleRenameSubmit}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleRenameSubmit()}
-                                        className="h-7 w-64 font-bold text-lg bg-white"
-                                    />
-                                ) : (
-                                    <div
-                                        className="font-bold text-lg text-slate-800 dark:text-white cursor-pointer hover:underline decoration-dashed underline-offset-4 flex items-center gap-3"
-                                        onClick={() => setIsEditingName(true)}
-                                    >
-                                        {chapterName}
-                                        <Badge variant="secondary" className="font-normal text-xs text-slate-500">
-                                            {items.length} ítems
-                                        </Badge>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="flex items-center gap-4">
-                                <span className="font-mono font-bold text-slate-700 dark:text-white">
-                                    {formatCurrency(totalChapter)}
-                                </span>
-                                {!isReadOnly && (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400">
-                                            <MoreHorizontal className="w-4 h-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                        <DropdownMenuItem onClick={() => onOpenMarkup(chapterName)}>
-                                            <Percent className="w-4 h-4 mr-2 text-slate-500" />
-                                            Ajustar Precios de Capítulo
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => setIsEditingName(true)}>Renombrar</DropdownMenuItem>
-                                        <DropdownMenuItem className="text-red-600" onClick={onDelete}>Eliminar Capítulo</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                                )}
-                            </div>
-                        </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => onOpenMarkup(chapterName)}>
+                                    <Percent className="w-4 h-4 mr-2 text-slate-500" />
+                                    Ajustar Precios de Capítulo
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setIsEditingName(true)}>Renombrar</DropdownMenuItem>
+                                <DropdownMenuItem className="text-red-600" onClick={onDelete}>Eliminar Capítulo</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* Draggable Items */}

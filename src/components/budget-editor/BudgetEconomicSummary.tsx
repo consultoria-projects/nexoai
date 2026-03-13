@@ -90,15 +90,18 @@ export const BudgetEconomicSummary = ({
                     <h3 className="font-bold text-slate-800 dark:text-white">Resumen Económico</h3>
                     {!isReadOnly && onUpdateConfig && (
                         <Button
-                            variant="ghost"
-                            size="icon"
+                            variant={isEditing ? "default" : "outline"}
+                            size="sm"
                             className={cn(
-                                "h-8 w-8 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200",
-                                isEditing && "bg-slate-100 dark:bg-white/10 text-slate-900 dark:text-white"
+                                "h-8 text-xs font-semibold gap-1.5 transition-colors shadow-sm",
+                                isEditing 
+                                    ? "bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-zinc-900" 
+                                    : "bg-white text-slate-700 hover:bg-slate-50 dark:bg-zinc-800 dark:text-slate-300 dark:border-zinc-700"
                             )}
                             onClick={toggleEdit}
                         >
-                            {isEditing ? <Check className="w-4 h-4" /> : <Settings2 className="w-4 h-4" />}
+                            {isEditing ? <Check className="w-3.5 h-3.5" /> : <Settings2 className="w-3.5 h-3.5 text-slate-500" />}
+                            {isEditing ? 'Listo' : 'Ajustes'}
                         </Button>
                     )}
                 </div>
@@ -199,7 +202,7 @@ export const BudgetEconomicSummary = ({
                                 Generar PDF Oficial
                             </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-xl w-[calc(100vw-2rem)] bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 p-6 sm:p-8 shadow-2xl">
+                        <DialogContent className="max-w-xl w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 p-6 sm:p-8 shadow-2xl">
                             <DialogTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Configuración del Documento PDF</DialogTitle>
                             <div className="space-y-5 py-2">
                                 <div className="space-y-2">

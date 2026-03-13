@@ -15,11 +15,11 @@ export async function getLeadPdfConfigAction(leadId: string) {
 
         let pdfMetadata: any = lead.pdfMetadata || {};
         
-        // Pre-fill the client fields, not the issuing company's fields
-        if (!pdfMetadata.clientName && lead.profile?.companyName) {
-            pdfMetadata.clientName = lead.profile.companyName;
-        } else if (!pdfMetadata.clientName && lead.personalInfo?.name) {
-            pdfMetadata.clientName = lead.personalInfo.name;
+        // The lead executing the platform is the emitting company, not the client!
+        if (!pdfMetadata.companyName && lead.profile?.companyName) {
+            pdfMetadata.companyName = lead.profile.companyName;
+        } else if (!pdfMetadata.companyName && lead.personalInfo?.name) {
+            pdfMetadata.companyName = lead.personalInfo.name;
         }
 
         return Object.keys(pdfMetadata).length > 0 ? pdfMetadata : null;

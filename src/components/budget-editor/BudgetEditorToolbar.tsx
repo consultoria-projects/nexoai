@@ -83,6 +83,7 @@ interface BudgetEditorToolbarProps {
     onUpdateConfig?: (config: { marginGG?: number; marginBI?: number; tax?: number; }) => void;
     applyMarkup?: (scope: 'global' | 'chapter' | 'item', percentage: number, targetId?: string) => void;
     isReadOnly?: boolean;
+    onOpenSummary?: () => void;
 }
 
 export const BudgetEditorToolbar = ({
@@ -107,7 +108,8 @@ export const BudgetEditorToolbar = ({
     budgetConfig,
     onUpdateConfig,
     applyMarkup,
-    isReadOnly
+    isReadOnly,
+    onOpenSummary
 }: BudgetEditorToolbarProps) => {
     // Determine status text
     const [isTracing, setIsTracing] = useState(false); // Added isTracing state
@@ -253,22 +255,15 @@ export const BudgetEditorToolbar = ({
 
             {/* MOBILE STICKY BOTTOM BAR */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-zinc-950 border-t border-border z-50 flex gap-3 safe-area-pb">
-                {!isReadOnly && (
-                    <Button
-                        onClick={onSave}
-                        disabled={isSaving}
-                        size="lg"
-                        className={cn(
-                            "flex-[2] shadow-lg transition-all font-semibold",
-                            hasUnsavedChanges
-                                ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
-                                : "bg-primary text-primary-foreground"
-                        )}
-                    >
-                        {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : (hasUnsavedChanges ? <Save className="w-5 h-5 mr-2" /> : <Check className="w-5 h-5 mr-2" />)}
-                        {isSaving ? 'Guardando...' : 'Guardar'}
-                    </Button>
-                )}
+                <Button
+                    onClick={onOpenSummary}
+                    size="lg"
+                    variant="outline"
+                    className="flex-1 shadow-lg transition-all font-semibold bg-zinc-900 border-transparent text-white dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700"
+                >
+                    <Layers className="w-5 h-5 mr-2 opacity-80" />
+                    Resumen y Partidas
+                </Button>
             </div>
         </>
     );
