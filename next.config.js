@@ -43,7 +43,7 @@ const nextConfig = {
       },
     ],
   },
-  serverExternalPackages: ['pdf-parse', '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation', '@opentelemetry/sdk-node', 'framer-motion', 'motion'],
+  serverExternalPackages: ['pdf-parse', '@opentelemetry/api', '@opentelemetry/core', '@opentelemetry/instrumentation', '@opentelemetry/sdk-node', 'framer-motion', 'motion', '@google-cloud/tasks'],
 };
 
 const createNextIntlPlugin = require('next-intl/plugin');
