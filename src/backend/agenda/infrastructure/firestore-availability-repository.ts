@@ -55,4 +55,10 @@ export class FirestoreAvailabilityRepository implements AvailabilityRepository {
     async save(config: AvailabilityConfig): Promise<void> {
         await this.db.collection(this.collectionName).doc(this.docId).set(this.toPersistence(config), { merge: true });
     }
+
+    async isSlotAvailable(date: Date, slot: string): Promise<boolean> {
+        // En implementación real, se debe buscar en Firestore si hay colisiones con bookings activos
+        // Para efectos de POC/Frontend flow, confirmaremos todo.
+        return true; 
+    }
 }

@@ -48,13 +48,13 @@ export async function generatePublicDemoAction(leadId: string, requirements: Bud
         const aiTrainingRepo = new FirestoreAiTrainingRepository();
         const leadRepo = new FirestoreLeadRepository();
 
-        // 1. Check strict 1-use limit for the public demo
+        // 1. Check strict 3-use limit for the public demo
         const existingTraces = await aiTrainingRepo.findByLeadId(leadId);
-        if (existingTraces.length > 0) {
-            console.log(`>> Lead ${leadId} already generated a budget. Enforcing rate limit.`);
+        if (existingTraces.length >= 3) {
+            console.log(`>> Lead ${leadId} already generated 3 budgets. Enforcing rate limit.`);
             return {
                 success: false,
-                error: "Ya has agotado tu presupuesto gratuito de demostración. Agenda una consultoría para seguir evaluando Basis."
+                error: "Ya has agotado tus 3 presupuestos de demostración. Agenda una consultoría para seguir evaluando Basis."
             };
         }
 
@@ -65,10 +65,11 @@ export async function generatePublicDemoAction(leadId: string, requirements: Bud
         // This is the Cognitive Barrier. It forces the Architect to reject New Builds.
         const demoConstraints = `
         IMPORTANTE (RESTRICCIÓN DE DEMO PÚBLICA):
-        El usuario está usando una demostración pública limitada.
-        1. SOLO puedes procesar reformas menores, interiores, cocinas, baños, pintura, solados y derribos simples.
-        2. ESTÁ TERMINANTEMENTE PROHIBIDO generar partidas de Cimentación, Estructuras, Movimientos de Tierra Masivos, o Construcción de Edificios Nuevos.
-        3. Si el usuario te pide construir una casa desde cero, u Obra Nueva, RECHAZA la petición cordialmente (devuelve un status 'ASKING' diciendo: "En esta demo gratuita solo realizamos cálculos de Obras Menores y Reformas de Interior. Por favor, ajusta tu petición").
+        El usuario está usando una demostración pública de Basis con capacidad COMPLETA de reforma.
+        1. Puedes y DEBES procesar cualquier tipo de reforma: integrales a cualquier escala, parciales, menores, interiores, cocinas, baños, albañilería general, derribos, instalaciones completas (fontanería, electricidad, clima). NO hay límite de superficie.
+        2. REGLA CRÍTICA - JAMÁS INVENTES RESTRICCIONES: Bajo ninguna circunstancia establezcas ni menciones límites de m² (como "el máximo son 100m²" o similares). Si el cliente menciona 200m², 300m² o cualquier otra superficie, acéptala y presupuesta con esa área exacta.
+        3. ESTÁ TERMINANTEMENTE PROHIBIDO generar presupuestos que involucren Construcción de Edificios de Obra Nueva desde cero, Cimentación Pesada, Estructuras Primarias desde Cero o Movimientos de Tierra Masivos sin intervención previa.
+        4. Si el usuario te pide construir una casa desde cero, una estructura de edificio nueva, u Obra Nueva pura, RECHAZA cordialmente (status 'ASKING': "En esta demo realizamos cálculos de Reformas (Integrales o Parciales) de cualquier escala. Para Construcción de Edificios desde Cero, agenda una consultoría o sube tu Proyecto de Ejecución en PDF.").
         
         Petición del usuario:
         `;
@@ -277,7 +278,21 @@ export async function generatePublicDemoAction(leadId: string, requirements: Bud
                     })) || [],
                     notes: decision.note || '',
                     ai_justification: decision.internal_reasoning || '',
-                    sourceDatabase: (selectedCandidate as any).sourceDatabase || '2025_catalog'
+                    sourceDatabase: (selectedCandidate as any).sourceDatabase || '2025_catalog',
+                    
+                    // --- ESTANDARIZACIÓN RAG ---
+                    original_item: {
+                        description: task.task,
+                        quantity: decision.quantity,
+                        unit: selectedCandidate.unit
+                    },
+                    ai_resolution: {
+                        selected_candidate: selectedCandidate,
+                        needs_human_review: false,
+                        confidence: 'high',
+                        reasoning: decision.internal_reasoning || '',
+                        flagged_by_agent: false
+                    }
                 };
 
                 currentChapter.items.push(newItem);

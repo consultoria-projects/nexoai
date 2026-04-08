@@ -28,6 +28,8 @@ interface GenerationProgress {
 interface BudgetGenerationProgressProps {
     progress: GenerationProgress;
     className?: string;
+    onComplete?: (budgetId: string) => void;
+    budgetId?: string;
 }
 
 const AGENT_NODES = [
@@ -42,9 +44,9 @@ function getStepIndex(step: GenerationStep): number {
     return idx === -1 ? 0 : idx;
 }
 
-export function BudgetGenerationProgress({ progress, className }: BudgetGenerationProgressProps) {
+export function BudgetGenerationProgress({ progress, className, onComplete, budgetId }: BudgetGenerationProgressProps) {
     const t = useTranslations('budgetRequest.demoProgress');
-    const { leadId } = useWidgetContext();
+    const telemetryId = budgetId;
     const { step, extractedItems, matchedItems, currentItem, error } = progress;
     const currentStepIndex = getStepIndex(step);
 
@@ -64,7 +66,7 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
     const activeStepIndex = getStepIndex(activeStep);
 
     const eventSourceRef = useRef<EventSource | null>(null);
-    const processedEvents = useRef<Set<number>>(new Set());
+    const processedEvents = useRef<Set<string | number>>(new Set());
     const logEndRef = useRef<HTMLDivElement>(null);
 
     // Auto-scroll logs
@@ -101,21 +103,22 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
     };
 
     useEffect(() => {
-        if (!leadId || step === 'idle' || step === 'complete' || step === 'error') return;
+        if (!telemetryId || step === 'idle' || step === 'complete' || step === 'error') return;
 
         if (eventSourceRef.current) {
             eventSourceRef.current.close();
         }
 
-        const url = `/api/budget/stream?leadId=${leadId}`;
+        const url = `/api/budget/stream?budgetId=${telemetryId}`;
         const es = new EventSource(url);
         eventSourceRef.current = es;
 
         es.onmessage = (event) => {
             try {
                 const parsed = JSON.parse(event.data);
-                if (processedEvents.current.has(parsed.timestamp)) return;
-                processedEvents.current.add(parsed.timestamp);
+                const uniqueKey = parsed.id || parsed.timestamp;
+                if (processedEvents.current.has(uniqueKey)) return;
+                processedEvents.current.add(uniqueKey);
 
                 if (parsed.type === 'subtasks_extracted') {
                     if (parsed.data.totalTasks) setLocalExtractedItems(parsed.data.totalTasks);
@@ -128,6 +131,20 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
                     const price = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(item.totalPrice || 0);
                     const agentPrefix = parsed.data.type === 'MATERIAL' ? '[Aparejador]' : '[Juez]';
                     addLog(`${agentPrefix} Resolved: [${item.code || item.code}] ${item.description?.substring(0, 40) || ''}... -> ${price}`, 'success');
+                } else if (parsed.type === 'vector_search' || parsed.type === 'restructuring' || parsed.type === 'vector_search_started' || parsed.type === 'batch_pricing_submitted' || parsed.type === 'extraction_started' || parsed.type === 'batch_restructure_submitted') {
+                    if (parsed.type.includes('vector') || parsed.type.includes('pricing')) {
+                        setLocalStep('searching');
+                        addLog(`[Aparejador] ${parsed.data.query}`, 'system');
+                    } else {
+                        setLocalStep('extracting');
+                        addLog(`[Arquitecto] ${parsed.data.query}`, 'system');
+                    }
+                } else if (parsed.type === 'budget_completed') {
+                    setLocalStep('complete');
+                    addLog(`[Sistema] Presupuesto finalizado con éxito. Redirigiendo...`, 'success');
+                    if (onComplete) {
+                        onComplete(parsed.data.budgetId);
+                    }
                 }
             } catch (e) {
                 // Ignore parse errors from heartbeats
@@ -137,7 +154,7 @@ export function BudgetGenerationProgress({ progress, className }: BudgetGenerati
         return () => {
             if (eventSourceRef.current) eventSourceRef.current.close();
         };
-    }, [leadId, step]);
+    }, [telemetryId, step]);
 
     if (step === 'idle') return null;
 

@@ -12,7 +12,8 @@ export async function processClientMessageAction(
     leadId: string,
     message: string,
     history: any[],
-    currentRequirements: Partial<BudgetRequirement>
+    currentRequirements: Partial<BudgetRequirement>,
+    attachments: string[] = []
 ) {
     try {
         const leadRepo = new FirestoreLeadRepository();
@@ -25,7 +26,7 @@ export async function processClientMessageAction(
         // ===============================================
         // RATE LIMITING SECURITY
         // ===============================================
-        if (lead.demoBudgetsGenerated >= 1) {
+        if (lead.demoBudgetsGenerated >= 3) {
             return {
                 success: true,
                 data: {
@@ -41,6 +42,7 @@ export async function processClientMessageAction(
             userMessage: message,
             history: history,
             currentRequirements: currentRequirements,
+            attachments: attachments,
             leadContext: {
                 personalInfo: lead.personalInfo,
                 profile: lead.profile || undefined,

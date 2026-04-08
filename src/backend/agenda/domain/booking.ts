@@ -19,7 +19,8 @@ export class Booking {
         public status: BookingStatus,
         public notes: string | null,
         public readonly createdAt: Date,
-        public updatedAt: Date
+        public updatedAt: Date,
+        public meetUrl?: string
     ) { }
 
     static create(

@@ -9,6 +9,8 @@ import { verifyLeadOtpAction } from '@/actions/lead/verify-lead-otp.action';
 import { createBookingFromLeadAction } from '@/actions/agenda/booking.action';
 import { ProfilingWizard } from '@/components/onboarding/profiling-wizard';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import { useSearchParams } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
 
 const timeSlots = [
     '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
@@ -36,6 +38,7 @@ const fadeUp = {
 export function AgendaSection() {
     const t = useTranslations('home.basis');
 
+    const searchParams = useSearchParams();
     const today = new Date();
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
     const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
@@ -47,6 +50,15 @@ export function AgendaSection() {
     const [loading, setLoading] = useState(false);
     const [otpCode, setOtpCode] = useState('');
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (searchParams) {
+            const preEmail = searchParams.get('email');
+            const preName = searchParams.get('name');
+            if (preEmail) setEmail(preEmail);
+            if (preName) setName(preName);
+        }
+    }, [searchParams]);
 
     const fallbackAgenda = {
         badge: 'Demo Personalizada',

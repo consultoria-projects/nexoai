@@ -6,6 +6,9 @@ import { Budget } from '@/backend/budget/domain/budget';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
+import { getFirestore } from 'firebase-admin/firestore';
+import { initFirebaseAdminApp } from '@/backend/shared/infrastructure/firebase/admin-app';
+import { CommunityFeedbackPanel } from '@/components/budget-editor/CommunityFeedbackPanel';
 
 interface TraceViewerPageProps {
     params: Promise<{
@@ -84,6 +87,27 @@ export default async function TraceViewerPage({ params }: TraceViewerPageProps) 
 
     const safeTraceData = JSON.parse(JSON.stringify(traceDataForViewer));
 
+    // Fetch Public Demo Feedbacks pending moderation for this specific trace
+    initFirebaseAdminApp();
+    const db = getFirestore();
+    const feedbackSnap = await db.collection('training_heuristics')
+        .where('budgetId', '==', cleanTraceId)
+        .where('status', '==', 'pending_review')
+        .get();
+
+    const feedbacks = feedbackSnap.docs.map(d => {
+        const data = d.data();
+        return {
+            id: d.id,
+            itemId: data.itemId,
+            description: data.description,
+            proposedPrice: data.proposedPrice,
+            vote: data.vote,
+            reason: data.reason,
+            timestamp: data.timestamp?.toDate()?.toISOString() || null
+        };
+    });
+
     return (
         <div className="h-screen w-full bg-background flex flex-col relative">
             <div className="absolute top-4 left-4 z-50">
@@ -99,6 +123,11 @@ export default async function TraceViewerPage({ params }: TraceViewerPageProps) 
                 budget={safeProxyBudget}
                 isAdmin={true}
                 traceData={safeTraceData}
+            />
+
+            <CommunityFeedbackPanel 
+                feedbacks={feedbacks} 
+                traceId={cleanTraceId}
             />
         </div>
     );

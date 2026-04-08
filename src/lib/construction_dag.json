@@ -1,0 +1,353 @@
+{
+  "_meta": {
+    "version": "2025.1",
+    "catalog": "COAATMCA",
+    "description": "Directed Acyclic Graph (DAG) of construction phases. Each node represents a chapter from the official COAATMCA 2025 price catalog. 'dependsOn' lists chapter IDs that must be completed before this chapter can begin. Used by the ArchitectAgent to enforce chronological and logistic coherence in budget decomposition.",
+    "executionModel": "parallel-where-possible",
+    "note": "Installations (plumbing, electrical, HVAC) share a concurrent phase after structure and before finishings. Finishings (render, tiling, paint) must follow all rough-in installations."
+  },
+  "phases": [
+    {
+      "phaseId": 0,
+      "phaseName": "Fase 0 — Trabajos Previos y Demolición",
+      "description": "Punto de partida de cualquier obra. Limpieza, derribo y gestión de escombros. No tiene dependencias previas.",
+      "chapters": [
+        {
+          "id": "DEMOLICIONES",
+          "label": "Demoliciones",
+          "catalogPage": 1,
+          "dependsOn": [],
+          "parallelWith": [],
+          "notes": "Siempre la primera fase. Incluir obligatoriamente la partida de carga y recogida de escombros al final."
+        }
+      ]
+    },
+    {
+      "phaseId": 1,
+      "phaseName": "Fase 1 — Acondicionamiento del Terreno",
+      "description": "Trabajos sobre el terreno natural. Excavaciones, zanjas para cimentación y red de saneamiento enterrada.",
+      "chapters": [
+        {
+          "id": "MOVIMIENTO DE TIERRAS",
+          "label": "Movimiento de Tierras",
+          "catalogPage": 18,
+          "dependsOn": ["DEMOLICIONES"],
+          "parallelWith": [],
+          "notes": "Incluye la excavación para zapatas, zanjas de saneamiento y firmes exteriores. Precede a toda cimentación."
+        }
+      ]
+    },
+    {
+      "phaseId": 2,
+      "phaseName": "Fase 2 — Cimentación y Estructura",
+      "description": "Construcción de la estructura portante del edificio. Hormigón, forjados y estructura metálica. Estas subfases son parcialmente paralelas.",
+      "chapters": [
+        {
+          "id": "HORMIGONES",
+          "label": "Hormigones (Cimentación y Estructura)",
+          "catalogPage": 24,
+          "dependsOn": ["MOVIMIENTO DE TIERRAS"],
+          "parallelWith": [],
+          "notes": "Incluye pilotes, zapatas, muros de contención, pilares y jácenas. Fundamento estructural obligatorio antes de cualquier forjado."
+        },
+        {
+          "id": "FORJADOS",
+          "label": "Forjados",
+          "catalogPage": 42,
+          "dependsOn": ["HORMIGONES"],
+          "parallelWith": ["ESTRUCTURAS METALICAS"],
+          "notes": "Losas, forjados reticulares, placas alveolares. Se ejecutan sobre la cimentación de hormigón."
+        },
+        {
+          "id": "ESTRUCTURAS METALICAS",
+          "label": "Estructuras Metálicas",
+          "catalogPage": 62,
+          "dependsOn": ["HORMIGONES"],
+          "parallelWith": ["FORJADOS"],
+          "notes": "Pilares y jácenas metálicas. Alternativa o complemento a la estructura de hormigón. Puede ejecutarse en paralelo con forjados."
+        }
+      ]
+    },
+    {
+      "phaseId": 3,
+      "phaseName": "Fase 3 — Envolvente del Edificio",
+      "description": "Cierre del edificio hacia el exterior. Cubiertas y cerramientos. La obra queda 'bajo techo'.",
+      "chapters": [
+        {
+          "id": "CUBIERTAS",
+          "label": "Cubiertas",
+          "catalogPage": 68,
+          "dependsOn": ["FORJADOS", "ESTRUCTURAS METALICAS"],
+          "parallelWith": ["FABRICAS Y TABIQUES"],
+          "notes": "Teja, azotea, cubierta plana. Imprescindible completar antes del inicio de instalaciones interiores para proteger la obra de la lluvia."
+        },
+        {
+          "id": "FABRICAS Y TABIQUES",
+          "label": "Fábricas y Tabiques (Cerramientos)",
+          "catalogPage": 89,
+          "dependsOn": ["FORJADOS", "ESTRUCTURAS METALICAS"],
+          "parallelWith": ["CUBIERTAS"],
+          "notes": "Muros de cerramiento exterior (marés, ladrillo, bloque) y tabiquería interior. Define los espacios antes de instalar."
+        }
+      ]
+    },
+    {
+      "phaseId": 4,
+      "phaseName": "Fase 4 — Instalaciones en Bruto (Rough-in)",
+      "description": "Todas las instalaciones se ejecutan EN PARALELO antes de cerrar con yeso/revoco. Es la fase más crítica de coordinación entre gremios.",
+      "chapters": [
+        {
+          "id": "RED DE SANEAMIENTO",
+          "label": "Red de Saneamiento",
+          "catalogPage": 107,
+          "dependsOn": ["MOVIMIENTO DE TIERRAS", "FORJADOS"],
+          "parallelWith": ["FONTANERIA Y GAS", "ELECTRICIDAD Y TELECOMUNICACIONES", "CALEFACCION", "RED DE VENTILACIÓN", "AISLAMIENTOS"],
+          "notes": "Bajantes, colectores, arquetas, impermeabilización de muros enterrados. La parte soterrada se ejecuta en Fase 1 junto al movimiento de tierras."
+        },
+        {
+          "id": "RED DE VENTILACIÓN",
+          "label": "Red de Ventilación",
+          "catalogPage": 126,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["FONTANERIA Y GAS", "ELECTRICIDAD Y TELECOMUNICACIONES", "CALEFACCION", "RED DE SANEAMIENTO"],
+          "notes": "Recuperadores de calor, conductos y rejillas. Se distribuye antes de cerrar techos y tabiques con guarnecidos."
+        },
+        {
+          "id": "AISLAMIENTOS",
+          "label": "Aislamientos",
+          "catalogPage": 191,
+          "dependsOn": ["CUBIERTAS", "FABRICAS Y TABIQUES"],
+          "parallelWith": ["FONTANERIA Y GAS", "ELECTRICIDAD Y TELECOMUNICACIONES", "CALEFACCION"],
+          "notes": "Aislamiento térmico de paredes, cubiertas y tuberías. Debe aplicarse antes de cerrar con revestimientos."
+        },
+        {
+          "id": "FONTANERIA Y GAS",
+          "label": "Fontanería y Gas",
+          "catalogPage": 270,
+          "dependsOn": ["RED DE SANEAMIENTO", "FABRICAS Y TABIQUES"],
+          "parallelWith": ["ELECTRICIDAD Y TELECOMUNICACIONES", "CALEFACCION", "RED DE VENTILACIÓN", "AISLAMIENTOS"],
+          "notes": "Tuberías de agua fría, ACS y gas empotradas. Los aparatos sanitarios se instalan en Fase 5 (acabados)."
+        },
+        {
+          "id": "CALEFACCION",
+          "label": "Calefacción",
+          "catalogPage": 289,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["FONTANERIA Y GAS", "ELECTRICIDAD Y TELECOMUNICACIONES", "RED DE VENTILACIÓN"],
+          "notes": "Suelo radiante, ramales y caldera. El suelo radiante se instala ANTES del solado. Los radiadores, en Fase 5."
+        },
+        {
+          "id": "ELECTRICIDAD Y TELECOMUNICACIONES",
+          "label": "Electricidad y Telecomunicaciones",
+          "catalogPage": 307,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["FONTANERIA Y GAS", "CALEFACCION", "RED DE VENTILACIÓN", "AISLAMIENTOS"],
+          "notes": "Cableado, cuadros, rozas y cajas empotradas. El cuadro definitivo y la iluminación se instalan en Fase 5."
+        },
+        {
+          "id": "ENERGIA SOLAR",
+          "label": "Energía Solar",
+          "catalogPage": 322,
+          "dependsOn": ["CUBIERTAS"],
+          "parallelWith": ["ELECTRICIDAD Y TELECOMUNICACIONES"],
+          "notes": "Paneles fotovoltaicos y colectores solares. Se instalan sobre cubierta terminada. Conexión eléctrica en paralelo con instalación eléctrica."
+        },
+        {
+          "id": "AIRE ACONDICIONADO",
+          "label": "Aire Acondicionado",
+          "catalogPage": 325,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["FONTANERIA Y GAS", "ELECTRICIDAD Y TELECOMUNICACIONES"],
+          "notes": "Máquinas, conductos y splits. La unidad exterior se coloca en cubierta o fachada. La interior, antes de cerrar falsos techos."
+        },
+        {
+          "id": "APARATOS ELEVADORES",
+          "label": "Aparatos Elevadores",
+          "catalogPage": 337,
+          "dependsOn": ["HORMIGONES", "ESTRUCTURAS METALICAS"],
+          "parallelWith": [],
+          "notes": "El hueco del ascensor debe preverse en la estructura. La cabina se instala habitualmente en esta fase o en Fase 5."
+        },
+        {
+          "id": "CONTRAINCENDIOS",
+          "label": "Contraincendios",
+          "catalogPage": 341,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["ELECTRICIDAD Y TELECOMUNICACIONES"],
+          "notes": "Sistemas de detección y extinción. Instalar en paralelo con electricidad."
+        }
+      ]
+    },
+    {
+      "phaseId": 5,
+      "phaseName": "Fase 5 — Revestimientos y Acabados Primarios",
+      "description": "Cierre de paredes y techos sobre instalaciones ya pasadas. El orden interno es crítico: guarnecidos → solados → alicatados.",
+      "chapters": [
+        {
+          "id": "REVOCOS Y ENLUCIDOS",
+          "label": "Revocos y Enlucidos (Yeso / SATE / Monocapa)",
+          "catalogPage": 146,
+          "dependsOn": ["FONTANERIA Y GAS", "ELECTRICIDAD Y TELECOMUNICACIONES", "CALEFACCION", "RED DE VENTILACIÓN", "AISLAMIENTOS"],
+          "parallelWith": ["FIRMES Y PAVIMENTOS", "OBRAS VARIAS Y ALBAÑILERIA"],
+          "notes": "Guarnecidos, enlucidos, enfoscados y fachadas SATE. Cierra las rozas de instalaciones. Precede a pintura y alicatados."
+        },
+        {
+          "id": "FIRMES Y PAVIMENTOS",
+          "label": "Firmes y Pavimentos (Soleras)",
+          "catalogPage": 204,
+          "dependsOn": ["CALEFACCION", "MOVIMIENTO DE TIERRAS"],
+          "parallelWith": ["REVOCOS Y ENLUCIDOS"],
+          "notes": "Soleras de hormigón base para el solado final. Si hay suelo radiante, debe estar instalado antes."
+        },
+        {
+          "id": "OBRAS VARIAS Y ALBAÑILERIA",
+          "label": "Obras Varias y Albañilería",
+          "catalogPage": 216,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["REVOCOS Y ENLUCIDOS"],
+          "notes": "Recibo de marcos y persianas, rozas de última hora, ayudas a industriales. Fase de coordinación entre gremios."
+        },
+        {
+          "id": "CANTERIA Y PIEDRA  ARTIFICIAL",
+          "label": "Cantería y Piedra Artificial",
+          "catalogPage": 177,
+          "dependsOn": ["FIRMES Y PAVIMENTOS", "REVOCOS Y ENLUCIDOS"],
+          "parallelWith": ["SOLADOS Y ALICATADOS"],
+          "notes": "Encimeras, escaleras de piedra, aplacados, vierteaguas. Instalar una vez la estructura base esté lista."
+        },
+        {
+          "id": "SOLADOS Y ALICATADOS",
+          "label": "Solados y Alicatados",
+          "catalogPage": 158,
+          "dependsOn": ["FIRMES Y PAVIMENTOS", "REVOCOS Y ENLUCIDOS"],
+          "parallelWith": ["CANTERIA Y PIEDRA  ARTIFICIAL", "PAVIMENTOS DE MADERA"],
+          "notes": "Cerámica, gres, piedra natural, alicatados de paredes. Se instalan después de solera y guarnecidos."
+        },
+        {
+          "id": "PAVIMENTOS DE MADERA",
+          "label": "Pavimentos de Madera",
+          "catalogPage": null,
+          "dependsOn": ["FIRMES Y PAVIMENTOS", "REVOCOS Y ENLUCIDOS"],
+          "parallelWith": ["SOLADOS Y ALICATADOS"],
+          "notes": "Parquet y tarima flotante. Instalar después de la solera y en un ambiente con humedad controlada."
+        }
+      ]
+    },
+    {
+      "phaseId": 6,
+      "phaseName": "Fase 6 — Carpintería, Cerrajería y Acristalamientos",
+      "description": "Puertas, ventanas, barandillas y vidrios. Solo pueden instalarse una vez los marcos están recibidos y los revestimientos terminados.",
+      "chapters": [
+        {
+          "id": "CARPINTERIA DE MADERA",
+          "label": "Carpintería de Madera",
+          "catalogPage": 222,
+          "dependsOn": ["REVOCOS Y ENLUCIDOS", "OBRAS VARIAS Y ALBAÑILERIA"],
+          "parallelWith": ["CERRAJERIA"],
+          "notes": "Puertas de paso, puertas de entrada, armarios. Los marcos se reciben en Fase 5. Las hojas se colocan en esta fase."
+        },
+        {
+          "id": "CERRAJERIA",
+          "label": "Cerrajería y Aluminio",
+          "catalogPage": 239,
+          "dependsOn": ["REVOCOS Y ENLUCIDOS", "OBRAS VARIAS Y ALBAÑILERIA"],
+          "parallelWith": ["CARPINTERIA DE MADERA"],
+          "notes": "Ventanas de aluminio o PVC, barandillas, rejas. En paralelo con carpintería de madera."
+        },
+        {
+          "id": "ACRISTALAMIENTOS",
+          "label": "Acristalamientos",
+          "catalogPage": null,
+          "dependsOn": ["CARPINTERIA DE MADERA", "CERRAJERIA"],
+          "parallelWith": [],
+          "notes": "Vidrios y mamparas. Se instalan siempre después de los marcos de carpintería y cerrajería."
+        }
+      ]
+    },
+    {
+      "phaseId": 7,
+      "phaseName": "Fase 7 — Acabados Finales e Instalaciones Terminadas",
+      "description": "Pintura, aparatos sanitarios, iluminación, griferías y electrodomésticos. La fase de puesta a punto final.",
+      "chapters": [
+        {
+          "id": "PINTURA Y REVESTIMIENTOS",
+          "label": "Pintura y Revestimientos Decorativos",
+          "catalogPage": null,
+          "dependsOn": ["REVOCOS Y ENLUCIDOS", "CARPINTERIA DE MADERA", "CERRAJERIA"],
+          "parallelWith": [],
+          "notes": "Pintura plástica, esmaltes, barnices. Siempre la ÚLTIMA operación sobre paredes y techos, después de carpintería."
+        },
+        {
+          "id": "REHABILITACIÓN, REPARACIÓN Y MANTENIMIENTO",
+          "label": "Rehabilitación, Reparación y Mantenimiento",
+          "catalogPage": null,
+          "dependsOn": [],
+          "parallelWith": [],
+          "notes": "Capítulo especial para obras de mantenimiento. Las dependencias son específicas de cada proyecto."
+        },
+        {
+          "id": "BIOCONSTRUCCIÓN",
+          "label": "Bioconstrucción",
+          "catalogPage": null,
+          "dependsOn": ["FABRICAS Y TABIQUES"],
+          "parallelWith": ["REVOCOS Y ENLUCIDOS"],
+          "notes": "Materiales sostenibles y naturales. Se integran en las fases de cerramiento y revestimiento."
+        },
+        {
+          "id": "PISCINAS",
+          "label": "Piscinas",
+          "catalogPage": null,
+          "dependsOn": ["MOVIMIENTO DE TIERRAS"],
+          "parallelWith": ["HORMIGONES"],
+          "notes": "Excavación y construcción de piscinas. Se ejecuta en paralelo con la cimentación del edificio."
+        }
+      ]
+    },
+    {
+      "phaseId": 8,
+      "phaseName": "Fase 8 — Urbanización Exterior y Jardinería",
+      "description": "Trabajos exteriores. Solo pueden comenzar cuando la obra interior principal no genere más suciedad ni tráfico pesado.",
+      "chapters": [
+        {
+          "id": "URBANIZACION INTERIOR PARCELA",
+          "label": "Urbanización Interior de Parcela",
+          "catalogPage": null,
+          "dependsOn": ["PINTURA Y REVESTIMIENTOS", "SOLADOS Y ALICATADOS"],
+          "parallelWith": ["JARDINERIA"],
+          "notes": "Pavimentación de accesos, muros de cierre, aceras perimetrales. Fase final exterior."
+        },
+        {
+          "id": "JARDINERIA",
+          "label": "Jardinería",
+          "catalogPage": null,
+          "dependsOn": ["URBANIZACION INTERIOR PARCELA"],
+          "parallelWith": [],
+          "notes": "Plantaciones, sistemas de riego y césped. La última operación en cualquier obra."
+        }
+      ]
+    },
+    {
+      "phaseId": 9,
+      "phaseName": "Fase 9 — Control y Verificación Técnica",
+      "description": "Fase transversal de calidad. Los ensayos y el control se realizan durante y al final de la obra.",
+      "chapters": [
+        {
+          "id": "ENSAYOS Y CONTROL TECNICO",
+          "label": "Ensayos y Control Técnico",
+          "catalogPage": null,
+          "dependsOn": [],
+          "parallelWith": ["HORMIGONES", "FORJADOS", "SOLADOS Y ALICATADOS"],
+          "notes": "Ensayos de materiales, pruebas de estanqueidad, inspecciones. Fase transversal que acompaña a todo el proceso constructivo."
+        },
+        {
+          "id": "SEGURIDAD Y SALUD",
+          "label": "Seguridad y Salud",
+          "catalogPage": null,
+          "dependsOn": [],
+          "parallelWith": [],
+          "notes": "Medidas de protección colectiva e individual. Fase transversal obligatoria durante toda la obra. NO incluir como partida de PEM estándar."
+        }
+      ]
+    }
+  ]
+}

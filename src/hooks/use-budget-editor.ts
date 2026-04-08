@@ -1,44 +1,98 @@
 import { useReducer, useCallback, useEffect, useState } from 'react';
 import { BudgetLineItem, BudgetCostBreakdown } from '@/backend/budget/domain/budget';
-import { BudgetEditorState, BudgetEditorAction, EditableBudgetLineItem, BudgetConfig } from '@/types/budget-editor';
+import { BudgetEditorState, BudgetEditorAction, EditableBudgetLineItem, BudgetConfig, ExecutionMode } from '@/types/budget-editor';
 
 // Simple ID generator
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// Initial Cost Breakdown Calculator
-const calculateBreakdown = (items: EditableBudgetLineItem[], config: BudgetConfig, isExecutionOnly: boolean = false): BudgetCostBreakdown => {
-    const materialExecutionPrice = items.reduce((sum, item) => {
-        let price = parseFloat(String(item.item?.totalPrice || 0));
-
-        // Exclude variable material costs if Execution Only mode is active
-        if (isExecutionOnly && item.item?.breakdown) {
-            const variableCosts = item.item.breakdown
-                .filter((comp: any) => comp.is_variable === true)
-                .reduce((acc: number, comp: any) => {
-                    const cPrice = comp.unitPrice || comp.price || 0;
-                    const cQuantity = comp.quantity || comp.yield || 1;
-                    return acc + (comp.totalPrice || comp.total || (cPrice * cQuantity));
-                }, 0);
-            price = Math.max(0, price - variableCosts);
+const calculateBreakdown = (items: EditableBudgetLineItem[], config: BudgetConfig, executionMode: ExecutionMode = 'complete'): BudgetCostBreakdown => {
+    // Robust number parser for Spanish locales and random string formats
+    const parseNumber = (val: any): number => {
+        if (typeof val === 'number') return isNaN(val) ? 0 : val;
+        if (!val) return 0;
+        // Strip out € and spaces, replace comma with dot. Only keep last dot if multiple. 
+        let str = String(val).replace(/[^0-9,-.]/g, '');
+        // handle european format like 1.250,50 -> 1250.50
+        if (str.includes(',') && str.includes('.')) {
+            str = str.replace(/\./g, '').replace(',', '.');
+        } else if (str.includes(',')) {
+            str = str.replace(',', '.');
         }
+        const num = parseFloat(str);
+        return isNaN(num) ? 0 : num;
+    };
 
-        return sum + (isNaN(price) ? 0 : price);
+    // 1. Calculate base execution price (Complete Mode)
+    const rawMaterialExecutionPrice = items.reduce((sum, item) => {
+        const uPrice = parseNumber(item.item?.unitPrice || 0);
+        const qty = parseNumber(item.item?.quantity || 1);
+        const tPrice = parseNumber(item.item?.totalPrice ?? (uPrice * qty));
+        return sum + tPrice;
     }, 0);
-    const overheadExpenses = materialExecutionPrice * (config.marginGG / 100);
-    const industrialBenefit = materialExecutionPrice * (config.marginBI / 100);
-    const subtotal = materialExecutionPrice + overheadExpenses + industrialBenefit;
-    const tax = subtotal * (config.tax / 100);
 
-    // Round to 2 decimals
+    // 2. Calculate deductions based on executionMode
+    let variableCostsToDeduct = 0;
+    
+    if (executionMode === 'execution') {
+        variableCostsToDeduct = items.reduce((sum, item) => {
+            if (!item.item?.breakdown) return sum;
+            const vCost = item.item.breakdown
+                .filter((comp: any) => comp.is_variable === true || comp.is_variable === 'true' || comp.isVariable === true)
+                .reduce((acc: number, comp: any) => {
+                    const cPrice = parseNumber(comp.unitPrice || comp.price || 0);
+                    const cQuantity = parseNumber(comp.quantity || comp.yield || 1);
+                    const totalComp = parseNumber(comp.totalPrice ?? comp.total ?? (cPrice * cQuantity));
+                    return acc + totalComp;
+                }, 0);
+            const itemQty = parseNumber(item.item?.quantity || 1);
+            return sum + (vCost * itemQty);
+        }, 0);
+    } else if (executionMode === 'labor') {
+        const laborCosts = items.reduce((sum, item) => {
+            if (!item.item?.breakdown) return sum;
+            const moCost = item.item.breakdown
+                .filter((comp: any) => comp.code && String(comp.code).toLowerCase().startsWith('mo'))
+                .reduce((acc: number, comp: any) => {
+                    const cPrice = parseNumber(comp.unitPrice || comp.price || 0);
+                    const cQuantity = parseNumber(comp.quantity || comp.yield || 1);
+                    const totalComp = parseNumber(comp.totalPrice ?? comp.total ?? (cPrice * cQuantity));
+                    return acc + totalComp;
+                }, 0);
+            const itemQty = parseNumber(item.item?.quantity || 1);
+            return sum + (moCost * itemQty);
+        }, 0);
+        variableCostsToDeduct = rawMaterialExecutionPrice - laborCosts;
+    }
+
+    // Calculation helper
+    const calcSubtotal = (pem: number) => {
+        const gh = pem * (config.marginGG / 100);
+        const bi = pem * (config.marginBI / 100);
+        return pem + gh + bi;
+    };
     const round = (num: number) => Math.round((num + Number.EPSILON) * 100) / 100;
 
+    // We must ensure the execution pem doesn't go below 0
+    const pemComplete = isNaN(rawMaterialExecutionPrice) ? 0 : rawMaterialExecutionPrice;
+    const activePem = Math.max(0, pemComplete - variableCostsToDeduct);
+
+    // Selected Mode Values
+    const activeSubtotal = calcSubtotal(activePem);
+    const activeTax = activeSubtotal * (config.tax / 100);
+    
+    // Explicit tracking
+    const completeTotal = calcSubtotal(pemComplete) * (1 + (config.tax / 100));
+    const executionOnlyTotal = calcSubtotal(Math.max(0, pemComplete - variableCostsToDeduct)) * (1 + (config.tax / 100)); // Still tracks the active total, not just "execution" strictly. We can leave it named this way or rename it in types.
+
     return {
-        materialExecutionPrice: round(materialExecutionPrice),
-        overheadExpenses: round(overheadExpenses),
-        industrialBenefit: round(industrialBenefit),
-        tax: round(tax),
+        materialExecutionPrice: round(activePem),
+        overheadExpenses: round(activePem * (config.marginGG / 100)),
+        industrialBenefit: round(activePem * (config.marginBI / 100)),
+        tax: round(activeTax),
         globalAdjustment: 0,
-        total: round(subtotal + tax)
+        total: round(activeSubtotal + activeTax),
+        completeTotal: round(completeTotal),
+        executionOnlyTotal: round(executionOnlyTotal)
     };
 };
 
@@ -57,12 +111,12 @@ const initialState: BudgetEditorState = {
     historyIndex: -1,
     hasUnsavedChanges: false,
     isSaving: false,
-    isExecutionOnly: false,
+    executionMode: 'complete',
     history: []
 };
 
 // Add new INIT_STATE action
-export type BudgetEditorInitAction = { type: 'INIT_STATE'; payload: { items: EditableBudgetLineItem[]; config?: BudgetConfig; isExecutionOnly?: boolean } };
+export type BudgetEditorInitAction = { type: 'INIT_STATE'; payload: { items: EditableBudgetLineItem[]; config?: BudgetConfig; executionMode?: ExecutionMode } };
 
 function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorAction | BudgetEditorInitAction): BudgetEditorState {
     switch (action.type) {
@@ -80,15 +134,15 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
             const derivedChapters = Array.from(new Set(newItems.map(i => i.chapter).filter(Boolean) as string[]));
             const chapters = derivedChapters.length > 0 ? derivedChapters : ['General'];
             const config = action.payload.config || state.config;
-            const isExecutionOnly = action.payload.isExecutionOnly ?? state.isExecutionOnly;
+            const executionMode = action.payload.executionMode ?? state.executionMode;
 
-            const breakdown = calculateBreakdown(newItems, config, isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, config, executionMode);
             return {
                 ...state,
                 items: newItems,
                 chapters: chapters,
                 config: config,
-                isExecutionOnly: isExecutionOnly,
+                executionMode: executionMode,
                 costBreakdown: breakdown,
                 history: [{ items: newItems, timestamp: Date.now() }],
                 historyIndex: 0,
@@ -116,7 +170,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
             const derivedChapters = Array.from(new Set(newItems.map(i => i.chapter).filter(Boolean) as string[]));
             const chapters = derivedChapters.length > 0 ? derivedChapters : ['General'];
 
-            const breakdown = calculateBreakdown(newItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, state.config, state.executionMode);
             return {
                 ...state,
                 items: newItems,
@@ -124,6 +178,16 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
                 costBreakdown: breakdown,
                 history: [{ items: newItems, timestamp: Date.now() }],
                 historyIndex: 0
+            };
+        }
+
+        case 'SET_EXECUTION_MODE': {
+            const newExecutionMode = action.payload;
+            const newBreakdown = calculateBreakdown(state.items, state.config, newExecutionMode);
+            return {
+                ...state,
+                executionMode: newExecutionMode,
+                costBreakdown: newBreakdown,
             };
         }
 
@@ -146,7 +210,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
                 newChapters.push('General');
             }
 
-            const breakdown = calculateBreakdown(newItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, state.config, state.executionMode);
 
             const newHistory = state.history.slice(0, state.historyIndex + 1);
             newHistory.push({ items: newItems, timestamp: Date.now() });
@@ -186,29 +250,56 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
         }
 
         case 'UPDATE_ITEM': {
-            const newItems = state.items.map(item =>
-                item.id === action.payload.id
-                    ? { ...item, ...action.payload.changes, isDirty: true }
-                    : item
-            );
+            const updatedItems = state.items.map(oldItem => {
+                if (oldItem.id !== action.payload.id) return oldItem;
 
-            // Recalculate totals for the updated item if quantity or price changed
-            const updatedItems = newItems.map(item => {
-                if (item.id === action.payload.id && item.item) {
-                    const quantity = item.item.quantity || 0;
-                    const unitPrice = item.item.unitPrice || 0;
-                    return {
-                        ...item,
-                        item: {
-                            ...item.item,
-                            totalPrice: quantity * unitPrice
-                        }
-                    };
+                // Grab the intended changes
+                const changes = action.payload.changes;
+                const payloadItemChanges = changes.item;
+                const prevUnitPrice = Number(oldItem.item?.unitPrice || 0);
+                
+                // 1. Proportional Scaling Logic for Breakdown
+                let newBreakdown = oldItem.item?.breakdown;
+                if (payloadItemChanges && payloadItemChanges.unitPrice !== undefined && newBreakdown) {
+                    const newUnitPrice = Number(payloadItemChanges.unitPrice);
+                    if (prevUnitPrice > 0 && newUnitPrice !== prevUnitPrice) {
+                        const scaleFactor = newUnitPrice / prevUnitPrice;
+                        newBreakdown = newBreakdown.map(comp => {
+                            const newCompPrice = (comp.price || comp.unitPrice || 0) * scaleFactor;
+                            const qty = comp.yield || comp.quantity || 1;
+                            const newTotal = newCompPrice * qty;
+                            return {
+                                ...comp,
+                                price: newCompPrice,
+                                unitPrice: newCompPrice, // Keep compatibility with both structures
+                                total: newTotal,
+                                totalPrice: newTotal
+                            };
+                        });
+                    }
                 }
-                return item;
+
+                // 2. Merge all changes
+                const mergedItem = {
+                    ...oldItem,
+                    ...changes,
+                    isDirty: true
+                };
+
+                // 3. Re-assign scaled breakdown and fixed properties
+                if (mergedItem.item) {
+                    if (newBreakdown) {
+                        mergedItem.item.breakdown = newBreakdown;
+                    }
+                    const quantity = mergedItem.item.quantity || 0;
+                    const unitPrice = mergedItem.item.unitPrice || 0;
+                    mergedItem.item.totalPrice = quantity * unitPrice;
+                }
+
+                return mergedItem;
             });
 
-            const breakdown = calculateBreakdown(updatedItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(updatedItems, state.config, state.executionMode);
 
             // Add to history
             const newHistory = state.history.slice(0, state.historyIndex + 1);
@@ -301,7 +392,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
                 ? state.chapters
                 : [...state.chapters, newItem.chapter];
 
-            const breakdown = calculateBreakdown(newItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, state.config, state.executionMode);
 
             const newHistory = state.history.slice(0, state.historyIndex + 1);
             newHistory.push({ items: newItems, timestamp: Date.now() });
@@ -335,7 +426,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
             const newItems = [...state.items];
             newItems.splice(originalIndex + 1, 0, newItem);
 
-            const breakdown = calculateBreakdown(newItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, state.config, state.executionMode);
 
             const newHistory = state.history.slice(0, state.historyIndex + 1);
             newHistory.push({ items: newItems, timestamp: Date.now() });
@@ -352,7 +443,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
 
         case 'REMOVE_ITEM': {
             const newItems = state.items.filter(item => item.id !== action.payload);
-            const breakdown = calculateBreakdown(newItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, state.config, state.executionMode);
 
             const newHistory = state.history.slice(0, state.historyIndex + 1);
             newHistory.push({ items: newItems, timestamp: Date.now() });
@@ -373,7 +464,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
             return {
                 ...state,
                 items: prevVersion.items,
-                costBreakdown: calculateBreakdown(prevVersion.items, state.config, state.isExecutionOnly),
+                costBreakdown: calculateBreakdown(prevVersion.items, state.config, state.executionMode),
                 historyIndex: state.historyIndex - 1,
                 hasUnsavedChanges: true
             };
@@ -384,16 +475,16 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
             return {
                 ...state,
                 items: nextVersion.items,
-                costBreakdown: calculateBreakdown(nextVersion.items, state.config, state.isExecutionOnly),
+                costBreakdown: calculateBreakdown(nextVersion.items, state.config, state.executionMode),
                 historyIndex: state.historyIndex + 1,
                 hasUnsavedChanges: true
             };
 
-        case 'TOGGLE_EXECUTION_MODE': {
-            const newMode = !state.isExecutionOnly;
+        case 'SET_EXECUTION_MODE': {
+            const newMode = action.payload;
             return {
                 ...state,
-                isExecutionOnly: newMode,
+                executionMode: newMode,
                 costBreakdown: calculateBreakdown(state.items, state.config, newMode)
             };
         }
@@ -403,7 +494,7 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
             return {
                 ...state,
                 config: newConfig,
-                costBreakdown: calculateBreakdown(state.items, newConfig, state.isExecutionOnly),
+                costBreakdown: calculateBreakdown(state.items, newConfig, state.executionMode),
                 hasUnsavedChanges: true
             };
         }
@@ -422,20 +513,39 @@ function budgetEditorReducer(state: BudgetEditorState, action: BudgetEditorActio
                     const currentPrice = Number(item.item.unitPrice || 0);
                     const newUnitPrice = currentPrice * factor;
                     const quantity = Number(item.item.quantity || 1);
+
+                    // Scale breakdown proportionally
+                    let newBreakdown = item.item.breakdown;
+                    if (newBreakdown && currentPrice > 0) {
+                        newBreakdown = newBreakdown.map(comp => {
+                            const newCompPrice = (comp.price || comp.unitPrice || 0) * factor;
+                            const qty = comp.yield || comp.quantity || 1;
+                            const newTotal = newCompPrice * qty;
+                            return {
+                                ...comp,
+                                price: newCompPrice,
+                                unitPrice: newCompPrice,
+                                total: newTotal,
+                                totalPrice: newTotal
+                            };
+                        });
+                    }
+
                     return {
                         ...item,
                         isDirty: true,
                         item: {
                             ...item.item,
                             unitPrice: newUnitPrice,
-                            totalPrice: quantity * newUnitPrice
+                            totalPrice: quantity * newUnitPrice,
+                            breakdown: newBreakdown
                         }
                     };
                 }
                 return item;
             });
 
-            const breakdown = calculateBreakdown(newItems, state.config, state.isExecutionOnly);
+            const breakdown = calculateBreakdown(newItems, state.config, state.executionMode);
 
             const newHistory = state.history.slice(0, state.historyIndex + 1);
             newHistory.push({ items: newItems, timestamp: Date.now() });
@@ -540,7 +650,7 @@ export function useBudgetEditor(initialItems: BudgetLineItem[] = [], initialConf
     const renameChapter = useCallback((oldName: string, newName: string) => dispatch({ type: 'RENAME_CHAPTER', payload: { oldName, newName } }), []);
     const reorderChapters = useCallback((newOrder: string[]) => dispatch({ type: 'REORDER_CHAPTERS', payload: newOrder }), []);
 
-    const toggleExecutionMode = useCallback(() => dispatch({ type: 'TOGGLE_EXECUTION_MODE' }), []);
+    const setExecutionMode = useCallback((mode: ExecutionMode) => dispatch({ type: 'SET_EXECUTION_MODE', payload: mode }), []);
 
     const updateConfig = useCallback((config: Partial<BudgetConfig>) => dispatch({ type: 'UPDATE_CONFIG', payload: config }), []);
 
@@ -569,7 +679,7 @@ export function useBudgetEditor(initialItems: BudgetLineItem[] = [], initialConf
         removeChapter,
         renameChapter,
         reorderChapters,
-        toggleExecutionMode,
+        setExecutionMode,
         updateConfig,
         applyMarkup
     };

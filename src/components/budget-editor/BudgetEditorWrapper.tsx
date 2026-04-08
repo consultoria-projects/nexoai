@@ -18,12 +18,16 @@ import { RenovationGallery } from '@/components/dream-renovator/RenovationGaller
 import { BudgetRequestViewer } from './BudgetRequestViewer';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { AIThinkingTrace } from './AIThinkingTrace';
-import { Menu, Sparkles, FileText, User, Home, BrainCircuit } from 'lucide-react';
+import { Menu, Sparkles, FileText, User, Home, BrainCircuit, Plus, Lock } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { AssignClientModal } from './AssignClientModal';
 import { getLeadPdfConfigAction } from '@/actions/lead/getLeadPdfConfigAction';
 import { saveLeadPdfConfigAction } from '@/actions/lead/saveLeadPdfConfigAction';
+import { BudgetEditorProvider } from './BudgetEditorContext';
+import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
 
 interface BudgetEditorWrapperProps {
     budget: Budget;
@@ -53,7 +57,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
         removeChapter,
         renameChapter,
         reorderChapters,
-        toggleExecutionMode,
+        setExecutionMode,
         updateConfig,
         applyMarkup
     } = useBudgetEditor((budget as any).lineItems, budget.config);
@@ -61,8 +65,10 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
     const { toast } = useToast();
     const router = useRouter();
     const [isGhostMode, setIsGhostMode] = React.useState(false);
-    const [localPdfCount, setLocalPdfCount] = React.useState((budget as any).demoPdfsDownloaded || 0);
+    const [isPdfLocked, setIsPdfLocked] = React.useState(budget.isPdfGenerated || false);
     const [isMobileSummaryOpen, setIsMobileSummaryOpen] = React.useState(false);
+    const [isDesktopSummaryOpen, setIsDesktopSummaryOpen] = React.useState(true); // Toggle for economic summary
+    const [isAddPartidaOpen, setIsAddPartidaOpen] = React.useState(false);
 
     // PDF Config State
     const [pdfMeta, setPdfMeta] = React.useState<any>(null);
@@ -145,15 +151,19 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                         totalPrice: editorItem.item?.totalPrice || 0,
 
                         originalTask: editorItem.originalTask,
+                        original_item: editorItem.original_item, // Preservar nodo OCR
                         breakdown: editorItem.item?.breakdown, // <--- Key for AI Persistence
                         note: editorItem.item?.note,
                         isRealCost: editorItem.item?.isRealCost,
-                        matchConfidence: editorItem.item?.matchConfidence
+                        matchConfidence: editorItem.item?.matchConfidence,
+                        ai_resolution: editorItem.item?.aiResolution,
+                        alternativeCandidates: editorItem.item?.alternativeCandidates,
+                        needsHumanReview: editorItem.item?.needsHumanReview
                     };
                 });
 
             return {
-                id: `chap-${index}-${Date.now()}`, // Generate acceptable ID or keep track if possible
+                id: `chap-${index}`, // Usar ID estable para evitar que cada Guardar genere un documento fantasma en Firestore
                 name: chapterName,
                 order: index + 1,
                 items: chapterItems,
@@ -165,18 +175,22 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
             // Is this a trace viewer (Public Demo or Admin Trace Preview)?
             const isTraceMode = !isAdmin || !!traceData;
 
+            // Track rough edit time for telemetry
+            const msSinceLoad = Date.now() - (state.lastSavedAt?.getTime() || Date.now());
+
+            const finalJson = {
+                chapters: domainChapters,
+                costBreakdown: state.costBreakdown,
+                totalEstimated: state.costBreakdown.total,
+                financialSummary: {
+                    executionOnlyTotal: (state.costBreakdown as any).executionOnlyTotal,
+                    completeTotal: (state.costBreakdown as any).completeTotal
+                },
+                config: state.config
+            };
+
             if (isTraceMode) {
                 // Trace Mode: Save RLHF Telemetry delta instead of standard Budget Save
-                const finalJson = {
-                    chapters: domainChapters,
-                    costBreakdown: state.costBreakdown,
-                    totalEstimated: state.costBreakdown.total,
-                    config: state.config
-                };
-
-                // Track rough edit time for telemetry (optional enhancement)
-                const msSinceLoad = Date.now() - (state.lastSavedAt?.getTime() || Date.now());
-
                 const result = await saveTrainingDeltaAction(budget.id, finalJson, msSinceLoad);
 
                 if (result.success) {
@@ -195,12 +209,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                 }
             } else {
                 // Normal User Budget Edit Pipeline
-                const result = await updateBudgetAction(budget.id, {
-                    chapters: domainChapters,
-                    costBreakdown: state.costBreakdown,
-                    totalEstimated: state.costBreakdown.total,
-                    config: state.config
-                } as any);
+                const result = await updateBudgetAction(budget.id, finalJson as any);
 
                 if (result.success) {
                     saveSuccess();
@@ -232,11 +241,11 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
             try {
                 if (budget.leadId && budget.leadId !== 'unassigned') {
                     const { markDemoPdfDownloadedAction } = await import('@/actions/lead/mark-demo-pdf-downloaded.action');
-                    await markDemoPdfDownloadedAction(budget.leadId);
+                    await markDemoPdfDownloadedAction(budget.leadId, budget.id);
                     
                     // Actualizamos un poco el estado local para que el candado sea inmediato
-                    (budget as any).demoPdfsDownloaded = ((budget as any).demoPdfsDownloaded || 0) + 1;
-                    setLocalPdfCount((prev: number) => prev + 1);
+                    budget.isPdfGenerated = true; // Mutate the local budget payload
+                    setIsPdfLocked(true);
                 }
 
                 // Background sync
@@ -270,9 +279,17 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
         }
     };
 
-    const isDemoLocked = !isAdmin && localPdfCount > 0;
+    const isDemoLocked = !isAdmin && isPdfLocked;
+
+    const editorContextValue = {
+        state, updateItem, addItem, reorderItems, removeItem, duplicateItem, undo, redo, 
+        saveStart, saveSuccess, saveError, canUndo, canRedo, addChapter, removeChapter, 
+        renameChapter, reorderChapters, setExecutionMode, updateConfig, applyMarkup,
+        isAdmin, isReadOnly: isDemoLocked, leadId: budget.leadId === 'unassigned' ? undefined : budget.leadId
+    };
 
     return (
+        <BudgetEditorProvider value={editorContextValue}>
         <div className="flex flex-col h-full bg-slate-50/50 dark:bg-transparent overflow-hidden">
             <BudgetEditorToolbar
                 isReadOnly={isDemoLocked}
@@ -290,8 +307,8 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                 budgetNumber={budget.id.substring(0, 8)}
                 showGhostMode={isGhostMode}
                 onToggleGhostMode={() => setIsGhostMode(!isGhostMode)}
-                isExecutionOnly={state.isExecutionOnly}
-                onToggleExecutionMode={toggleExecutionMode}
+                executionMode={state.executionMode}
+                onSetExecutionMode={setExecutionMode}
                 budgetConfig={state.config}
                 onUpdateConfig={updateConfig}
                 onAddItem={addItem}
@@ -303,6 +320,16 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
             <main className="flex-1 w-full p-4 md:p-6 space-y-6 md:space-y-8 animate-in fade-in duration-500 pb-24 md:pb-6 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/20">
 
                 <div className="max-w-[1600px] mx-auto w-full">
+                    {isDemoLocked && (
+                        <div className="mb-6 p-4 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800/30 flex items-start gap-3">
+                            <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
+                            <div>
+                                <h4 className="font-semibold text-indigo-900 dark:text-indigo-300">¡Tu Presupuesto Seguro!</h4>
+                                <p className="text-sm text-indigo-700 dark:text-indigo-400 mt-1">Has generado el PDF Oficial con éxito y ahora este documento está protegido con modo de lectura. Si necesitas hacer más pruebas con toda la potencia de la IA, puedes generar un nuevo presupuesto desde el chat.</p>
+                            </div>
+                        </div>
+                    )}
+                    
                     {/* Header Info */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-6 pb-2">
                         {/* ... existing header code ... */}
@@ -359,7 +386,7 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                                     <Tabs defaultValue="summary" className="w-full mt-6">
                                         <TabsList className="w-full grid grid-cols-2">
                                             <TabsTrigger value="summary">Resumen</TabsTrigger>
-                                            <TabsTrigger value="library">Agregar Partida</TabsTrigger>
+                                            <TabsTrigger value="library">Buscar Catálogo</TabsTrigger>
                                         </TabsList>
                                         <TabsContent value="summary" className="mt-4">
                                             <BudgetEconomicSummary 
@@ -372,9 +399,11 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                                                 chapters={state.chapters}
                                                 clientName={budget.clientSnapshot?.name || 'Cliente'}
                                                 budgetNumber={budget.id.substring(0, 8)}
+                                                executionMode={state.executionMode}
                                                 onPdfDownloaded={handlePdfDownloaded}
                                                 initialPdfMeta={pdfMeta}
                                                 onSavePdfSettings={handleSavePdfSettings}
+                                                renders={budget.renders}
                                             />
                                         </TabsContent>
                                         <TabsContent value="library" className="mt-4">
@@ -386,53 +415,78 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-8 items-start">
+                    <div className="flex flex-col lg:flex-row items-start gap-8">
                         {/* LEFT COLUMN: Main Content Area (Tabs) */}
-                        <div className="min-w-0">
+                        <motion.div 
+                            layout
+                            className="min-w-0 flex-1 transition-all duration-300"
+                        >
                             <Tabs defaultValue="editor" className="space-y-6">
-                                {(isAdmin || traceData) && (
-                                <div className="overflow-x-auto pb-2 -mb-2 md:pb-0 md:mb-0">
-                                    <TabsList className="bg-white dark:bg-white/5 border dark:border-white/10 shadow-sm w-full md:w-auto inline-flex justify-start">
-                                        <TabsTrigger value="editor" className="flex-1 md:flex-none">Editor</TabsTrigger>
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 -mb-2 md:pb-0 md:mb-0">
+                                    <div className="overflow-x-auto">
+                                        {(isAdmin || traceData) && (
+                                            <TabsList className="bg-white dark:bg-white/5 border dark:border-white/10 shadow-sm w-full md:w-auto inline-flex justify-start">
+                                                <TabsTrigger value="editor" className="flex-1 md:flex-none">Editor</TabsTrigger>
 
-                                        {isAdmin && (
-                                            <TabsTrigger value="details" className="flex-1 md:flex-none">Detalles</TabsTrigger>
-                                        )}
+                                            {isAdmin && (
+                                                <TabsTrigger value="details" className="flex-1 md:flex-none">Detalles</TabsTrigger>
+                                            )}
 
-                                        {traceData && (
-                                            <TabsTrigger value="rlhf" className="flex-1 md:flex-none text-indigo-600 data-[state=active]:text-indigo-800 data-[state=active]:bg-indigo-50 dark:text-indigo-400">
-                                                Traza Cognitiva (RLHF)
-                                            </TabsTrigger>
-                                        )}
+                                            {traceData && (
+                                                <TabsTrigger value="rlhf" className="flex-1 md:flex-none text-indigo-600 data-[state=active]:text-indigo-800 data-[state=active]:bg-indigo-50 dark:text-indigo-400">
+                                                    Traza Cognitiva (RLHF)
+                                                </TabsTrigger>
+                                            )}
 
-                                        {isAdmin && (
-                                            <TabsTrigger value="renovation" className="flex-1 md:flex-none text-purple-600 data-[state=active]:text-purple-800 data-[state=active]:bg-purple-50">
-                                                Dream Renovator ✨
-                                            </TabsTrigger>
+                                            {isAdmin && (
+                                                <TabsTrigger value="renovation" className="flex-1 md:flex-none text-purple-600 data-[state=active]:text-purple-800 data-[state=active]:bg-purple-50">
+                                                    Imágenes IA 🍌
+                                                </TabsTrigger>
+                                            )}
+                                            </TabsList>
                                         )}
-                                    </TabsList>
+                                    </div>
+                                    
+                                    <div className="flex-shrink-0 flex items-center gap-2">
+                                        {!isDemoLocked && (
+                                            <Dialog open={isAddPartidaOpen} onOpenChange={setIsAddPartidaOpen}>
+                                                <DialogTrigger asChild>
+                                                    <Button variant="outline" size="sm" className="flex gap-1.5 h-9 border-slate-200 text-slate-700 bg-white hover:bg-slate-50 shadow-sm">
+                                                        <Plus className="w-4 h-4" />
+                                                        <span className="hidden sm:inline">Agregar partidas</span>
+                                                        <span className="sm:hidden">Buscar</span>
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent className="max-w-4xl h-[80vh] flex flex-col p-0 gap-0 bg-white dark:bg-zinc-950 border-slate-200 dark:border-white/10">
+                                                    <div className="p-4 border-b border-slate-200 dark:border-white/10">
+                                                        <DialogTitle className="text-lg font-semibold flex items-center gap-2 text-slate-800 dark:text-white">
+                                                            <Plus className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                                                            Catálogo de Partidas
+                                                        </DialogTitle>
+                                                    </div>
+                                                    <div className="flex-1 overflow-hidden p-4 bg-slate-50/50 dark:bg-zinc-900/50">
+                                                        <SemanticCatalogSidebar onAddItem={(item) => {
+                                                            addItem(item);
+                                                        }} />
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
+                                        )}
+                                        <BudgetHealthWidget items={state.items} variant="compact" />
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            className="hidden lg:flex gap-1.5 h-9" 
+                                            onClick={() => setIsDesktopSummaryOpen(!isDesktopSummaryOpen)}
+                                        >
+                                            <FileText className="w-4 h-4" />
+                                            {isDesktopSummaryOpen ? 'Ocultar Resumen' : 'Mostrar Resumen'}
+                                        </Button>
+                                    </div>
                                 </div>
-                                )}
 
                                 <TabsContent value="editor" className="space-y-8">
-                                    <BudgetEditorTable
-                                        items={state.items}
-                                        chapters={state.chapters}
-                                        onReorder={reorderItems}
-                                        onUpdate={updateItem}
-                                        onRemove={removeItem}
-                                        onDuplicate={duplicateItem}
-                                        onAddChapter={addChapter}
-                                        onRemoveChapter={removeChapter}
-                                        onRenameChapter={renameChapter}
-                                        onReorderChapters={reorderChapters}
-                                        showGhostMode={isGhostMode}
-                                        isExecutionOnly={state.isExecutionOnly}
-                                        isAdmin={isAdmin}
-                                        isReadOnly={isDemoLocked}
-                                        applyMarkup={applyMarkup}
-                                        leadId={budget.leadId === 'unassigned' ? undefined : budget.leadId}
-                                    />
+                                    <BudgetEditorTable />
                                 </TabsContent>
 
                                 {isAdmin && (
@@ -477,14 +531,21 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                                     <RenovationGallery budgetId={budget.id} renders={budget.renders} />
                                 </TabsContent>
                             </Tabs>
-                        </div>
+                        </motion.div>
 
                         {/* RIGHT COLUMN: Summary - DESKTOP ONLY */}
-                        <div className="hidden lg:block sticky top-6 space-y-6">
-                            {/* Adjusted sticky top since we are in a scrollable container */}
-                            <BudgetHealthWidget items={state.items} />
-                            <div className="border border-slate-200 dark:border-white/10 rounded-xl bg-white dark:bg-white/5 overflow-hidden">
-                                <div className="p-4 border-b border-slate-100 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
+                        <AnimatePresence>
+                        {isDesktopSummaryOpen && (
+                        <motion.div 
+                            layout
+                            initial={{ opacity: 0, x: 20, width: 0 }}
+                            animate={{ opacity: 1, x: 0, width: 350 }}
+                            exit={{ opacity: 0, x: 20, width: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            className="hidden lg:block sticky top-6 space-y-6"
+                        >
+                            <div className="w-[350px] border border-slate-200 dark:border-white/10 rounded-xl bg-white dark:bg-white/5 overflow-hidden shadow-sm">
+                                <div className="p-4 border-b border-slate-100 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 flex items-center justify-between">
                                     <h3 className="font-bold text-slate-800 dark:text-white">Resumen Económico</h3>
                                 </div>
                                 <div className="p-4 flex-1 flex flex-col">
@@ -498,18 +559,22 @@ const BudgetEditorMain = ({ budget, isAdmin, traceData }: BudgetEditorWrapperPro
                                         chapters={state.chapters}
                                         clientName={budget.clientSnapshot?.name || 'Cliente'}
                                         budgetNumber={budget.id.substring(0, 8)}
+                                        executionMode={state.executionMode}
                                         onPdfDownloaded={handlePdfDownloaded}
                                         initialPdfMeta={pdfMeta}
                                         onSavePdfSettings={handleSavePdfSettings}
+                                        renders={budget.renders}
                                     />
                                 </div>
                             </div>
-                        </div>
-
+                        </motion.div>
+                        )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </main>
         </div>
+        </BudgetEditorProvider>
     );
 };
 
@@ -527,6 +592,7 @@ export const BudgetEditorWrapper = ({ budget, isAdmin = false, traceData }: Budg
                 id: item.id,
                 order: item.order,
                 originalTask: item.originalTask || item.description,
+                original_item: item.original_item, // Extraer nodo original del PDF
                 type: item.type, // Pass the type (PARTIDA/MATERIAL)
                 chapter: chapterName,
                 item: {
@@ -536,6 +602,10 @@ export const BudgetEditorWrapper = ({ budget, isAdmin = false, traceData }: Budg
                     unitPrice: item.unitPrice,
                     totalPrice: item.totalPrice,
                     code: item.code || item.sku,
+                    aiResolution: item.ai_resolution || item.aiResolution,
+                    alternativeCandidates: item.alternativeCandidates || item.alternatives || [],
+                    needsHumanReview: item.ai_resolution?.needs_human_review || item.needsHumanReview || false,
+                    matchConfidence: item.matchConfidence,
                 },
                 isEditing: false,
                 isDirty: false

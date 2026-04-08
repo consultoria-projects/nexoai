@@ -44,6 +44,16 @@ next-env.d.ts
 firebase-debug.log
 firestore-debug.log
 
+# python / ai-core
+env.yaml
+**/env.yaml
+**/icl_golden_examples.json
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
 # Custom dev & analysis folders
 video/
 .basis/

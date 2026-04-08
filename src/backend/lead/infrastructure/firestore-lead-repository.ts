@@ -11,6 +11,10 @@ export class FirestoreLeadRepository implements LeadRepository {
         this.db = getFirestore();
     }
 
+    private get collectionName() {
+        return process.env.NEXT_PUBLIC_USE_TEST_DB === 'true' ? 'test_leads' : 'leads';
+    }
+
     private toDomain(doc: FirebaseFirestore.DocumentSnapshot): Lead {
         const data = doc.data();
         if (!data) throw new Error(`Lead not found for id ${doc.id}`);
@@ -78,17 +82,17 @@ export class FirestoreLeadRepository implements LeadRepository {
     }
 
     async save(lead: Lead): Promise<void> {
-        await this.db.collection('leads').doc(lead.id).set(this.toPersistence(lead));
+        await this.db.collection(this.collectionName).doc(lead.id).set(this.toPersistence(lead));
     }
 
     async findById(id: string): Promise<Lead | null> {
-        const doc = await this.db.collection('leads').doc(id).get();
+        const doc = await this.db.collection(this.collectionName).doc(id).get();
         if (!doc.exists) return null;
         return this.toDomain(doc);
     }
 
     async findByEmail(email: string): Promise<Lead | null> {
-        const snapshot = await this.db.collection('leads')
+        const snapshot = await this.db.collection(this.collectionName)
             .where('personalInfo.email', '==', email)
             .limit(1)
             .get();
@@ -98,12 +102,12 @@ export class FirestoreLeadRepository implements LeadRepository {
     }
 
     async findAll(limit: number, offset: number): Promise<Lead[]> {
-        let query = this.db.collection('leads')
+        let query = this.db.collection(this.collectionName)
             .orderBy('createdAt', 'desc')
             .limit(limit);
 
         if (offset > 0) {
-            const offsetSnap = await this.db.collection('leads')
+            const offsetSnap = await this.db.collection(this.collectionName)
                 .orderBy('createdAt', 'desc')
                 .limit(offset)
                 .get();
@@ -119,7 +123,7 @@ export class FirestoreLeadRepository implements LeadRepository {
     }
 
     async countByStatus(): Promise<{ verified: number; unverified: number; profiled: number }> {
-        const allDocs = await this.db.collection('leads').get();
+        const allDocs = await this.db.collection(this.collectionName).get();
         let verified = 0;
         let unverified = 0;
         let profiled = 0;
@@ -139,6 +143,6 @@ export class FirestoreLeadRepository implements LeadRepository {
     }
 
     async delete(id: string): Promise<void> {
-        await this.db.collection('leads').doc(id).delete();
+        await this.db.collection(this.collectionName).doc(id).delete();
     }
 }

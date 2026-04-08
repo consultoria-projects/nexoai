@@ -10,6 +10,7 @@ export async function saveLeadPdfConfigAction(
         companyLogo: string;
         clientName: string;
         clientAddress: string;
+        clientEmail?: string;
         notes: string;
     }
 ) {

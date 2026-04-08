@@ -12,6 +12,7 @@ const ClientRequirementsInput = z.object({
         content: z.array(z.object({ text: z.string() }))
     })).optional(),
     currentRequirements: z.custom<Partial<BudgetRequirement>>().optional(),
+    attachments: z.array(z.string()).optional(),
 });
 
 // Define the output schema
@@ -29,7 +30,7 @@ export const clientRequirementsFlow = ai.defineFlow(
         outputSchema: ClientRequirementsOutput,
     },
     async (input) => {
-        const { userMessage, history = [], currentRequirements = {} } = input;
+        const { userMessage, history = [], currentRequirements = {}, attachments = [] } = input;
 
         // Define Zod schemas for the LLM to understand the structure
         const RoomSpecsSchema = z.object({
@@ -90,6 +91,7 @@ export const clientRequirementsFlow = ai.defineFlow(
       Current Requirements State: ${JSON.stringify(currentRequirements, null, 2)}
       
       User's latest message: "${userMessage}"
+      Attachments (PDF/Images): ${attachments.length > 0 ? JSON.stringify(attachments) : 'None'}
       Conversation History: ${JSON.stringify(history)}
       
       BEHAVIOR GUIDELINES:
@@ -111,7 +113,7 @@ export const clientRequirementsFlow = ai.defineFlow(
       CRITICAL OUTPUT INSTRUCTIONS:
       - Output a single flat JSON object meeting the exact schema structure.
       - DEBES incluir OBLIGATORIAMENTE la clave "response" en la raíz del JSON con tu respuesta conversacional (menos de 40 palabras).
-      - **REGLA DE BLOQUEO (\`isComplete\`)**: Si es \`interventionType: new_build\` Y falta \`terrainType\` o \`machineryAccess\` o \`totalArea\`, ENTONCES \`isComplete\` DEBE SER \`false\` y debes formular la \`nextQuestion\`. De lo contrario, \`isComplete: true\`.
+      - **REGLA DE BLOQUEO (\`isComplete\`)**: Esta clave ES OBLIGATORIA SIEMPRE. Si es \`interventionType: new_build\` Y falta \`terrainType\` o \`machineryAccess\` o \`totalArea\`, ENTONCES \`isComplete\` DEBE SER \`false\` y debes formular la \`nextQuestion\`. De lo contrario, \`isComplete: true\`. ¡Incluso si una herramienta (Tool) falla, NUNCA olvides omitir la clave \`isComplete\`!
     `;
 
         const extractionSchema = z.object({

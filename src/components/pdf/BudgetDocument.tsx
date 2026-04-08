@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
@@ -205,15 +205,30 @@ const styles = StyleSheet.create({
 
 interface BudgetDocumentProps {
     budgetNumber: string;
-    clientName: string;
-    clientEmail: string;
-    clientAddress: string;
+    clientName?: string; // Made optional
+    clientEmail?: string;
+    clientAddress?: string;
     items: any[];
     costBreakdown: any;
     date: string;
     logoUrl?: string;
     notes?: string;
     budgetConfig?: { tax: number; marginGG: number; marginBI: number };
+    executionMode?: 'complete' | 'execution' | 'labor';
+    renders?: any[];
+    
+    // Explicit structured props
+    issuer?: {
+        name: string;
+        address?: string;
+        email?: string;
+        cif?: string;
+    };
+    client?: {
+        name: string;
+        address?: string;
+        email?: string;
+    };
 }
 
 const Footer = ({ pageNumber, companyName, cif, address }: { pageNumber: number, companyName?: string, cif?: string, address?: string }) => {
@@ -252,6 +267,9 @@ const Header = ({ budgetNumber, date, logoUrl, companyName }: { budgetNumber: st
         <View style={styles.metaSection}>
             <Text style={styles.bold}>PRESUPUESTO Nº {budgetNumber}</Text>
             <Text>Fecha: {date}</Text>
+            {companyName && (
+                <Text style={{ fontSize: 7, color: '#64748B', marginTop: 2 }}>{companyName}</Text>
+            )}
         </View>
     </View>
 );
@@ -266,8 +284,17 @@ export const BudgetDocument = ({
     date,
     logoUrl,
     notes,
-    budgetConfig
+    budgetConfig,
+    executionMode = 'complete',
+    renders = [],
+    issuer,
+    client
 }: BudgetDocumentProps) => {
+
+    const finalClientName = client?.name || clientName;
+    const finalClientEmail = client?.email || clientEmail;
+    const finalClientAddress = client?.address || clientAddress;
+    const finalIssuerName = issuer?.name || "Nexo AI";
 
     // Group items by chapter
     const itemsByChapter = items.reduce((acc: Record<string, any[]>, item) => {
@@ -283,21 +310,21 @@ export const BudgetDocument = ({
         <Document>
             {/* --- PAGES: DETAILED BUDGET (NOW COMES FIRST) --- */}
             <Page size="A4" style={styles.page}>
-                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={clientEmail} />
+                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={finalIssuerName} />
 
                 <View style={{ marginTop: 20, marginBottom: 30 }}>
                     <Text style={styles.title}>Propuesta Técnica y Económica</Text>
                     <View style={{ flexDirection: 'row', gap: 10, marginTop: 5 }}>
                         <Text style={styles.badge}>Reforma Personalizada</Text>
-                        <Text style={styles.badge}>Basis Estándar de Calidad</Text>
+                        <Text style={styles.badge}>{finalIssuerName} Estándar de Calidad</Text>
                     </View>
                 </View>
 
                 <View style={{ marginBottom: 30, backgroundColor: '#F8FAFC', padding: 20, borderRadius: 8 }}>
                     <Text style={{ fontSize: 9, color: '#64748B', marginBottom: 8, textTransform: 'uppercase', fontWeight: 'bold' }}>Cliente / Ubicación</Text>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#0F172A', marginBottom: 4 }}>{clientName}</Text>
-                    <Text style={{ fontSize: 10, color: '#475569' }}>{clientEmail}</Text>
-                    <Text style={{ fontSize: 10, color: '#475569', marginTop: 4 }}>{clientAddress || 'Dirección de obra facilitada'}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#0F172A', marginBottom: 4 }}>{finalClientName}</Text>
+                    {finalClientEmail && <Text style={{ fontSize: 10, color: '#475569' }}>{finalClientEmail}</Text>}
+                    <Text style={{ fontSize: 10, color: '#475569', marginTop: 4 }}>{finalClientAddress || 'Dirección de obra facilitada'}</Text>
                 </View>
 
                 {chapters.map((chapterName) => (
@@ -305,8 +332,22 @@ export const BudgetDocument = ({
                         <Text style={styles.chapterHeader} wrap={false}>{chapterName}</Text>
 
                         {itemsByChapter[chapterName].map((item: any, index: number) => {
-                            const bTotal = (item.item?.totalPrice || item.item?.price || 0);
+                            let bTotal = (item.item?.totalPrice || item.item?.price || 0);
                             const qTotal = (item.item?.quantity || 1);
+                            
+                            // Adjust bTotal dynamically for PDF based on execution mode
+                            const activeBreakdown = item.item?.breakdown || [];
+                            if (executionMode === 'execution' && activeBreakdown.length > 0) {
+                                const vCost = activeBreakdown
+                                    .filter((c: any) => c.is_variable === true || c.is_variable === 'true' || c.isVariable === true)
+                                    .reduce((acc: number, c: any) => acc + (c.totalPrice || c.total || ((c.unitPrice || c.price || 0) * (c.quantity || c.yield || 1))), 0);
+                                bTotal = Math.max(0, bTotal - (vCost * qTotal));
+                            } else if (executionMode === 'labor' && activeBreakdown.length > 0) {
+                                const laborCost = activeBreakdown
+                                    .filter((c: any) => c.code && String(c.code).toLowerCase().startsWith('mo'))
+                                    .reduce((acc: number, c: any) => acc + (c.totalPrice || c.total || ((c.unitPrice || c.price || 0) * (c.quantity || c.yield || 1))), 0);
+                                bTotal = Math.max(0, laborCost * qTotal);
+                            }
 
                             // Prevent duplicating title into description if they are implicitly the same 
                             const showDescription = item.item?.description && item.item.description.trim() !== "" && item.item.description.trim() !== item.originalTask.trim();
@@ -327,9 +368,11 @@ export const BudgetDocument = ({
                                     </View>
 
                                     {/* Detailed Breakdown nested correctly */}
-                                    {item.item?.breakdown && item.item.breakdown.length > 0 && (
+                                    {activeBreakdown.length > 0 && (
                                         <View style={{ marginTop: 2 }}>
-                                            {item.item.breakdown.map((b: any, bIdx: number) => {
+                                            {activeBreakdown.map((b: any, bIdx: number) => {
+                                                if (executionMode === 'execution' && (b.is_variable === true || b.is_variable === 'true' || b.isVariable === true)) return null;
+                                                if (executionMode === 'labor' && !(b.code && String(b.code).toLowerCase().startsWith('mo'))) return null;
                                                 const unitPrice = b.price || 0;
                                                 const qty = b.quantity || 1;
                                                 const lineTotal = unitPrice * qty;
@@ -339,7 +382,7 @@ export const BudgetDocument = ({
                                                         <Text style={styles.bdCode}>{b.code || '-'}</Text>
                                                         <Text style={styles.bdQty}>{parseFloat(qty.toString()).toLocaleString('es-ES', { minimumFractionDigits: 3 })}</Text>
                                                         <Text style={styles.bdUnit}>{b.unit?.toLowerCase() === '%' ? 'h' : (b.unit || 'u')}</Text>
-                                                        <Text style={styles.bdDesc}>{b.description}</Text>
+                                                        <Text style={styles.bdDesc}>{b.description || b.concept}</Text>
                                                         <Text style={styles.bdPrice}>{unitPrice.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</Text>
                                                         <Text style={styles.bdTotal}>{lineTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}</Text>
                                                     </View>
@@ -384,12 +427,12 @@ export const BudgetDocument = ({
                         * Este documento es una estimación técnica preliminar. Un experto contactará con usted para realizar una visita técnica y refinar los detalles finales del presupuesto.
                     </Text>
                 </View>
-                <Footer pageNumber={1} companyName={clientEmail} cif={clientEmail ? "Generado desde Basis" : undefined} address={clientEmail ? "Presupuesto" : undefined} />
+                <Footer pageNumber={1} companyName={finalIssuerName} cif={finalIssuerName ? "Generado desde Nexo AI" : undefined} address={finalIssuerName ? "Presupuesto Oficial" : undefined} />
             </Page>
 
             {/* --- PAGE: METHODOLOGY & INFO (MOVED TO THE END) --- */}
             <Page size="A4" style={styles.page}>
-                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={clientEmail} />
+                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={finalIssuerName} />
 
                 <Text style={styles.sectionTitle}>1. Por qué es importante leer este presupuesto hasta el final</Text>
                 <Text style={styles.textBlock}>
@@ -467,8 +510,48 @@ export const BudgetDocument = ({
                     </Text>
                 </View>
 
-                <Footer pageNumber={2} companyName={clientEmail} cif={clientEmail ? "Generado desde Basis" : undefined} address={clientEmail ? "Presupuesto" : undefined} />
+                <Footer pageNumber={2} companyName={finalIssuerName} cif={finalIssuerName ? "Generado desde Nexo AI" : undefined} address={finalIssuerName ? "Presupuesto Oficial" : undefined} />
             </Page>
+
+            {/* --- AI VISUAL PROPOSAL PAGE --- */}
+            {renders && renders.filter(r => r.includeInPdf).length > 0 && (
+                <Page size="A4" style={styles.page}>
+                    <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={finalIssuerName} />
+                    
+                    <Text style={[styles.sectionTitle, { fontSize: 16, borderBottomWidth: 2 }]}>Anexo: Propuesta Visual Conceptual</Text>
+                    <Text style={styles.textBlock}>
+                        Las presentes infografías han sido generadas mediante inteligencia artificial paramétrica. Tienen carácter exclusivamente conceptual y orientativo para comprender el estilo, la distribución espacial y la paleta de colores propuesta en este presupuesto. No poseen valor contractual exacto sobre elementos mobiliarios o acabados finales menores.
+                    </Text>
+
+                    <View style={{ marginTop: 20, flex: 1, flexDirection: 'column', gap: 20 }}>
+                        {renders.filter(r => r.includeInPdf).slice(0, 2).map((render, idx) => (
+                            <View key={idx} style={{ flex: 1, backgroundColor: '#F8FAFC', padding: 8, borderRadius: 8, border: 1, borderColor: '#E2E8F0' }}>
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 }}>
+                                    <Text style={[styles.bold, { fontSize: 10 }]}>{render.roomType} - Estilo {render.style}</Text>
+                                    <Text style={{ fontSize: 8, color: '#64748B' }}>Dochevi AI Render Engine</Text>
+                                </View>
+                                {/* Limit height to fit 2 images perfectly per page */}
+                                <Image src={render.url} style={{ width: '100%', height: 260, objectFit: 'cover', borderRadius: 4 }} />
+                                {render.prompt && (
+                                    <Text style={{ fontSize: 7, color: '#94A3B8', marginTop: 6, fontStyle: 'italic', textAlign: 'center' }}>
+                                        {render.prompt}
+                                    </Text>
+                                )}
+                            </View>
+                        ))}
+                    </View>
+
+                    {renders.filter(r => r.includeInPdf).length > 2 && (
+                         <View style={{ marginTop: 10 }}>
+                             <Text style={{ fontSize: 8, color: '#64748B', textAlign: 'center' }}>
+                                 * Se han omitido imágenes adicionales. Solicite el Anexo Visual Completo si desea mayor detalle.
+                             </Text>
+                         </View>
+                    )}
+
+                    <Footer pageNumber={3} companyName={finalIssuerName} cif={finalIssuerName ? "Generado desde Nexo AI" : undefined} address={finalIssuerName ? "Anexo Visual" : undefined} />
+                </Page>
+            )}
         </Document>
     );
 };

@@ -8,8 +8,8 @@ import { GenerateOptions, GenerateResponse } from 'genkit';
  */
 export async function generateWithRetry(
     options: any,
-    maxRetries = 3,
-    baseDelayMs = 1500
+    maxRetries = 5,
+    baseDelayMs = 4000
 ): Promise<any> {
     let attempt = 0;
 

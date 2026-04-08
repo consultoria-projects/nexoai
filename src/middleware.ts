@@ -38,13 +38,28 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  // Bypass next-intl for all API routes so they don't get locale redirects
+  // 3. Bypass next-intl for all API routes so they don't get locale redirects
   if (pathname.startsWith('/api/') || pathname.includes('/api/')) {
     return NextResponse.next();
   }
 
-  // 2. Default Next-Intl routing for UI pages
-  return intlMiddleware(request);
+  // 4. Default Next-Intl routing for UI pages
+  const response = intlMiddleware(request);
+
+  // 5. A/B Testing Variant Cookie Assignment (Persistent & Flicker-free)
+  const existingVariant = request.cookies.get('variant_id')?.value;
+  if (!existingVariant) {
+    // 50/50 Chance assignment randomly on the edge
+    const variant = Math.random() < 0.5 ? 'A' : 'B';
+    response.cookies.set('variant_id', variant, {
+      path: '/',
+      maxAge: 30 * 24 * 60 * 60, // 30 days persistence
+      httpOnly: false, // Visible for JS if needed
+      sameSite: 'lax',
+    });
+  }
+
+  return response;
 }
 
 export const config = {

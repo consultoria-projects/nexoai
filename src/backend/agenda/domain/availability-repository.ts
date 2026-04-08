@@ -11,4 +11,9 @@ export interface AvailabilityRepository {
      * Save the availability configuration.
      */
     save(config: AvailabilityConfig): Promise<void>;
+
+    /**
+     * Checks whether a specific time slot is available on a given date.
+     */
+    isSlotAvailable(date: Date, slot: string): Promise<boolean>;
 }

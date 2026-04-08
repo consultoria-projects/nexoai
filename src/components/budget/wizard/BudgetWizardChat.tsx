@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useRef, useEffect, useState } from 'react';
+import { Sparkles, Home, Hammer, Layers, Square, Send, Info, FileText, Image as ImageIcon, Mic, ChevronRight, CheckCircle2, ChevronDown, Bot, Loader2, PlayCircle, PlusCircle, PenTool, Paperclip, ExternalLink, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Mic, Paperclip, Sparkles, Loader2, Square, CheckCircle2, ExternalLink, Bot } from 'lucide-react';
-import { useBudgetWizard, Message } from './useBudgetWizard';
+import { useBudgetWizard, Message, ConversationThread } from './useBudgetWizard';
 import { useWidgetContext } from '@/context/budget-widget-context';
 import { useAudioRecorder } from '@/hooks/use-audio-recorder';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { useTranslations } from 'next-intl';
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription, DrawerHeader } from '@/components/ui/drawer';
 
-import { Trash2, X, PlusCircle, MessageSquare, Home, Hammer, Layers, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Trash2, MessageSquare, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 // removed sileo imports
 import { Logo } from '@/components/logo';
 import { Budget } from '@/backend/budget/domain/budget';
@@ -39,6 +39,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
         conversations, conversationId, isLoadingChats, startNewConversation, switchConversation, deleteConversation, resetConversation
     } = useBudgetWizard(isAdmin);
     const { leadId, closeWidget, initialPrompt, setInitialPrompt } = useWidgetContext();
+    const effectiveId = isAdmin ? 'admin-user' : (leadId || 'unknown-lead');
     const { isRecording, startRecording, stopRecording, recordingTime } = useAudioRecorder();
     const router = useRouter();
     const [generationProgress, setGenerationProgress] = React.useState<{
@@ -47,12 +48,16 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
         matchedItems?: number;
         currentItem?: string;
         error?: string;
+        budgetId?: string;
     }>({ step: 'idle' });
 
 
 
     // Auto-resume generation after answering the Architect
     const [isAwaitingArchitect, setIsAwaitingArchitect] = React.useState(false);
+    
+    // PDF Strategy Triage
+    const [pdfAwaitingStrategy, setPdfAwaitingStrategy] = useState<File | null>(null);
 
     // Replay logic
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
@@ -80,44 +85,144 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
     };
 
     const [showRequirements, setShowRequirements] = useState(false);
+    const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+    const [isDragging, setIsDragging] = useState(false);
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(true);
+    };
+
+    const handleDragLeave = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+    };
+
+    const handleDrop = (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+            setPendingFiles(prev => [...prev, ...Array.from(files)]);
+        }
+    };
+
+    const handleRemovePendingFile = (index: number) => {
+        setPendingFiles(prev => prev.filter((_, i) => i !== index));
+    };
+
+    const handleSubmit = async () => {
+        const currentInput = input.trim();
+        if ((!currentInput && pendingFiles.length === 0) || isLimitReached || state === 'uploading') return;
+
+        if (pendingFiles.length > 0) {
+            // Upload flow
+            setState('uploading');
+            const filesToUpload = [...pendingFiles];
+            setPendingFiles([]); // clear from UI
+            
+            const hasPdf = filesToUpload.some(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'));
+
+            if (hasPdf) {
+                 const pdfFile = filesToUpload.find(file => file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))!;
+                 setPdfAwaitingStrategy(pdfFile);
+                 
+                 // Simular un mini mensaje de log para que el usuario entienda
+                 addSystemMessage("He detectado un PDF de mediciones. Por favor, selecciona el tipo de formato en la caja inferior para aplicar el mapeo correcto.");
+                 return;
+            }
+
+            const base64Files = await Promise.all(filesToUpload.map(file => {
+                return new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }));
+
+            const formData = new FormData();
+            filesToUpload.forEach(file => {
+                formData.append('files', file);
+            });
+
+            try {
+                const { processAttachmentsAction } = await import('@/actions/attachments/process-attachments.action');
+                const result = await processAttachmentsAction(formData);
+
+                if (result.success && result.analysis) {
+                    const hiddenContext = `[Sistema: El usuario ha subido archivos. Análisis de visión por computadora: ${result.analysis}]`;
+                    const userDisplayMessage = currentInput || "He subido estos archivos. Crea el presupuesto con ellos.";
+                    
+                    setInput("");
+                    await sendMessage(userDisplayMessage, result.urls || base64Files, hiddenContext);
+                } else {
+                    console.error(result.error);
+                    setState('idle');
+                    setPendingFiles(filesToUpload); // restore
+                }
+            } catch (error) {
+                console.error("Upload failed", error);
+                setState('idle');
+                setPendingFiles(filesToUpload); // restore
+            }
+        } else {
+            // Text only flow
+            setInput("");
+            await sendMessage(currentInput);
+        }
+    };
+
+    const handleConfirmPdfStrategy = async (strategy: 'INLINE' | 'ANNEXED') => {
+        if (!pdfAwaitingStrategy) return;
+        
+        setState('processing_pdf');
+        setGenerationProgress({ step: 'extracting', currentItem: "Analizando presupuesto PDF estructural..." });
+        
+        const formData = new FormData();
+        formData.append('file', pdfAwaitingStrategy);
+        setPdfAwaitingStrategy(null); // Clear triage UI
+
+        try {
+            const { extractMeasurementPdfAction } = await import('@/actions/budget/extract-measurement-pdf.action');
+            const effectiveId = isAdmin ? 'admin-user' : (leadId || 'unknown-lead');
+            const result = await extractMeasurementPdfAction(formData, effectiveId, strategy);
+
+            if (result.success && result.budgetId) {
+                if (result.isPending) {
+                    setGenerationProgress({ step: 'extracting', currentItem: "Analizando presupuesto PDF estructural...", budgetId: result.budgetId });
+                    return;
+                }
+
+                setGenerationProgress({ step: 'complete', currentItem: "¡Presupuesto Generado!" });
+                const viewLink = isAdmin
+                    ? `/dashboard/admin/budgets/${result.budgetId}/edit`
+                    : isPublicMode ? `/demo/viewer/${result.budgetId}` : `/budget/${result.budgetId}`;
+
+                setTimeout(() => {
+                    setGenerationProgress({ step: 'idle' });
+                    addSystemMessage(`¡Estado de Mediciones procesado y tasado con éxito!\n\n[Ver el resultado y Descargar](${viewLink})`);
+                    setState(isPublicMode ? 'generated' : 'idle');
+                }, 1500);
+            } else {
+                throw new Error(result.error);
+            }
+        } catch (error: any) {
+            console.error("Fast Track PDF processing failed", error);
+            setGenerationProgress({ step: 'error', error: error.message || "Error procesando el PDF." });
+            setTimeout(() => setState('idle'), 3000);
+        }
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files || files.length === 0) return;
 
-        // Create previews
-        const previews = Array.from(files).map(file => URL.createObjectURL(file));
-
-        // Show loading state
-        const previousPlaceholder = input;
-        setInput(w.input.analyzingDocs);
-
-        const formData = new FormData();
-        Array.from(files).forEach(file => {
-            formData.append('files', file);
-        });
-
-        try {
-            const { processAttachmentsAction } = await import('@/actions/attachments/process-attachments.action');
-            const result = await processAttachmentsAction(formData);
-
-            if (result.success && result.analysis) {
-                const hiddenContext = `[Sistema: El usuario ha subido archivos. Análisis de visión por computadora: ${result.analysis}]`;
-                const userDisplayMessage = "He subido estos archivos. ¿Qué opinas?";
-
-                // Restore input and send
-                setInput("");
-                await sendMessage(userDisplayMessage, previews, hiddenContext);
-            } else {
-                console.error(result.error);
-                setInput(previousPlaceholder);
-                // Trigger an error toast or message here if possible
-            }
-        } catch (error) {
-            console.error("Upload failed", error);
-            setInput(previousPlaceholder);
-        }
-
+        setPendingFiles(prev => [...prev, ...Array.from(files)]);
+        
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
@@ -240,14 +345,16 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
             }
 
             if (result.success && result.budgetResult) {
+                const typedResult: any = result;
+                const budgetId = typedResult.budgetId || typedResult.budgetResult?.id;
+
                 setGenerationProgress({
                     step: 'searching',
                     extractedItems: detectedCount,
-                    currentItem: w.progress.searching
+                    currentItem: w.progress.searching,
+                    budgetId: budgetId
                 });
-                const typedResult: any = result;
 
-                const budgetId = typedResult.budgetId || typedResult.budgetResult?.id;
                 const itemCount = typedResult.budgetResult?.chapters?.reduce((acc: number, c: any) => acc + c.items.length, 0) || 0;
                 const total = typedResult.budgetResult?.costBreakdown?.total || typedResult.budgetResult?.totalEstimated || 0;
 
@@ -299,7 +406,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
 
 
 
-    const handleKeyDown = async (e: React.KeyboardEvent) => {
+    const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
 
@@ -332,7 +439,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                 return;
             }
 
-            sendMessage(input);
+            handleSubmit();
         }
     };
 
@@ -342,7 +449,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
 
 
     return (
-        <div className="flex h-full w-full overflow-hidden md:rounded-3xl md:border md:border-white/20 bg-background md:bg-white/95 md:dark:bg-black/90 md:shadow-2xl md:backdrop-blur-2xl md:ring-1 md:ring-black/5 md:dark:ring-white/10 relative">
+        <div className="flex flex-1 min-h-0 h-full w-full overflow-hidden md:rounded-3xl md:border md:border-white/20 bg-background md:bg-white/95 md:dark:bg-black/90 md:shadow-2xl md:backdrop-blur-2xl md:ring-1 md:ring-black/5 md:dark:ring-white/10 relative">
             {/* Admin Left Sidebar: Chat History */}
             {isAdmin && (
                 <div className={cn(
@@ -454,7 +561,21 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                                     <div className="w-full bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden p-1">
                                         <BudgetGenerationProgress
                                             progress={generationProgress}
+                                            budgetId={(generationProgress as any).budgetId || leadId}
                                             className="shadow-none border-none rounded-xl"
+                                            onComplete={(budgetId) => {
+                                                const viewLink = isAdmin
+                                                    ? `/dashboard/admin/budgets/${budgetId}/edit`
+                                                    : isPublicMode
+                                                        ? `/demo/viewer/${budgetId}` 
+                                                        : `/budget/${budgetId}`;
+                                                
+                                                setTimeout(() => {
+                                                    setGenerationProgress({ step: 'idle' });
+                                                    addSystemMessage(`¡Estado de Mediciones procesado y tasado con éxito!\n\n[Ver el resultado y Descargar](${viewLink})`);
+                                                    setState(isPublicMode ? 'generated' : 'idle');
+                                                }, 1500);
+                                            }}
                                         />
                                     </div>
                                 </motion.div>
@@ -486,6 +607,17 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                             </motion.div>
                         )}
 
+                        {state === 'uploading' && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="self-start max-w-[85%] md:max-w-[75%] rounded-2xl p-4 md:p-5 shadow-sm bg-zinc-100 dark:bg-[#2a2a2b] border border-black/5 dark:border-white/5 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-2"
+                            >
+                                <Loader2 className="w-5 h-5 text-primary opacity-70 animate-spin" />
+                                <span className="font-medium">Subiendo archivos... por favor espera.</span>
+                            </motion.div>
+                        )}
+
                         {state === 'processing' && (
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
@@ -499,6 +631,29 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                                     <div className="w-1.5 h-1.5 bg-primary/70 rounded-full animate-bounce"></div>
                                 </div>
                                 <span className="font-medium">{w.input.analyzingText}</span>
+                            </motion.div>
+                        )}
+
+                        {state === 'processing_pdf' && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="self-start max-w-[85%] md:max-w-[85%] rounded-2xl p-5 shadow-sm bg-zinc-100 dark:bg-[#2a2a2b] border border-black/5 dark:border-white/5 flex flex-col gap-4 text-sm text-gray-500 dark:text-gray-400 mt-2 border-l-4 border-l-blue-500 dark:border-l-blue-400"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Paperclip className="w-5 h-5 text-blue-500 dark:text-blue-400 animate-pulse" />
+                                    <span className="font-semibold text-blue-600 dark:text-blue-400 text-base">Procesando Documento (Tool Activa)</span>
+                                </div>
+                                <div className="flex items-center gap-3 ml-1 bg-white dark:bg-black/20 p-3 rounded-lg border border-black/5 dark:border-white/5">
+                                    <div className="flex space-x-1 shrink-0">
+                                        <div className="w-2 h-2 bg-blue-500/70 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                        <div className="w-2 h-2 bg-blue-500/70 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                        <div className="w-2 h-2 bg-blue-500/70 rounded-full animate-bounce"></div>
+                                    </div>
+                                    <span className="font-medium text-slate-700 dark:text-slate-300">
+                                        Extrayendo información espacial con IA y emparejando precios en base de datos. Esto puede tardar hasta 1 minuto...
+                                    </span>
+                                </div>
                             </motion.div>
                         )}
                         
@@ -531,7 +686,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                     layout
                     className={cn(
                         "absolute left-0 right-0 p-2 md:p-6 pointer-events-none flex flex-col items-center z-20 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
-                        messages.length === 0
+                        (messages.length === 0 && state === 'idle' && generationProgress.step === 'idle')
                             ? "top-1/2 -translate-y-1/2 px-4"
                             : "bottom-0 bg-gradient-to-t from-background via-background/90 to-transparent"
                     )}
@@ -540,7 +695,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
 
                         {/* Greeting Header shown only when empty */}
                         <AnimatePresence>
-                            {messages.length === 0 && (
+                            {(messages.length === 0 && state === 'idle' && generationProgress.step === 'idle') && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -573,29 +728,43 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                             )}
                         </AnimatePresence>
 
-                        <motion.div layout className={cn(
-                            "w-full relative flex items-end gap-2 rounded-3xl md:rounded-[2rem] bg-[#1e1f20] p-2 md:p-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300",
+                        <motion.div layout 
+                            onDragOver={handleDragOver}
+                            onDragLeave={handleDragLeave}
+                            onDrop={handleDrop}
+                            className={cn(
+                            "w-full relative flex flex-col rounded-3xl md:rounded-[2rem] bg-[#1e1f20] p-2 md:p-2.5 shadow-2xl backdrop-blur-xl transition-all duration-300",
+                            isDragging && "ring-2 ring-primary bg-[#2a2b2e]",
                             generationProgress.step !== 'idle' && generationProgress.step !== 'complete' && "opacity-50 pointer-events-none grayscale"
                         )}>
-                            <input
-                                type="file"
-                                multiple
-                                className="hidden"
-                                ref={fileInputRef}
-                                onChange={handleFileChange}
-                                accept="image/*,application/pdf"
-                            />
-
-                            {isAdmin && (
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={handleAttachmentClick}
-                                    className="h-12 w-12 shrink-0 text-gray-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors mb-0.5"
-                                >
-                                    <PlusCircle className="h-6 w-6" />
-                                </Button>
+                            
+                            {/* Pending Files Preview Area */}
+                            {pendingFiles.length > 0 && (
+                                <div className="flex flex-wrap gap-2 px-3 pt-3 pb-1 animate-in fade-in slide-in-from-top-2 duration-300 ease-out">
+                                    {pendingFiles.map((file, i) => {
+                                        const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+                                        return (
+                                            <div key={i} className="relative group flex items-center gap-2.5 bg-[#2a2b2e] border border-white/5 shadow-[0_2px_10px_rgba(0,0,0,0.2)] rounded-xl py-1.5 pl-3 pr-1.5">
+                                                {isPdf ? (
+                                                    <FileText className="w-4 h-4 text-blue-400" />
+                                                ) : (
+                                                    <ImageIcon className="w-4 h-4 text-emerald-400" />
+                                                )}
+                                                <span className="text-[13px] font-medium text-white/90 max-w-[180px] truncate tracking-tight">{file.name}</span>
+                                                <button
+                                                    onClick={() => handleRemovePendingFile(i)}
+                                                    className="p-1.5 rounded-full hover:bg-white/10 text-white/40 hover:text-white transition-colors ml-1"
+                                                >
+                                                    <X className="w-3.5 h-3.5" />
+                                                </button>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             )}
+
+                            <div className="flex items-end gap-2 w-full">
+
 
                             {/* Variables Toggle Button */}
                             {(requirements.specs || (requirements.detectedNeeds && requirements.detectedNeeds.length > 0)) && (
@@ -620,11 +789,55 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                                 </div>
                             )}
 
-                            {(state as string) === 'generated' ? (
+                            {pdfAwaitingStrategy ? (
+                                <motion.div 
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="flex flex-col md:flex-row gap-3 w-full py-2 px-1 items-center"
+                                >
+                                    <div className="w-full">
+                                        <p className="text-sm font-semibold text-white/90 mb-1 px-1 flex items-center gap-2">
+                                            <Layers className="w-4 h-4 text-primary" /> ¿Cómo viene estructurado tu PDF de Mediciones?
+                                        </p>
+                                        <div className="flex flex-col md:flex-row gap-3 w-full mt-2">
+                                            <Button 
+                                                onClick={() => handleConfirmPdfStrategy('INLINE')}
+                                                className="flex-1 w-full h-auto py-4 px-4 justify-start text-left bg-zinc-800 hover:bg-zinc-700/80 border border-transparent hover:border-primary/50 transition-all whitespace-normal overflow-hidden group shadow-[0px_4px_20px_-10px_rgba(0,0,0,0.5)] active:scale-[0.98]"
+                                            >
+                                                <div className="flex flex-col w-full space-y-1">
+                                                    <span className="font-semibold text-white group-hover:text-primary transition-colors text-sm">1. Estándar (Recomendado)</span>
+                                                    <span className="text-xs text-white/50 font-normal leading-relaxed">Textos y mediciones en una sola línea (Documentos habituales).</span>
+                                                </div>
+                                            </Button>
+                                            <Button 
+                                                onClick={() => handleConfirmPdfStrategy('ANNEXED')}
+                                                className="flex-1 w-full h-auto py-4 px-4 justify-start text-left bg-zinc-800 hover:bg-zinc-700/80 border border-transparent hover:border-blue-500/50 transition-all whitespace-normal overflow-hidden group shadow-[0px_4px_20px_-10px_rgba(0,0,0,0.5)] active:scale-[0.98]"
+                                            >
+                                                <div className="flex flex-col w-full space-y-1">
+                                                    <span className="font-semibold text-white group-hover:text-blue-400 transition-colors text-sm">2. Cuadro Resumen (Anexado)</span>
+                                                    <span className="text-xs text-white/50 font-normal leading-relaxed">Literatura compacta al inicio y desglose de mediciones al final.</span>
+                                                </div>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ) : (state as string) === 'generated' ? (
                                 <div className="flex flex-col items-center justify-center w-full py-2">
                                     <Sparkles className="h-6 w-6 text-primary mb-2 animate-pulse" />
                                     <p className="text-sm font-semibold text-primary">¡Presupuesto Generado!</p>
-                                    <p className="text-xs text-gray-500 text-center mt-1">Haz clic en el enlace de arriba para verlo.</p>
+                                    <p className="text-xs text-gray-500 text-center mt-1 mb-3">Haz clic en el enlace de arriba para verlo.</p>
+                                    {isPublicMode && !isLimitReached && (
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm" 
+                                            onClick={() => {
+                                                setState('idle');
+                                            }}
+                                            className="text-xs bg-transparent border-white/20 text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                                        >
+                                            Generar otro presupuesto
+                                        </Button>
+                                    )}
                                 </div>
                             ) : (
                                 <>
@@ -635,7 +848,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                                         placeholder="Pega aquí todo tu proyecto o escribe..."
                                         className="min-h-[100px] max-h-48 w-full resize-none border-0 border-transparent bg-transparent py-4 text-base placeholder:text-gray-500 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none shadow-none text-gray-100 scrollbar-hide font-medium leading-relaxed"
                                         rows={1}
-                                        disabled={(state as string) === 'generated' || isLimitReached}
+                                        disabled={(state as string) === 'generated' || isLimitReached || state === 'uploading'}
                                     />
 
                                     <div className="shrink-0 flex items-center gap-1 mb-0.5">
@@ -645,9 +858,29 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                                             Basis AI
                                         </div>
 
-                                        {input.trim() ? (
+                                        {!isPublicMode && (
+                                            <div className="relative">
+                                                <input
+                                                    type="file"
+                                                    id="file-upload"
+                                                    multiple
+                                                    className="hidden"
+                                                    onChange={handleFileChange}
+                                                    accept="image/*,application/pdf"
+                                                />
+                                                <label
+                                                    htmlFor="file-upload"
+                                                    className="h-10 w-10 shrink-0 text-gray-400 hover:text-white rounded-full hover:bg-white/10 transition-colors flex items-center justify-center cursor-pointer"
+                                                    title="Adjuntar archivo"
+                                                >
+                                                    <Paperclip className="h-5 w-5" />
+                                                </label>
+                                            </div>
+                                        )}
+
+                                        {(input.trim() || pendingFiles.length > 0) ? (
                                             <Button
-                                                onClick={() => sendMessage(input)}
+                                                onClick={handleSubmit}
                                                 size="icon"
                                                 disabled={isLimitReached}
                                                 className={cn(
@@ -676,6 +909,7 @@ export function BudgetWizardChat({ isAdmin = false, isPublicMode = false }: { is
                                     </div>
                                 </>
                             )}
+                            </div>
                         </motion.div>
 
                         {/* Suggestion Pills underneath */}
@@ -757,16 +991,26 @@ function ChatBubble({ message, isGenerating }: { message: Message, isGenerating?
                 <div className="break-words overflow-hidden space-y-2">
                     {message.attachments && message.attachments.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-2">
-                            {message.attachments.map((url, i) => (
-                                <div key={i} className="relative group rounded-lg overflow-hidden border border-black/5 dark:border-white/10">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={url}
-                                        alt={`Adjunto ${i + 1}`}
-                                        className="max-w-[200px] max-h-[150px] object-cover bg-gray-100 dark:bg-gray-800"
-                                    />
-                                </div>
-                            ))}
+                            {message.attachments.map((url, i) => {
+                                const isPdf = url.startsWith('data:application/pdf') || url.toLowerCase().includes('.pdf');
+                                return (
+                                    <div key={i} className="relative group rounded-lg overflow-hidden border border-black/5 dark:border-white/10 bg-gray-100 dark:bg-gray-800 flex items-center justify-center p-2">
+                                        {isPdf ? (
+                                            <div className="flex flex-col items-center gap-2 p-4 min-w-[120px]">
+                                                <ExternalLink className="w-8 h-8 text-red-500" />
+                                                <span className="text-xs font-semibold">Documento PDF</span>
+                                            </div>
+                                        ) : (
+                                            // eslint-disable-next-line @next/next/no-img-element
+                                            <img
+                                                src={url}
+                                                alt={`Adjunto ${i + 1}`}
+                                                className="max-w-[200px] max-h-[150px] object-cover"
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                     {isGenerating ? (

@@ -11,7 +11,7 @@ export class FirestorePriceBookRepository implements PriceBookRepository {
     private db;
     private collectionName: string;
 
-    constructor(collectionName: string = 'price_book_items') {
+    constructor(collectionName: string = 'price_book_2025') {
         initFirebaseAdminApp();
         this.db = getFirestore();
         this.collectionName = collectionName;

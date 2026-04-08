@@ -16,6 +16,16 @@ export function BudgetWizardTips({ setInput }: BudgetWizardTipsProps) {
     const isMobile = useIsMobile();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [hasOpenedBefore, setHasOpenedBefore] = useState(false);
+    const [isDesktopOpen, setIsDesktopOpen] = useState(true);
+
+    useEffect(() => {
+        // Enforce opening by default whenever mounted
+        setIsDesktopOpen(true);
+    }, []);
+
+    const toggleDesktop = () => {
+        setIsDesktopOpen(!isDesktopOpen);
+    };
 
     // Auto-open on mobile on first load
     useEffect(() => {
@@ -48,29 +58,29 @@ export function BudgetWizardTips({ setInput }: BudgetWizardTipsProps) {
 
     const templates = [
         {
-            title: "Reforma de Baño Estándar",
+            title: "Reforma Integral (Calidad Alta)",
             icon: Hammer,
-            text: "Presupuesta la reforma integral de un baño de 5 m2. Incluye demolición de alicatados, renovación completa de fontanería y tomas de agua, instalación de plato de ducha de resina antideslizante, mampara de cristal fijo, inodoro y mueble lavabo."
+            text: "Reforma integral de una vivienda de 120 m2. Incluye tabiquería nueva, sustitución completa de fontanería y electricidad, preinstalación de clima por conductos, 2 baños completos (duchas de resina), cocina abierta con encimera porcelánica y suelo de tarima flotante AC5 en toda la casa."
         },
         {
-            title: "Reforma de Cocina",
+            title: "Reforma de Local a Vivienda",
             icon: Wrench,
-            text: "Reforma de cocina de 12 m2. Considerar demolición de azulejos, alisado de paredes, nueva instalación de tuberías de cobre, cableado eléctrico para electrodomésticos de alta potencia, e instalación de suelo cerámico formato 60x60."
+            text: "Cambio de uso de un local comercial en bruto de 90 m2 a vivienda. Necesita solera de nivelación, aislamiento termoacústico en techos y fachadas, divisiones de cartón yeso (pladur), saneamientos nuevos, cuadro general eléctrico y carpintería exterior de aluminio con rotura de puente térmico."
         },
         {
-            title: "Alisado y Pintura",
-            icon: Paintbrush,
-            text: "Quiero quitar el gotelé y alisar las paredes de un piso de 90 m2. Además, pintar todas las paredes y techos en color blanco con pintura plástica mate lavable de alta calidad."
-        },
-        {
-            title: "Cambio de Suelo (Tarima)",
-            icon: Ruler,
-            text: "Instalación de suelo laminado AC5 con rodapié blanco lacado en una vivienda de 80 m2. Incluye colocar capa aislante acústica y rebaje de 5 puertas de paso."
-        },
-        {
-            title: "Reforma Integral de Local",
+            title: "Reforma de Cocina y 2 Baños",
             icon: MessageSquarePlus,
-            text: "Reforma integral de un local comercial de 100 m2 en bruto. Hay que hacer solera de hormigón, división con cartón-yeso (Pladur), instalación eléctrica completa con cuadro general, e instalación de aire acondicionado por conductos."
+            text: "Reforma parcial: Cocina de 14 m2 y dos baños de 6 m2. Se debe demoler el alicatado actual, renovar puntos de agua y luz. Para la cocina: muebles en L y encimera de granito. Para los baños: sanitarios suspendidos, platos de ducha y azulejos de formato grande."
+        },
+        {
+            title: "Reforma Integral Estándar",
+            icon: Hammer,
+            text: "Presupuesto para rehabilitar un piso antiguo de 80 m2. Quitar suelos y puertas viejas. Instalar suelo cerámico imitación madera, puertas macizas lacadas en blanco, alisar el gotelé de las paredes, pintar todo en liso mate y renovar el baño de 5 m2."
+        },
+        {
+            title: "Climatización y Energía",
+            icon: Ruler,
+            text: "Instalación de suelo radiante impulsado por aerotermia para una vivienda unifamiliar de 150 m2. Incluir el picado de la solera actual y la regularización del suelo tras la instalación."
         }
     ];
 
@@ -165,15 +175,44 @@ export function BudgetWizardTips({ setInput }: BudgetWizardTipsProps) {
 
     // Desktop View
     return (
-        <div className="hidden md:flex flex-col w-[320px] shrink-0 border-l border-white/10 bg-[#1e1f20]/50 backdrop-blur-xl h-full p-6 overflow-y-auto custom-scrollbar auto-cols-auto z-10">
-            <div className="mb-6">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Lightbulb className="w-5 h-5 text-primary" />
-                    Cómo pedirlo
-                </h3>
-                <p className="text-sm text-slate-400 mt-1">Mejores descripciones = Mejor presupuesto generado por la IA.</p>
-            </div>
-            <TipsContent />
+        <div 
+            className={cn(
+                "hidden md:flex flex-col shrink-0 border-l border-slate-200 dark:border-white/10 bg-white dark:bg-[#1e1f20]/50 backdrop-blur-xl h-full overflow-y-auto custom-scrollbar auto-cols-auto transition-all duration-300 relative",
+                isDesktopOpen ? "w-[400px] p-6" : "w-[65px] items-center py-6 px-2"
+            )}
+        >
+            {isDesktopOpen ? (
+                <div className="flex flex-col animate-in fade-in duration-300">
+                    <div className="mb-6 flex items-start justify-between">
+                        <div>
+                            <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <Lightbulb className="w-5 h-5 text-primary" />
+                                Cómo pedirlo
+                            </h3>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 pr-2">Mejores descripciones = Mejor presupuesto generado por la IA.</p>
+                        </div>
+                        <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            onClick={toggleDesktop} 
+                            className="h-8 w-8 shrink-0 text-slate-400 hover:text-slate-600 dark:hover:text-white -mr-2"
+                        >
+                            <X className="w-4 h-4" />
+                        </Button>
+                    </div>
+                    <TipsContent />
+                </div>
+            ) : (
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={toggleDesktop} 
+                    className="w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary mt-2"
+                    title="Ver Tips y Plantillas"
+                >
+                    <Lightbulb className="w-5 h-5" />
+                </Button>
+            )}
         </div>
     );
 }

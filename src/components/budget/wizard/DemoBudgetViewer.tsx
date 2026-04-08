@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye, Trash2, Edit2, Check, X, Sparkles, Cpu } from 'lucide-react';
+import { FileText, CheckCircle2, ChevronDown, Download, Building2, User, Loader2, UploadCloud, Receipt, Eye, Trash2, Edit2, Check, X, Sparkles, Cpu, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -13,6 +13,9 @@ import { cn } from '@/lib/utils';
 import { Budget } from '@/backend/budget/domain/budget';
 import { useTranslations } from 'next-intl';
 import { Logo } from '@/components/logo';
+import { sileo } from 'sileo';
+import { savePublicDemoFeedbackAction } from '@/actions/budget/public-feedback.action';
+import { useTransition } from 'react';
 
 /** European price format: 1.250,50 € */
 function formatEUR(value: number): string {
@@ -178,6 +181,15 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                     clientEmail={companyName || 'Empresa de Demostración'}
                     clientAddress={address || ''}
                     items={pdfItems}
+                    issuer={{
+                        name: companyName || 'Empresa Emisora',
+                        address: address || '',
+                        cif: cif || ''
+                    }}
+                    client={{
+                        name: clientName || 'Cliente Demo',
+                        address: address || ''
+                    }}
                     costBreakdown={{
                         materialExecutionPrice: totals.executionMaterial,
                         overheadExpenses: totals.executionMaterial * 0.13,
@@ -327,9 +339,17 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
                                                                 <div key={item.id} className="group/row flex flex-col xl:flex-row xl:items-start justify-between p-3 gap-4 hover:bg-secondary/30 dark:hover:bg-white/[0.02] transition-colors rounded-md relative select-none">
 
                                                                     <div className="flex-1 pr-4 pt-1 xl:pt-0">
-                                                                        <p className="text-sm text-foreground/80 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all pr-8 xl:pr-0">
-                                                                            {item.description}
-                                                                        </p>
+                                                                        <div className="flex flex-col gap-1.5">
+                                                                            <p className="text-sm text-foreground/80 leading-relaxed font-light line-clamp-2 md:line-clamp-none transition-all pr-8 xl:pr-0">
+                                                                                {item.description}
+                                                                            </p>
+                                                                            {/* RLHF Vote Buttons */}
+                                                                            <PublicItemVote 
+                                                                                budgetId={budgetData.id} 
+                                                                                item={item} 
+                                                                                currentPrice={current.price} 
+                                                                            />
+                                                                        </div>
                                                                     </div>
 
                                                                     <div className="flex items-center justify-between w-full mt-3 xl:mt-0 xl:w-auto gap-2 xl:gap-3 shrink-0 self-end xl:self-start xl:pt-1">
@@ -704,4 +724,60 @@ export function DemoBudgetViewer({ budgetData, onDownloadPdf, isGeneratingPdf }:
             `}</style>
         </div>
     );
+}
+
+// Inline Component for RLHF Pipeline
+function PublicItemVote({ budgetId, item, currentPrice }: { budgetId: string, item: any, currentPrice: number }) {
+    const [vote, setVote] = useState<'up' | 'down' | null>(null);
+    const [isPending, startTransition] = useTransition();
+    const [showReason, setShowReason] = useState(false);
+    const [reason, setReason] = useState('');
+
+    const handleVote = (v: 'up'|'down') => {
+        if (vote) return; 
+        setVote(v);
+        if (v === 'up') {
+            startTransition(async () => {
+                await savePublicDemoFeedbackAction({
+                    budgetId, itemId: item.id, description: item.description, proposedPrice: currentPrice, vote: 'up'
+                });
+                sileo.success({ title: "¡Gracias!", description: "Tus votos mejoran la IA en tiempo real." });
+            });
+        } else {
+            setShowReason(true);
+        }
+    };
+
+    const submitReason = () => {
+        if (!reason.trim()) return;
+        startTransition(async () => {
+            await savePublicDemoFeedbackAction({
+                budgetId, itemId: item.id, description: item.description, proposedPrice: currentPrice, vote: 'down', reason
+            });
+            setShowReason(false);
+            sileo.success({ title: "Feedback enviado", description: "El equipo técnico analizará tu corrección." });
+        });
+    }
+
+    return (
+        <div className="flex items-center gap-2 mt-1 -ml-1">
+            {!showReason ? (
+                <>
+                <Button size="sm" variant="ghost" className={cn("h-6 px-2 text-[10px] text-muted-foreground hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20", vote === 'up' && "text-emerald-700 bg-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-400 font-medium")} onClick={() => handleVote('up')} disabled={!!vote || isPending}>
+                    <ThumbsUp className="w-3 h-3 mr-1" /> Bien Tarificado
+                </Button>
+                <Button size="sm" variant="ghost" className={cn("h-6 px-2 text-[10px] text-muted-foreground hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20", vote === 'down' && "text-rose-700 bg-rose-100 dark:bg-rose-900/40 dark:text-rose-400 font-medium")} onClick={() => handleVote('down')} disabled={!!vote || isPending}>
+                    <ThumbsDown className="w-3 h-3 mr-1" /> IA Equivocada
+                </Button>
+                </>
+            ) : (
+                <div className="flex items-center gap-2 w-full max-w-sm ml-1">
+                    <Input className="h-6 text-[11px] bg-secondary/50 border-border focus:ring-1" placeholder="Ej: Faltan horas en la partida, o es muy cara" value={reason} onChange={e=>setReason(e.target.value)} />
+                    <Button size="sm" className="h-6 px-3 text-[10px]" disabled={isPending || !reason.trim()} onClick={submitReason}>
+                        {isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : "Enviar"}
+                    </Button>
+                </div>
+            )}
+        </div>
+    )
 }

@@ -28,10 +28,9 @@ import { cn } from '@/lib/utils';
 import { Logo } from '@/components/logo';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { BudgetDocument } from '@/components/pdf/BudgetDocument';
-import { EditableBudgetLineItem } from '@/types/budget-editor';
+import { EditableBudgetLineItem, ExecutionMode } from '@/types/budget-editor';
 import { BudgetCostBreakdown } from '@/backend/budget/domain/budget';
 import React, { useState } from 'react';
-import { MaterialCatalogSearch } from './material-catalog-search';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -40,9 +39,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuLabel
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input"; // Added Input
-import { SemanticCatalogSidebar } from './SemanticCatalogSidebar';
 
 interface BudgetEditorToolbarProps {
     hasUnsavedChanges: boolean;
@@ -59,8 +55,8 @@ interface BudgetEditorToolbarProps {
     onToggleGhostMode: () => void;
 
     // Execution Mode
-    isExecutionOnly: boolean;
-    onToggleExecutionMode: () => void;
+    executionMode: ExecutionMode;
+    onSetExecutionMode: (mode: ExecutionMode) => void;
 
     // For PDF Generation
     clientName: string;
@@ -86,6 +82,8 @@ interface BudgetEditorToolbarProps {
     onOpenSummary?: () => void;
 }
 
+import { BudgetHealthWidget } from '@/components/budget-editor/BudgetHealthWidget';
+
 export const BudgetEditorToolbar = ({
     hasUnsavedChanges,
     isSaving,
@@ -97,8 +95,8 @@ export const BudgetEditorToolbar = ({
     lastSavedAt,
     showGhostMode,
     onToggleGhostMode,
-    isExecutionOnly,
-    onToggleExecutionMode,
+    executionMode,
+    onSetExecutionMode,
     clientName,
     items,
     costBreakdown,
@@ -113,7 +111,16 @@ export const BudgetEditorToolbar = ({
 }: BudgetEditorToolbarProps) => {
     // Determine status text
     const [isTracing, setIsTracing] = useState(false); // Added isTracing state
-    const [isAddPartidaOpen, setIsAddPartidaOpen] = useState(false);
+
+    // RAG Validation: Check if any item has breakdowns with variable materials
+    const hasVariableCosts = React.useMemo(() => {
+        return items.some(item => (item as any).item?.breakdown?.some((b: any) => b.is_variable === true || b.is_variable === 'true'));
+    }, [items]);
+
+    // Check if any item has breakdowns at all (needed for labor mode)
+    const hasAnyBreakdown = React.useMemo(() => {
+        return items.some(item => (item as any).item?.breakdown?.length > 0);
+    }, [items]);
 
     const statusText = isSaving ? 'Guardando...' :
         hasUnsavedChanges ? 'Cambios sin guardar' :
@@ -144,67 +151,57 @@ export const BudgetEditorToolbar = ({
                         </div>
                     )}
                     <StatusBadge />
+                    {/* Budget Health Widget - Compact View */}
+                    <div className="hidden sm:block">
+                        <BudgetHealthWidget items={items} variant="compact" />
+                    </div>
                 </div>
 
                 {/* RIGHT: Actions */}
                 <div className="flex items-center gap-2">
-                    {/* Library Button (Dialog) */}
-                    {!isReadOnly && (
-                        <Dialog open={isAddPartidaOpen} onOpenChange={setIsAddPartidaOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" className="hidden md:flex bg-white hover:bg-slate-50 border-slate-200 text-slate-700 gap-2">
-                                    <Plus className="w-4 h-4" />
-                                    Agregar Partida
-                                </Button>
-                            </DialogTrigger>
-                        <DialogContent className="max-w-4xl h-[80vh] flex flex-col p-0 gap-0 bg-white dark:bg-zinc-950 border-slate-200 dark:border-white/10">
-                            <div className="p-4 border-b border-slate-200 dark:border-white/10">
-                                <DialogTitle className="text-lg font-semibold flex items-center gap-2 text-slate-800 dark:text-white">
-                                    <Plus className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                                    Agregar Partida
-                                </DialogTitle>
-                            </div>
-                            <div className="flex-1 overflow-hidden p-4 bg-slate-50/50 dark:bg-zinc-900/50">
-                                <SemanticCatalogSidebar onAddItem={(item) => {
-                                    onAddItem(item);
-                                }} />
-                            </div>
-                        </DialogContent>
-                    </Dialog>
-                    )}
 
-                    {/* Compare Button */}
-                    {!isReadOnly && (
-                    <Button
-                        variant={showGhostMode ? "secondary" : "outline"}
-                        size="sm"
-                        onClick={onToggleGhostMode}
-                        className={cn(
-                            "hidden md:flex bg-white hover:bg-slate-50 border-slate-200 text-slate-700",
-                            showGhostMode && "bg-indigo-50 text-indigo-700 border-indigo-200"
-                        )}
-                    >
-                        <ScanEye className="w-4 h-4 mr-2" />
-                        Comparar
-                    </Button>
-                    )}
-
-                    {/* Execution Mode Toggle */}
-                    <Button
-                        variant={isExecutionOnly ? "secondary" : "outline"}
-                        size="sm"
-                        onClick={onToggleExecutionMode}
-                        className={cn(
-                            "hidden md:flex transition-colors shrink-0",
-                            isExecutionOnly
-                                ? "bg-amber-100/50 hover:bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-900/30 dark:text-amber-500 dark:border-amber-800"
-                                : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
-                        )}
-                        title={isExecutionOnly ? "Mostrando: Sólo Ejecución (Sin materiales variables)" : "Mostrando: Presupuesto Completo"}
-                    >
-                        {isExecutionOnly ? <Wrench className="w-4 h-4 mr-2 text-amber-600" /> : <Layers className="w-4 h-4 mr-2 text-indigo-500" />}
-                        {isExecutionOnly ? 'Sólo Ejecución' : 'Completo'}
-                    </Button>
+                    {/* Execution Mode Dropdown */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant={executionMode !== 'complete' ? "secondary" : "outline"}
+                                size="sm"
+                                className={cn(
+                                    "hidden md:flex transition-colors shrink-0",
+                                    executionMode === 'execution'
+                                        ? "bg-amber-100/50 hover:bg-amber-100 text-amber-900 border-amber-200 dark:bg-amber-900/30 dark:text-amber-500 dark:border-amber-800"
+                                        : executionMode === 'labor'
+                                        ? "bg-blue-100/50 hover:bg-blue-100 text-blue-900 border-blue-200 dark:bg-blue-900/30 dark:text-blue-500 dark:border-blue-800"
+                                        : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
+                                )}
+                                title="Seleccionar modo de visualización"
+                            >
+                                {executionMode === 'execution' ? <Wrench className="w-4 h-4 mr-2 text-amber-600" /> : executionMode === 'labor' ? <Wrench className="w-4 h-4 mr-2 text-blue-600" /> : <Layers className="w-4 h-4 mr-2 text-indigo-500" />}
+                                {executionMode === 'execution' ? 'Sólo Ejecución' : executionMode === 'labor' ? 'Sólo Mano de Obra' : 'Completo'}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-60">
+                            <DropdownMenuLabel>Modo de Visualización</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => onSetExecutionMode('complete')} className={executionMode === 'complete' ? 'bg-slate-100 dark:bg-white/10 font-semibold' : ''}>
+                                <Layers className="w-4 h-4 mr-2 text-indigo-500" /> Presupuesto Completo
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onSetExecutionMode('execution')} disabled={!hasVariableCosts} className={executionMode === 'execution' ? 'bg-amber-50 dark:bg-amber-900/20 font-semibold' : ''}>
+                                <Wrench className="w-4 h-4 mr-2 text-amber-600" />
+                                <div className="flex flex-col">
+                                    <span>Sólo Ejecución</span>
+                                    <span className="text-[10px] text-slate-400 font-normal">{hasVariableCosts ? 'Excluye materiales variables' : 'Sin materiales variables detectados'}</span>
+                                </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onSetExecutionMode('labor')} disabled={!hasAnyBreakdown} className={executionMode === 'labor' ? 'bg-blue-50 dark:bg-blue-900/20 font-semibold' : ''}>
+                                <Wrench className="w-4 h-4 mr-2 text-blue-600" />
+                                <div className="flex flex-col">
+                                    <span>Exclusivamente Mano de Obra</span>
+                                    <span className="text-[10px] text-slate-400 font-normal">{hasAnyBreakdown ? 'Solo componentes mo...' : 'Sin descompuestos disponibles'}</span>
+                                </div>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
 
                     {/* Mobile Menu */}
                     {!isReadOnly && (
@@ -218,15 +215,14 @@ export const BudgetEditorToolbar = ({
                                 <DropdownMenuContent align="end" className="w-56">
                                     <DropdownMenuLabel>Opciones</DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem onSelect={() => setIsAddPartidaOpen(true)}>
-                                        <Plus className="w-4 h-4 mr-2" /> Agregar Partida
+                                    <DropdownMenuItem onClick={() => onSetExecutionMode('complete')}>
+                                        <Layers className="w-4 h-4 mr-2 text-indigo-500" /> Presupuesto Completo
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={onToggleGhostMode}>
-                                        <ScanEye className="w-4 h-4 mr-2" /> {showGhostMode ? 'Ocultar Comparación' : 'Comparar'}
+                                    <DropdownMenuItem onClick={() => onSetExecutionMode('execution')} disabled={!hasVariableCosts}>
+                                        <Wrench className="w-4 h-4 mr-2 text-amber-600" /> Sólo Ejecución
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={onToggleExecutionMode}>
-                                        {isExecutionOnly ? <Layers className="w-4 h-4 mr-2" /> : <Wrench className="w-4 h-4 mr-2" />} 
-                                        {isExecutionOnly ? 'Vista Completa' : 'Sólo Ejecución'}
+                                    <DropdownMenuItem onClick={() => onSetExecutionMode('labor')}>
+                                        <Wrench className="w-4 h-4 mr-2 text-blue-600" /> Sólo Mano de Obra
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>

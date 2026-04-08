@@ -18,7 +18,7 @@ export type ConversationThread = {
     status: string;
 };
 
-export type WizardState = 'idle' | 'listening' | 'processing' | 'generating' | 'review' | 'generated';
+export type WizardState = 'idle' | 'listening' | 'uploading' | 'processing' | 'processing_pdf' | 'generating' | 'review' | 'generated';
 
 export const useBudgetWizard = (isAdmin: boolean = false) => {
     const { leadId } = useWidgetContext();
@@ -42,7 +42,7 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
         loadConversations();
     }, [isAdmin, effectiveUserId]);
 
-    const loadConversations = async () => {
+    const loadConversations = async (preventSwitch: boolean = false) => {
         setIsLoadingChats(true);
         try {
             if (isAdmin) {
@@ -52,7 +52,9 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
 
                 if (result.success && result.conversations && result.conversations.length > 0) {
                     setConversations(result.conversations);
-                    switchConversation(result.conversations[0].id);
+                    if (!preventSwitch) {
+                        switchConversation(result.conversations[0].id);
+                    }
                 }
             } else {
                 // Lead Mode: Just load the default conversation for this lead
@@ -67,7 +69,7 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
                             role: m.role,
                             content: m.content,
                             createdAt: new Date(m.createdAt),
-                            attachments: m.attachments
+                            attachments: (m.attachments || []).map((a: any) => typeof a === 'string' ? a : a.url)
                         })));
                     }
                 }
@@ -103,7 +105,7 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
                     role: m.role,
                     content: m.content,
                     createdAt: new Date(m.createdAt),
-                    attachments: m.attachments
+                    attachments: (m.attachments || []).map((a: any) => typeof a === 'string' ? a : a.url)
                 })));
             }
         } catch (error) {
@@ -118,8 +120,8 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
             const { createAdminConversationAction } = await import('@/actions/chat/create-admin-conversation.action');
             const result = await createAdminConversationAction(effectiveUserId);
             if (result.success && result.conversationId) {
-                // Refresh list and switch to new
-                await loadConversations();
+                // Refresh list and switch to new, preventing the inner switch to avoid race condition
+                await loadConversations(true);
                 switchConversation(result.conversationId);
             }
         } catch (e) {
@@ -184,7 +186,7 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
 
         setMessages(prev => [...prev, userMsg]);
         setInput('');
-        setState('processing');
+        setState(attachments.length > 0 ? 'processing_pdf' : 'processing');
 
         try {
             // 1. Persist User Message
@@ -224,10 +226,10 @@ export const useBudgetWizard = (isAdmin: boolean = false) => {
             let result;
             if (isAdmin) {
                 const { processAdminMessageAction } = await import('@/actions/budget/process-admin-message.action');
-                result = await processAdminMessageAction(conversationId, text, history, requirements);
+                result = await processAdminMessageAction(conversationId, text, history, requirements, attachments);
             } else {
                 const { processClientMessageAction } = await import('@/actions/budget/process-client-message.action');
-                result = await processClientMessageAction(effectiveUserId, text, history, requirements);
+                result = await processClientMessageAction(effectiveUserId, text, history, requirements, attachments);
             }
 
             if (result.success && result.data) {

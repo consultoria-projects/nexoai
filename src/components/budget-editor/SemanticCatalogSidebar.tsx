@@ -101,14 +101,14 @@ export const SemanticCatalogSidebar = ({ onAddItem }: SemanticCatalogSidebarProp
                 <div className="flex items-center justify-between">
                     <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
                         <Package className="w-4 h-4 text-primary dark:text-primary/90" />
-                        Catálogo Unificado
+                        Catálogo de Partidas
                     </h3>
                 </div>
 
                 <div className="relative">
                     <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400 dark:text-white/40" />
                     <Input
-                        placeholder="Buscar partida o material..."
+                        placeholder="Buscar partida..."
                         className="pl-9 bg-white dark:bg-white/5 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-white/40"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
@@ -120,7 +120,8 @@ export const SemanticCatalogSidebar = ({ onAddItem }: SemanticCatalogSidebarProp
                     )}
                 </div>
 
-                <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full">
+                {/* Materials search disabled for public demo */}
+                <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="w-full hidden">
                     <TabsList className="grid w-full grid-cols-2 h-8">
                         <TabsTrigger value="LABOR" className="text-xs">Partidas</TabsTrigger>
                         <TabsTrigger value="MATERIAL" className="text-xs">Materiales</TabsTrigger>
@@ -134,7 +135,7 @@ export const SemanticCatalogSidebar = ({ onAddItem }: SemanticCatalogSidebarProp
                         <div className="text-center py-8 text-slate-400 dark:text-white/40 text-sm px-4">
                             {search.length > 0 && search.length < 3
                                 ? "Escribe al menos 3 caracteres..."
-                                : "Busca partidas de obra o materiales de construcción."}
+                                : "Busca partidas de obra en el catálogo."}
                         </div>
                     ) : (
                         filteredItems.map((item) => {

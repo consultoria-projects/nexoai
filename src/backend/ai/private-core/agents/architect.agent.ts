@@ -52,7 +52,7 @@ export class ArchitectAgent {
     async decomposeRequest(userRequest: string): Promise<ArchitectResponse> {
 
         // Load DAG context
-        const dagPath = path.join(process.cwd(), 'src/data/construction_dag.json');
+        const dagPath = path.join(process.cwd(), 'src/lib/construction_dag.json');
         let dagContext = "";
         try {
             const dagData = fs.readFileSync(dagPath, 'utf8');
@@ -145,7 +145,7 @@ Cada objeto tarea en el array "tasks" debe tener:
 
         try {
             const result = await generateWithRetry({
-                model: 'googleai/gemini-2.0-flash-001',
+                model: 'googleai/gemini-2.5-flash',
                 prompt: prompt,
                 output: {
                     format: 'json',

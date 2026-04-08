@@ -20,6 +20,10 @@ export interface BudgetPartida {
   isEstimate?: boolean;
   isRealCost?: boolean; // True if recalculated by Construction Analyst
   matchConfidence?: number; // 0-100 Score from Vector Search
+  alternativeCandidates?: any[]; // Unselected candidates from Vector Search
+  reasoning?: string; // AI Chain of Thought
+  needsHumanReview?: boolean; // Flag if AI failed to calculate properly
+  aiResolution?: any; // The raw AI decision payload
   breakdown?: BudgetBreakdownComponent[]; // Detailed cost structure
   relatedMaterial?: {
     sku: string;
@@ -76,6 +80,8 @@ export interface BudgetCostBreakdown {
   tax: number; // IVA
   globalAdjustment: number;
   total: number; // PEC + IVA
+  completeTotal?: number; // Total without mode deductions
+  executionOnlyTotal?: number; // Total with variable material deductions
 }
 
 export interface BudgetTelemetryMetrics {
@@ -130,6 +136,7 @@ export interface Budget {
   updatedAt: Date;
   version: number;
   type?: 'renovation' | 'quick' | 'new_build';
+  isPdfGenerated?: boolean; // Toggles structural read-only mode after final PDF export
 
   // Domain Project Data
   specs: ProjectSpecs;

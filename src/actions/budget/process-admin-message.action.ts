@@ -10,7 +10,8 @@ export async function processAdminMessageAction(
     conversationId: string,
     message: string,
     history: any[],
-    currentRequirements: Partial<BudgetRequirement>
+    currentRequirements: Partial<BudgetRequirement>,
+    attachments: string[] = []
 ) {
     try {
         // ===============================================
@@ -21,6 +22,7 @@ export async function processAdminMessageAction(
             userMessage: message,
             history: history,
             currentRequirements: currentRequirements,
+            attachments: attachments
         });
 
         return { success: true, data: result };

@@ -18,7 +18,8 @@ export class FirestoreBookingRepository implements BookingRepository {
             status: booking.status,
             notes: booking.notes,
             createdAt: booking.createdAt,
-            updatedAt: booking.updatedAt
+            updatedAt: booking.updatedAt,
+            meetUrl: booking.meetUrl || null
         });
     }
 
@@ -86,7 +87,8 @@ export class FirestoreBookingRepository implements BookingRepository {
             data.status as BookingStatus,
             data.notes ?? null,
             data.createdAt?.toDate?.() ?? new Date(data.createdAt),
-            data.updatedAt?.toDate?.() ?? new Date(data.updatedAt)
+            data.updatedAt?.toDate?.() ?? new Date(data.updatedAt),
+            data.meetUrl ?? undefined
         );
     }
 }

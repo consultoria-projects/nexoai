@@ -197,6 +197,20 @@ const DraggableRow = ({ item, onUpdate, onRemove, onDuplicate, showGhostMode }: 
                                         <AlertTriangle className="w-3 h-3" />
                                     </div>
                                 )}
+                                {item.type === 'MATERIAL' && (
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <div className="w-8 h-8 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 flex items-center justify-center cursor-help">
+                                                    <Package className="w-4 h-4" />
+                                                </div>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Este es un material. Puedes buscarlo en el catálogo.</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
+                                )}
                             </div>
                         </div>
 

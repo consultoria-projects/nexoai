@@ -1,6 +1,8 @@
 import { LeadsTable } from '@/components/dashboard/leads/leads-table';
-import { Users, Sparkles } from 'lucide-react';
+import { CRMKanban } from '@/components/dashboard/leads/crm-kanban';
+import { Users, Columns, List } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function LeadsPage() {
     return (
@@ -15,16 +17,34 @@ export default function LeadsPage() {
                             <Users className="w-3 h-3 mr-1 text-purple-300" /> CRM
                         </Badge>
                         <h1 className="text-4xl font-bold font-headline tracking-tight">
-                            Leads & <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-indigo-200">Onboarding</span>
+                            Pipeline & <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-200 to-indigo-200">Leads</span>
                         </h1>
                         <p className="text-purple-100/80 max-w-xl text-lg">
-                            Gestiona todos los leads capturados y su estado de verificación y onboarding.
+                            Gestiona tu embudo de ventas y observa cómo los leads avanzan desde la Demo Pública al Cierre.
                         </p>
                     </div>
                 </div>
             </div>
 
-            <LeadsTable />
+            <Tabs defaultValue="kanban" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 max-w-md bg-slate-900/50 border border-slate-800">
+                    <TabsTrigger value="kanban" className="data-[state=active]:bg-purple-600">
+                        <Columns className="w-4 h-4 mr-2" />
+                        Tablero Kanban
+                    </TabsTrigger>
+                    <TabsTrigger value="table" className="data-[state=active]:bg-purple-600">
+                        <List className="w-4 h-4 mr-2" />
+                        Tabla Tradicional
+                    </TabsTrigger>
+                </TabsList>
+                <TabsContent value="kanban" className="mt-6 border-none p-0">
+                    <CRMKanban />
+                </TabsContent>
+                <TabsContent value="table" className="mt-6 border-none p-0">
+                    <LeadsTable />
+                </TabsContent>
+            </Tabs>
+
         </div>
     );
 }

@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { BudgetCostBreakdown } from '@/backend/budget/domain/budget';
-import { BudgetConfig } from '@/types/budget-editor';
-import { formatCurrency } from '@/lib/utils';
+import { BudgetConfig, ExecutionMode } from '@/types/budget-editor';
+import { formatMoneyEUR } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Settings2, X, Check, ArrowRight, FileDown, Trash, Loader2, Download, Save } from 'lucide-react';
+import { Settings2, X, Check, ArrowRight, FileDown, Trash, Loader2, Download, Save, Building2, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { BudgetDocument } from '@/components/pdf/BudgetDocument';
 
 interface BudgetEconomicSummaryProps {
     costBreakdown: BudgetCostBreakdown;
+    executionMode: ExecutionMode;
     budgetConfig?: BudgetConfig;
     onUpdateConfig?: (config: { marginGG?: number; marginBI?: number; tax?: number; }) => void;
     applyMarkup?: (scope: 'global' | 'chapter' | 'item', percentage: number, targetId?: string) => void;
@@ -24,10 +25,12 @@ interface BudgetEconomicSummaryProps {
     chapters?: any;
     clientName?: string;
     budgetNumber?: string;
+    renders?: any[];
 }
 
 export const BudgetEconomicSummary = ({ 
     costBreakdown, 
+    executionMode,
     budgetConfig,
     onUpdateConfig,
     applyMarkup,
@@ -38,7 +41,8 @@ export const BudgetEconomicSummary = ({
     items = [],
     chapters = [],
     clientName,
-    budgetNumber = 'PRE-0001'
+    budgetNumber = 'PRE-0001',
+    renders = []
 }: BudgetEconomicSummaryProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const [globalMarkup, setGlobalMarkup] = useState<number | ''>('');
@@ -47,12 +51,24 @@ export const BudgetEconomicSummary = ({
     const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
     const [isSavingMeta, setIsSavingMeta] = useState(false);
     const [pdfMeta, setPdfMeta] = useState({
-        companyName: initialPdfMeta?.companyName || 'Reformas y Servicios S.L.',
+        companyName: initialPdfMeta?.companyName || 'Nexo AI',
         companyLogo: initialPdfMeta?.companyLogo || '',
-        clientName: initialPdfMeta?.clientName || clientName || 'Cliente Demostración',
-        clientAddress: initialPdfMeta?.clientAddress || 'Calle Ejemplo 123, Madrid',
+        clientName: initialPdfMeta?.clientName || clientName || '',
+        clientAddress: initialPdfMeta?.clientAddress || '',
+        clientEmail: initialPdfMeta?.clientEmail || '',
         notes: initialPdfMeta?.notes || ''
     });
+
+    React.useEffect(() => {
+        if (initialPdfMeta) {
+            setPdfMeta(prev => ({
+                ...prev,
+                ...initialPdfMeta,
+                clientName: initialPdfMeta.clientName || prev.clientName || '',
+                clientAddress: initialPdfMeta.clientAddress || prev.clientAddress || '',
+            }));
+        }
+    }, [initialPdfMeta]);
 
     const handleSavePdfSettings = async () => {
         if (!onSavePdfSettings) return;
@@ -77,7 +93,7 @@ export const BudgetEconomicSummary = ({
     };
 
     // Prevent NaN breaking translations
-    const safeFormat = (num: number) => formatCurrency(num);
+    const safeFormat = (num: number) => formatMoneyEUR(num);
 
     const toggleEdit = () => {
         setIsEditing(!isEditing);
@@ -192,6 +208,7 @@ export const BudgetEconomicSummary = ({
                     <span className="font-bold text-2xl text-primary dark:text-amber-400 font-mono tracking-tight">{safeFormat(costBreakdown.total)}</span>
                 </div>
 
+                {!isReadOnly && (
                 <div className="py-2">
                     <Dialog open={isPdfModalOpen} onOpenChange={setIsPdfModalOpen}>
                         <DialogTrigger asChild>
@@ -204,45 +221,53 @@ export const BudgetEconomicSummary = ({
                         </DialogTrigger>
                         <DialogContent className="max-w-xl w-[calc(100vw-2rem)] max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-950 border-slate-200 dark:border-zinc-800 p-6 sm:p-8 shadow-2xl">
                             <DialogTitle className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Configuración del Documento PDF</DialogTitle>
-                            <div className="space-y-5 py-2">
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Empresa Emisora</label>
-                                    <Input value={pdfMeta.companyName} onChange={e => setPdfMeta((prev: any) => ({ ...prev, companyName: e.target.value }))} placeholder="Nombre de tu empresa" className="h-11 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-500" />
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Logo de Empresa</label>
-                                    <div className="flex items-center gap-4">
-                                        {pdfMeta.companyLogo ? (
-                                            <div className="relative group">
-                                                <img src={pdfMeta.companyLogo} alt="Logo" className="h-12 w-auto object-contain rounded-md border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-1" />
-                                                <button
-                                                    onClick={() => setPdfMeta((prev: any) => ({ ...prev, companyLogo: '' }))}
-                                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 focus:outline-none"
-                                                    title="Eliminar logo"
-                                                >
-                                                    <Trash className="w-3.5 h-3.5" />
-                                                </button>
+                            <div className="space-y-6 pt-4">
+                                {/* SECTION: ISSUER */}
+                                <div className="space-y-4">
+                                    <h4 className="text-[11px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest border-b border-slate-100 dark:border-white/5 pb-1 flex items-center gap-2">
+                                        <Building2 className="w-3.5 h-3.5" />
+                                        Mi Empresa (Emisora)
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nombre del Emisor</label>
+                                            <Input value={pdfMeta.companyName} onChange={e => setPdfMeta((prev: any) => ({ ...prev, companyName: e.target.value }))} placeholder="Ej: Reformas Nexo" className="h-10 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Logotipo</label>
+                                            <div className="flex items-center gap-4">
+                                                {pdfMeta.companyLogo ? (
+                                                    <div className="relative group">
+                                                        <img src={pdfMeta.companyLogo} alt="Logo" className="h-10 w-auto object-contain rounded border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-1" />
+                                                        <button onClick={() => setPdfMeta((prev: any) => ({ ...prev, companyLogo: '' }))} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"><Trash className="w-3 h-3" /></button>
+                                                    </div>
+                                                ) : (
+                                                    <Input type="file" accept="image/*" onChange={handleLogoUpload} className="h-10 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800 text-xs file:py-1 file:px-2 file:text-[10px]" />
+                                                )}
                                             </div>
-                                        ) : (
-                                            <div className="flex-1">
-                                                <Input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    onChange={handleLogoUpload}
-                                                    className="h-11 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800 text-sm cursor-pointer file:mr-4 file:py-1.5 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-indigo-50 file:text-indigo-700 dark:file:bg-indigo-900/30 dark:file:text-indigo-400 hover:file:bg-indigo-100 dark:hover:file:bg-indigo-900/50"
-                                                />
-                                            </div>
-                                        )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                    <div className="space-y-2">
-                                        <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nombre del Cliente</label>
-                                        <Input value={pdfMeta.clientName} onChange={e => setPdfMeta((prev: any) => ({ ...prev, clientName: e.target.value }))} placeholder="Nombre del cliente" className="h-11 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800 focus-visible:ring-indigo-500" />
+
+                                {/* SECTION: CLIENT */}
+                                <div className="space-y-4 pt-2">
+                                    <h4 className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest border-b border-slate-100 dark:border-white/5 pb-1 flex items-center gap-2">
+                                        <User className="w-3.5 h-3.5" />
+                                        Mi Cliente (Receptor)
+                                    </h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Nombre del Cliente</label>
+                                            <Input value={pdfMeta.clientName} onChange={e => setPdfMeta((prev: any) => ({ ...prev, clientName: e.target.value }))} placeholder="Nombre completo..." className="h-10 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email (Opcional)</label>
+                                            <Input value={pdfMeta.clientEmail || ''} onChange={e => setPdfMeta((prev: any) => ({ ...prev, clientEmail: e.target.value }))} placeholder="cliente@ejemplo.com" className="h-10 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800" />
+                                        </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dirección de la Obra</label>
-                                        <Input value={pdfMeta.clientAddress} onChange={e => setPdfMeta((prev: any) => ({ ...prev, clientAddress: e.target.value }))} placeholder="Dirección de la obra" className="h-11 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800 focus-visible:ring-indigo-500" />
+                                        <label className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Dirección de la Obra</label>
+                                        <Input value={pdfMeta.clientAddress} onChange={e => setPdfMeta((prev: any) => ({ ...prev, clientAddress: e.target.value }))} placeholder="Calle Ejemplo 123..." className="h-10 bg-slate-50 dark:bg-zinc-900/50 border-slate-200 dark:border-zinc-800" />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
@@ -274,15 +299,22 @@ export const BudgetEconomicSummary = ({
                                         document={
                                             <BudgetDocument
                                                 budgetNumber={budgetNumber}
-                                                clientName={pdfMeta.clientName}
-                                                clientEmail={pdfMeta.companyName}
-                                                clientAddress={pdfMeta.clientAddress}
-                                                logoUrl={pdfMeta.companyLogo}
-                                                notes={pdfMeta.notes}
                                                 items={items}
                                                 costBreakdown={costBreakdown}
                                                 date={new Date().toLocaleDateString('es-ES')}
                                                 budgetConfig={budgetConfig}
+                                                executionMode={executionMode} 
+                                                renders={renders}
+                                                notes={pdfMeta.notes}
+                                                logoUrl={pdfMeta.companyLogo}
+                                                issuer={{
+                                                    name: pdfMeta.companyName
+                                                }}
+                                                client={{
+                                                    name: pdfMeta.clientName,
+                                                    address: pdfMeta.clientAddress,
+                                                    email: pdfMeta.clientEmail
+                                                }}
                                             />
                                         }
                                         fileName={`Presupuesto-${budgetNumber}.pdf`}
@@ -308,6 +340,7 @@ export const BudgetEconomicSummary = ({
                         </DialogContent>
                     </Dialog>
                 </div>
+                )}
 
                 {!isReadOnly && applyMarkup && (
                     <div className="mt-auto pt-6 border-t border-slate-100 dark:border-white/5">

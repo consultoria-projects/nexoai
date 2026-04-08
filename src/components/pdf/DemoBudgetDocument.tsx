@@ -183,14 +183,27 @@ const styles = StyleSheet.create({
 
 interface DemoBudgetDocumentProps {
     budgetNumber: string;
-    clientName: string;
-    clientEmail: string;
-    clientAddress: string;
+    clientName?: string; // Made optional
+    clientEmail?: string;
+    clientAddress?: string;
     items: any[];
     costBreakdown: any;
     date: string;
     logoUrl?: string;
     budgetConfig?: { tax: number; marginGG: number; marginBI: number };
+    
+     // Explicit structured props
+     issuer?: {
+        name: string;
+        address?: string;
+        email?: string;
+        cif?: string;
+    };
+    client?: {
+        name: string;
+        address?: string;
+        email?: string;
+    };
 }
 
 const Footer = ({ pageNumber, companyName, cif, address }: { pageNumber: number, companyName?: string, cif?: string, address?: string }) => {
@@ -230,6 +243,9 @@ const Header = ({ budgetNumber, date, logoUrl, companyName }: { budgetNumber: st
         <View style={styles.metaSection}>
             <Text style={styles.bold}>PRESUPUESTO Nº {budgetNumber}</Text>
             <Text>Fecha: {date}</Text>
+            {companyName && (
+                <Text style={{ fontSize: 7, color: '#64748B', marginTop: 2 }}>{companyName}</Text>
+            )}
         </View>
     </View>
 );
@@ -243,8 +259,15 @@ export const DemoBudgetDocument = ({
     costBreakdown,
     date,
     logoUrl,
-    budgetConfig
+    budgetConfig,
+    issuer,
+    client
 }: DemoBudgetDocumentProps) => {
+
+    const finalClientName = client?.name || clientName;
+    const finalClientEmail = client?.email || clientEmail;
+    const finalClientAddress = client?.address || clientAddress;
+    const finalIssuerName = issuer?.name || "Nexo AI";
 
     const itemsByChapter = items.reduce((acc: Record<string, any[]>, item) => {
         const chapter = item.chapter || 'Partidas Generales';
@@ -258,15 +281,15 @@ export const DemoBudgetDocument = ({
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={clientEmail} />
+                <Header budgetNumber={budgetNumber} date={date} logoUrl={logoUrl} companyName={finalIssuerName} />
 
                 <Text style={styles.title}>Propuesta Técnica y Económica</Text>
 
                 <View style={{ marginBottom: 20, backgroundColor: '#F8FAFC', padding: 15, borderRadius: 8, marginTop: 10 }}>
                     <Text style={{ fontSize: 9, color: '#64748B', marginBottom: 6, textTransform: 'uppercase', fontWeight: 'bold' }}>Cliente / Ubicación</Text>
-                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#0F172A', marginBottom: 4 }}>{clientName}</Text>
-                    <Text style={{ fontSize: 10, color: '#475569' }}>{clientEmail}</Text>
-                    <Text style={{ fontSize: 10, color: '#475569', marginTop: 4 }}>{clientAddress || 'Dirección de obra facilitada'}</Text>
+                    <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#0F172A', marginBottom: 4 }}>{finalClientName}</Text>
+                    {finalClientEmail && <Text style={{ fontSize: 10, color: '#475569' }}>{finalClientEmail}</Text>}
+                    <Text style={{ fontSize: 10, color: '#475569', marginTop: 4 }}>{finalClientAddress || 'Dirección de obra facilitada'}</Text>
                 </View>
 
                 <Text style={styles.sectionTitle}>Desglose Detallado de Partidas</Text>
@@ -339,9 +362,9 @@ export const DemoBudgetDocument = ({
                     </View>
                 </View>
 
-                <Footer pageNumber={1} companyName={clientEmail} cif={clientEmail ? "Generado por Basis" : undefined} address={clientEmail ? "Demostración Pública" : undefined} />
-                <Footer pageNumber={2} companyName={clientEmail} cif={clientEmail ? "Generado por Basis" : undefined} address={clientEmail ? "Demostración Pública" : undefined} />
-                <Footer pageNumber={3} companyName={clientEmail} cif={clientEmail ? "Generado por Basis" : undefined} address={clientEmail ? "Demostración Pública" : undefined} />
+                <Footer pageNumber={1} companyName={finalIssuerName} cif={finalIssuerName ? "Generado por Nexo AI" : undefined} address={finalIssuerName ? "Demostración Pública" : undefined} />
+                <Footer pageNumber={2} companyName={finalIssuerName} cif={finalIssuerName ? "Generado por Nexo AI" : undefined} address={finalIssuerName ? "Demostración Pública" : undefined} />
+                <Footer pageNumber={3} companyName={finalIssuerName} cif={finalIssuerName ? "Generado por Nexo AI" : undefined} address={finalIssuerName ? "Demostración Pública" : undefined} />
             </Page>
         </Document>
     );
